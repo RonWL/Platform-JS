@@ -2,7 +2,8 @@ $.dispatchPlatform = {
     id: 'Platform Dispatch',
     version: '1.0',
     defaults: {
-		$platform:"SK" //	Options are for now "DC" -> DoubleClick & "SK" -> Sizmek
+		$platform:"SK", 			//	Options are for now "DC" -> DoubleClick & "SK" -> Sizmek
+		$dimensions: [300, 250]		//	Dimensions of the Unit [Width, Height]
 	}
 };
 
@@ -11,6 +12,11 @@ $.dispatchPlatform = {
 	"use strict";
 	
 	var _platform;
+	var _dimensions;
+	
+	var _newWidth;
+	var _newHeight;
+	
 	var adDiv;
 	
     $.fn.extend({
@@ -21,8 +27,9 @@ $.dispatchPlatform = {
                 var opts = $.extend({}, this.defaults, params);
 			
 				_platform = opts.$platform;
+				_dimensions = opts.$dimensions;	
 				
-				var $script;			
+				$("head").prepend("<meta name='unit-size' content='width='" + _dimensions[0] + ", height='" + _dimensions[1] + "'>");	
 				
 				switch (_platform)
 				{
@@ -36,11 +43,30 @@ $.dispatchPlatform = {
 						
 						break;
 				}
-				console.log(_platform);
+				//console.log(_platform);
+				
+				style_elements();
 				window.addEventListener("load", init_platform);
 			});
         }
     });
+	
+	function style_elements()
+	{
+		$("body").css({
+			"width" : _dimensions[0] + "px",
+			"height" : _dimensions[1] + "px"
+		});
+		
+		_newWidth = _dimensions[0] - 2;
+		_newHeight = _dimensions[1] - 2;
+		
+		$("#main-panel").css({
+			"width" : _newWidth + "px",
+			"height" : _newHeight + "px",
+			"border" : "1px solid #000"
+		});
+	}
 	
 	function init_platform()
 	{		
@@ -68,7 +94,7 @@ $.dispatchPlatform = {
 	
 	function startAd()
 	{
-		adDiv = document.getElementById("ad");
+		adDiv = document.getElementById("main-panel");
 		
 		addEventListeners();
 		init_animation();
@@ -92,7 +118,7 @@ $.dispatchPlatform = {
 	}
 	function addEventListeners()
 	{
-		document.getElementById("holder").addEventListener("click", function()
+		document.getElementById("main-panel").addEventListener("click", function()
 		{
 			clickThrough();
 		});

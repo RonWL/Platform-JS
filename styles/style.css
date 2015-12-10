@@ -13,3 +13,8 @@ body {
 .full {
 	
 }
+
+#main-panel {
+	position: relative;
+	cursor: pointer;
+}
