@@ -21,13 +21,11 @@
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.17.0/TweenMax.min.js"></script>
 	
-	<!--Following Script Classes will be removed, depending on which platform is selected-->
-	<!--Note: K-Weight of either is not substantial, and following methods DO NOT prevent from loading -- makes for less external scripts-->
-	
-	<script class="skjs" type="text/javascript" src="https://secure-ds.serving-sys.com/BurstingScript/EBLoader.js"></script> 
+	<!-- Script tags have classes pertaining to which Third Party Ad Server they belong to -->
 	
 	<script class="dcjs" type="text/javascript" src="https://s0.2mdn.net/ads/studio/Enabler.js"></script>
-	<script class="dcjs" type="text/javascript">
+	<script type="text/javascript">
+		<!-- This is needed, because for some reason, the clicktag is not detected if included in an external js file -->
 		var clickTag = "http://google.com";
 	</script>
 	

@@ -17,6 +17,9 @@ $.dispatchPlatform = {
 	var _newWidth;
 	var _newHeight;
 	
+	var _script = document.createElement("script");
+	var _head = document.getElementsByTagName("head")[0];
+	
 	var adDiv;
 	
     $.fn.extend({
@@ -30,6 +33,9 @@ $.dispatchPlatform = {
 				_dimensions = opts.$dimensions;	
 				
 				$("head").prepend("<meta name='unit-size' content='width='" + _dimensions[0] + ", height='" + _dimensions[1] + "'>");	
+
+				_script.type = "text/javascript";
+				_script.class = "skjs";
 				
 				switch (_platform)
 				{
@@ -40,6 +46,7 @@ $.dispatchPlatform = {
 						
 					case "SK" :
 						$(".dcjs").remove();
+						_script.src = "https://secure-ds.serving-sys.com/BurstingScript/EBLoader.js";
 						
 						break;
 				}
