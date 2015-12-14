@@ -28,32 +28,35 @@ $.dispatchPlatform = {
             return this.each(function () 
 			{
                 var opts = $.extend({}, this.defaults, params);
-			
-				_platform = opts.$platform;
-				_dimensions = opts.$dimensions;	
 				
-				$("head").prepend("<meta name='unit-size' content='width='" + _dimensions[0] + ", height='" + _dimensions[1] + "'>");	
-
-				_script.type = "text/javascript";
-				_script.class = "skjs";
-				
-				switch (_platform)
+				$(document).ready(function(evt)
 				{
-					case "DC" :    					
-						$(".skjs").remove();
-						
-						break;
-						
-					case "SK" :
-						$(".dcjs").remove();
-						_script.src = "https://secure-ds.serving-sys.com/BurstingScript/EBLoader.js";
-						
-						break;
-				}
-				//console.log(_platform);
-				
-				style_elements();
-				window.addEventListener("load", init_platform);
+					_platform = opts.$platform;
+					_dimensions = opts.$dimensions;	
+					
+					$("head").prepend("<meta name='unit-size' content='width='" + _dimensions[0] + ", height='" + _dimensions[1] + "'>");	
+	
+					_script.type = "text/javascript";
+					_script.class = "skjs";
+					
+					switch (_platform)
+					{
+						case "DC" :    					
+							$(".skjs").remove();
+							
+							break;
+							
+						case "SK" :
+							$(".dcjs").remove();
+							_script.src = "https://secure-ds.serving-sys.com/BurstingScript/EBLoader.js";
+							
+							break;
+					}
+					//console.log(_platform);
+					
+					style_elements();
+					window.addEventListener("load", init_platform);
+				});
 			});
         }
     });
