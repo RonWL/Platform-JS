@@ -1,6 +1,6 @@
 $.dispatchPlatform = {
     id: 'Platform Dispatch',
-    version: '1.0',
+    version: '1.3.1',
     defaults: {
 		$platform:"SK", 			//	Options are for now "DC" -> DoubleClick & "SK" -> Sizmek
 		$dimensions: [300, 250]		//	Dimensions of the Unit [Width, Height]
