@@ -157,6 +157,38 @@ $.dispatchPlatform = {
 				"height" : _newExpandedSize[1] + "px",
 				"border" : "1px solid #000"
 			});
+			
+			switch (_expandDirection)
+			{
+				case "up" :
+					$("#expanded-panel").css({
+						"transform" : "translate(0, " + _expandedSize[1] + "px)"
+					});
+					
+					break;
+					
+				case "down" :
+					$("#expanded-panel").css({
+						"transform" : "translate(0, " + -_expandedSize[1] + "px)"
+					});
+					
+					break;
+					
+				case "left" :
+					$("#expanded-panel").css({
+						"transform" : "translate(" + _expandedSize[0] + "px, 0)"
+					});
+					
+					break;
+					
+				case "right" :
+					$("#expanded-panel").css({
+						"transform" : "translate(" + -_expandedSize[0] + "px, 0)"
+					});
+					
+					break;
+			}
+			
 		} else {
 			$("body").css({
 				"width" : _collapsedSize[0] + "px",
@@ -296,7 +328,7 @@ $.dispatchPlatform = {
 		btnCloseCTA.css({
 			"width" : _collapseBtnSizePos[0] + "px",
 			"height" : _collapseBtnSizePos[1] + "px",
-			"transform" : "translate(" + _collapseBtnSizePos[2] + "," + _collapseBtnSizePos[3] + ")"
+			"transform" : "translate(" + _collapseBtnSizePos[2] + "px ," + _collapseBtnSizePos[3] + "px)"
 		});
 		
 		if (get_cta_type(btnCloseCTA))
@@ -310,7 +342,7 @@ $.dispatchPlatform = {
 		btnExpandCTA.css({
 			"width" : _expandBtnSizePos[0] + "px",
 			"height" : _expandBtnSizePos[1] + "px",
-			"transform" : "translate(" + _expandBtnSizePos[2] + "," + _expandBtnSizePos[3] + ")"
+			"transform" : "translate(" + _expandBtnSizePos[2] + "px ," + _expandBtnSizePos[3] + "px)"
 		});
 		
 		if (get_cta_type(btnExpandCTA))
