@@ -11,8 +11,8 @@ $.dispatchPlatform = {
 		$collapsedSize:	[300, 250],				//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
 		$expandedSize:	[550, 250],				//	Size ([Width, Height]) of the expanded state of the unit *NA if not a RM Unit*
 		
-		$collapseImageOrText: "Collapse",		// If Rich Media Unit, Url of Image or Text contained in Button.  If Blank, will be an invisible div with copy "Collapse" located based on values in "$collapsedBtnSize"
-		$expandImageOrText: "Expand",			// If Rich Media Unit, Url of Image or Text contained in Button.  If Blank, will be an invisible div with copy "Expand" located based on values in "$expandedBtnSize"
+		$collapseImageOrText: "Collapse",		// If Rich Media Unit, Url of Image or Text contained in Button.  If Blank, will be an invisible div with copy "Collapse" located based on values in "$collapseBtnSizePos"
+		$expandImageOrText: "Expand",			// If Rich Media Unit, Url of Image or Text contained in Button.  If Blank, will be an invisible div with copy "Expand" located based on values in "$expandBtnSizePos"
 		$collapseBtnSizePos: [0, 0, 0, 0],		// Array of [Width, Height, X, Y] of Collapse Button if 0, will be set to default size of [200 - width, 30 - height, lower right corner of expand panel]
 		$expandBtnSizePos: [0, 0, 0, 0],		// Array of [Width, Height, X, Y] of Expand Button if 0, will be set to default size of [200 - width, 30 - height, lower right corner of collapse panel]
 	}
