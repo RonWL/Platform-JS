@@ -35,8 +35,9 @@
 	
 	<script>
 		$(document).dispatchPlatform({
-			$platform:"DC",
-			$dimensions: [300, 250]
+			$platform:"DC", 						//	Options are for now "DC" -> DoubleClick & "SK" -> Sizmek
+			$isRich: false,							//	If this is set to false, the plugin will bypass functionality setup of a rich media unit
+			$collapsedSize:	[300, 250]				//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit* (Replaces the "_dimensions" parameter)
 		});
 	</script>
 
@@ -45,14 +46,33 @@
 <body>
 
 	<script src="scripts/script.js"></script>
-
+	
     <div id="main-panel">
+	
+				 <!-- Standard Display Unit -->
 	
         <!-- ************* Custom Code Here ************* -->
 		
-		
-		
 		<!-- ************* End Custom Code ************* -->
+	
+	
+					<!-- Rich Media Unit -->
+		
+		<div id="collapsed-panel">
+		
+			<!-- ************* Custom Code Here ************* -->		
+		
+			<!-- ************* End Custom Code ************* -->
+			
+		</div>		
+		
+		<div id="expanded-panel">
+		
+			<!-- ************* Custom Code Here ************* -->		
+		
+			<!-- ************* End Custom Code ************* -->
+			
+		</div>
 		
     </div>
 </body>
