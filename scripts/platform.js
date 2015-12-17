@@ -256,8 +256,29 @@ $.dispatchPlatform = {
 			addEventListeners();
 			init_strd_setup();
 		} else {
-			init_ctas();
-			init_rich_setup();
+			if (_expandable)
+			{
+				_isExpanded = false;
+				init_ctas();
+			}
+			switch (_platform)
+			{
+				case "DC" :
+					/* Offset of left,top and width height, respectively, of the expanded Masthead. */
+					Enabler.setExpandingPixelOffsets(0, 0, _expandedSize[0], _expandedSize[1]);
+					
+					if (_loadPolitely)
+					{
+						init_polite_load();
+					}
+					
+					break;
+					
+				case "SK" :
+					
+					
+					break;
+			}
 			addEventListeners();
 		}
 	}
@@ -366,26 +387,29 @@ $.dispatchPlatform = {
 		}
 	}
 	
-	function init_rich_setup()
+	function init_polite_load()
 	{
-		if (_expandable)
+		if (Enabler.isPageLoaded()) 
 		{
-			_isExpanded = false;
-			
-			switch (_platform)
-			{
-				case "DC" :
-					/* Offset of left,top and width height, respectively, of the expanded Masthead. */
-					Enabler.setExpandingPixelOffsets(0, 0, _expandedSize[0], _expandedSize[1]);
-					
-					break;
-					
-				case "SK" :
-					
-					
-					break;
-			}
+		  page_loaded_handler();
+		} else {
+		  Enabler.addEventListener(studio.events.StudioEvent.PAGE_LOADED, page_loaded_handler);
 		}
+	}
+	
+	function page_loaded_handler()
+	{
+		if (Enabler.isVisible()) 
+		{
+		  ad_visibility_handler();
+		} else {
+		  Enabler.addEventListener(studio.events.StudioEvent.VISIBLE, ad_visibility_handler);
+		}
+	}
+	
+	function ad_visibility_handler() 
+	{
+		init_animation();
 	}
 	
 	
