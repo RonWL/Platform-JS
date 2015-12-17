@@ -96,7 +96,7 @@ $.dispatchPlatform = {
 							_expandBtnSizePos = opts.$expandBtnSizePos;	
 						}	
 					}
-					$("head").prepend("<meta name='unit-size' content='width='" + _collapsedSize[0] + ", height='" + _collapsedSize[1] + "'>");	
+					$head.prepend("<meta name='unit-size' content='width='" + _collapsedSize[0] + ", height='" + _collapsedSize[1] + "'>");	
 	
 					$script.type = "text/javascript";
 					$script.class = "skjs";
