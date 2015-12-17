@@ -2,7 +2,7 @@ $.dispatchPlatform = {
     id: 'Platform Dispatch',
     version: '1.4.1',
     defaults: {
-		$platform:"DC", 						//	Options are for now "DC" -> DoubleClick & "SK" -> Sizmek
+		$platform:"DC", 						//	Options are at the moment "DC" -> DoubleClick & "SK" -> Sizmek
 		$isRich: true,							//	If this is set to false, the plugin will bypass functionality setup of a rich media unit
 		$loadPolitely: true,					//	Whether or not the unit takes the extra step of using a polite loader *NA if not a RM Unit*
 		
