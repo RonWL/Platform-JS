@@ -34,11 +34,11 @@ $.dispatchPlatform = {
 	var _expandedSize;
 	var _newExpandedSize;
 	
-	var collapsed_panel;
-	var btnExpandCTA;
+	var $collapsed_panel;
+	var $btnExpandCTA;
 	
-	var expanded_panel;
-	var btnCloseCTA;
+	var $expanded_panel;
+	var $btnCloseCTA;
 	
 	var _collapseImageOrText;
 	var _expandImageOrText;
@@ -52,10 +52,14 @@ $.dispatchPlatform = {
 				
 	var $ctas;
 	
-	var _script = document.createElement("script");
-	var _head = document.getElementsByTagName("head")[0];
+	var $script = document.createElement("script");
+	var $head = document.getElementsByTagName("head")[0];
 	
-	var adDiv;
+	var ad_div;
+	var sdk_data;
+	
+	var bannerDiv;
+	var expandButton;
 	
     $.fn.extend({
         dispatchPlatform: function (params) 
@@ -83,21 +87,19 @@ $.dispatchPlatform = {
 						
 						if (_expandable)
 						{
-							collapsed_panel = document.getElementById("collapsed-panel");
-							expanded_panel = document.getElementById("expanded-panel");
+							$collapsed_panel = document.getElementById("collapsed-panel");
+							$expanded_panel = document.getElementById("expanded-panel");
 						
 							_collapseImageOrText = opts.$collapseImageOrText;
 							_expandImageOrText = opts.$expandImageOrText;
 							_collapseBtnSizePos = opts.$collapseBtnSizePos;
 							_expandBtnSizePos = opts.$expandBtnSizePos;	
-						}
-						var $bg_exit;	
-						var $ctas;	
+						}	
 					}
 					$("head").prepend("<meta name='unit-size' content='width='" + _collapsedSize[0] + ", height='" + _collapsedSize[1] + "'>");	
 	
-					_script.type = "text/javascript";
-					_script.class = "skjs";
+					$script.type = "text/javascript";
+					$script.class = "skjs";
 					
 					switch (_platform)
 					{
@@ -111,12 +113,12 @@ $.dispatchPlatform = {
 							
 							if (!_isRich)
 							{
-								_script.src = "https://secure-ds.serving-sys.com/BurstingScript/EBLoader.js";
+								$script.src = "https://secure-ds.serving-sys.com/BurstingScript/EBLoader.js";
 							} else {
-								_script.src = "http://ds.serving-sys.com/BurstingScript/adKit/adkit.js";
+								$script.src = "http://ds.serving-sys.com/BurstingScript/adKit/adkit.js";
 								
-								var _script_2 = document.createElement("script");
-								_script_2.append("EBModulesToLoad = ['EBCMD'];");
+								var $script_2 = document.createElement("script");
+								$script_2.append("EBModulesToLoad = ['EBCMD'];");
 							}
 							break;
 					}
@@ -247,20 +249,121 @@ $.dispatchPlatform = {
 	}
 	
 	function init_handle()
-	{		
-		addEventListeners();
+	{
+		ad_div = document.getElementById("main-panel");		
 		if (!_isRich)
 		{
+			addEventListeners();
 			init_strd_setup();
 		} else {
+			init_ctas();
 			init_rich_setup();
+			addEventListeners();
 		}
 	}
 	
 	function init_strd_setup()
 	{
-		adDiv = document.getElementById("main-panel");
 		init_animation();
+	}
+	
+	/*		Rich Specific Setup		*/
+	
+	/*	Setup the Call-to-Actions for the RM Units	*/
+	function get_cta_type($elm)
+	{
+		var $img;
+		if ($elm.attr("data-cta-type") === "image")
+		{
+			$img = true;	
+		} else {
+			$img = false;
+		}
+		return $img; 
+	}
+	
+	function init_ctas()
+	{
+		//Create Elements
+		var $btns = [[$btnCloseCTA,"ctaClose"], [$btnExpandCTA,"ctaExpand"]];
+		
+		$.each([_collapseImageOrText, _expandImageOrText], function($idx, $str)
+		{
+			if ($str.indexOf(".jpg") !== -1 || $str.indexOf(".jpeg") !== -1 || $str.indexOf(".png") !== -1)
+			{
+				$btns[$idx][0] = $("<div data-cta-type='image' id='" + $btns[$idx][1] + "' class='cta'><img src=" + $str + "></div>");
+			} else if ($str !== "") 
+			{
+				$btns[$idx][0] = $("<div data-cta-type='text' id='" + $btns[$idx][1] + "' class='cta'>" + $str + "</div>");
+			} else {
+				$btns[$idx][0] = $("<div data-cta-type='text' id='" + $btns[$idx][1] + "' class='cta'>Click To Expand</div>");
+				$btns[$idx][0].css({"opacity":"0"});
+			}
+		});
+		
+		//	Assign Variables to Their Respective Panels
+		$collapsed_panel = $("#collapsed-panel");
+		$collapsed_panel.prepend($btnExpandCTA);
+	
+		$expanded_panel = $("#expanded-panel");
+		$expanded_panel.prepend($btnCloseCTA);
+		
+		$btnCloseCTA.css({
+			"width" : _collapseBtnSizePos[0] + "px",
+			"height" : _collapseBtnSizePos[1] + "px",
+			"transform" : "translate(" + _collapseBtnSizePos[2] + "px ," + _collapseBtnSizePos[3] + "px)"
+		});
+		
+		if (get_cta_type($btnCloseCTA))
+		{
+			$btnCloseCTA.find("img").css({
+				"width" : _collapseBtnSizePos[0] + "px",
+				"height" : _collapseBtnSizePos[1] + "px"				
+			});
+		}
+		
+		$btnExpandCTA.css({
+			"width" : _expandBtnSizePos[0] + "px",
+			"height" : _expandBtnSizePos[1] + "px",
+			"transform" : "translate(" + _expandBtnSizePos[2] + "px ," + _expandBtnSizePos[3] + "px)"
+		});
+		
+		if (get_cta_type($btnExpandCTA))
+		{
+			$btnExpandCTA.find("img").css({
+				"width" : _expandBtnSizePos[0] + "px",
+				"height" : _expandBtnSizePos[1] + "px"			
+			});
+		}
+		
+		switch (_platform)
+		{
+			case "DC" :
+				
+				
+				break;
+				
+			case "SK" :
+				ad_div = $("#main-panel");	
+				sdk_data = EB.getSDKData();
+				
+				init_sk_close_button();
+				
+				break;
+		}
+	}
+	
+	function init_sk_close_button()
+	{
+		var enableSDKDefaultCloseButton = EB._adConfig && EB._adConfig.hasOwnProperty("mdEnableSDKDefaultCloseButton") ? EB._adConfig.mdEnableSDKDefaultCloseButton : false;
+		if (sdk_data !== null)
+		{
+			if (sdk_data.SDKType === "MRAID" && !enableSDKDefaultCloseButton)
+			{
+				// set sdk to use custom close button
+				EB.setExpandProperties({useCustomClose: true});
+			}
+		}
 	}
 	
 	function init_rich_setup()
@@ -282,98 +385,143 @@ $.dispatchPlatform = {
 					
 					break;
 			}
-			init_ctas();
 		}
 	}
 	
-	/*	Setup the Call-to-Actions for the RM Units	*/
-	function get_cta_type($elm)
-	{
-		var $img;
-		if ($elm.attr("data-cta-type") === "image")
-		{
-			$img = true;	
-		} else {
-			$img = false;
-		}
-		return $img; 
-	}
 	
-	function init_ctas()
+	/*		Listeners and Events	*/
+	
+	function background_exit()
 	{
-		//Create Elements
-		var $btns = [[btnCloseCTA,"ctaClose_dc"], [btnExpandCTA,"ctaExpand_dc"]];
-		
-		$.each([_collapseImageOrText, _expandImageOrText], function($idx, $str)
+		if (!_isRich)
 		{
-			if ($str.indexOf(".jpg") !== -1 || $str.indexOf(".jpeg") !== -1 || $str.indexOf(".png") !== -1)
+			switch (_platform)
 			{
-				$btns[$idx][0] = $("<div data-cta-type='image' id='" + $btns[$idx][1] + "' class='cta'><img src=" + $str + "></div>");
-			} else if ($str !== "") 
-			{
-				$btns[$idx][0] = $("<div data-cta-type='text' id='" + $btns[$idx][1] + "' class='cta'>" + $str + "</div>");
-			} else {
-				$btns[$idx][0] = $("<div data-cta-type='text' id='" + $btns[$idx][1] + "' class='cta'>Click To Expand</div>");
-				$btns[$idx][0].css({"opacity":"0"});
+				case "DC" :
+					Enabler.exit("clicktag");
+					window.open(window.clickTag);
+					
+					break;
+					
+				case "SK" :
+					EB.clickthrough();
+					
+					break;
 			}
-		});
-		
-		//	Assign Variables to Their Respective Panels
-		collapsed_panel = $("#collapsed-panel");
-		collapsed_panel.prepend(btnExpandCTA);
-	
-		expanded_panel = $("#expanded-panel");
-		expanded_panel.prepend(btnCloseCTA);
-		
-		btnCloseCTA.css({
-			"width" : _collapseBtnSizePos[0] + "px",
-			"height" : _collapseBtnSizePos[1] + "px",
-			"transform" : "translate(" + _collapseBtnSizePos[2] + "px ," + _collapseBtnSizePos[3] + "px)"
-		});
-		
-		if (get_cta_type(btnCloseCTA))
-		{
-			btnCloseCTA.find("img").css({
-				"width" : _collapseBtnSizePos[0] + "px",
-				"height" : _collapseBtnSizePos[1] + "px"				
-			});
-		}
-		
-		btnExpandCTA.css({
-			"width" : _expandBtnSizePos[0] + "px",
-			"height" : _expandBtnSizePos[1] + "px",
-			"transform" : "translate(" + _expandBtnSizePos[2] + "px ," + _expandBtnSizePos[3] + "px)"
-		});
-		
-		if (get_cta_type(btnExpandCTA))
-		{
-			btnExpandCTA.find("img").css({
-				"width" : _expandBtnSizePos[0] + "px",
-				"height" : _expandBtnSizePos[1] + "px"			
-			});
-		}
-	}
-	function clickThrough()
-	{
-		switch (_platform)
-		{
-			case "DC" :
-				Enabler.exit("clicktag");
-				window.open(window.clickTag);
-				
-				break;
-				
-			case "SK" :
-				EB.clickthrough();
-				
-				break;
+		} else {
+			switch (_platform)
+			{
+				case "DC" :
+					Enabler.exit("Background Exit");
+					if (_expandable && _isExpanded)
+					{
+						end_expanded();
+					}
+					
+					break;
+					
+				case "SK" :
+					
+					
+					break;
+			}
 		}
 	}
 	function addEventListeners()
 	{
-		document.getElementById("main-panel").addEventListener("click", function()
+		if (_isRich)
+		{ 
+			if (_expandable)
+			{
+				$btnExpandCTA.addEventListener("click", trigger_unit_expand, false);
+				$btnCloseCTA.addEventListener("click", trigger_unit_collapse, false);
+				
+				switch (_platform)
+				{
+					case "DC" :
+						Enabler.addEventListener(studio.events.StudioEvent.EXPAND_START, expand_start);
+						Enabler.addEventListener(studio.events.StudioEvent.EXPAND_FINISH, expand_finish);
+	
+						// Collapse Event Listeners    
+						Enabler.addEventListener(studio.events.StudioEvent.COLLAPSE_START, collapse_start);
+						Enabler.addEventListener(studio.events.StudioEvent.COLLAPSE_FINISH, collapse_finish);
+						
+						break;
+						
+					case "SK" :
+						$btnExpandCTA.addEventListener("click", handleExpandButtonClick);
+						
+						break;
+				}
+				$bg_exit.addEventListener("click", bgExitHandler, false);
+				$bg_expanded_exit.addEventListener("click", bgExitHandler, false);
+			}
+		} else {
+			document.getElementById("main-panel").addEventListener("click", function()
+			{
+				background_exit();
+			});	
+		}
+	}
+	
+	function trigger_unit_expand()
+	{
+		switch (_platform)
 		{
-			clickThrough();
-		});
+			case "DC" :
+				Enabler.requestExpand();
+				
+				break;
+				
+			case "SK" :
+				EB.expand({panelName: $expanded_panel});
+				
+				break;
+		}
+	}
+	
+	function trigger_unit_collapse()
+	{
+		switch (_platform)
+		{
+			case "DC" :
+				Enabler.reportManualClose();
+				Enabler.requestCollapse();
+				
+				break;
+				
+			case "SK" :
+				EB.collapse();
+				
+				break;
+		}
+	}
+	
+	/*		Doubleclick Specific Events Fired by Expansion	*/
+	
+	function expand_start() 
+	{
+		Enabler.finishExpand();
+		
+		// Create your animation to expand here.
+		$collapsed_panel.style.display = "none";
+		$expanded_panel.style.display = "block";
+	} 
+	
+	function expand_finish() { 
+		_isExpanded = true;
+		init_expanded_animation();
+	}
+	
+	function collapse_start() {
+		Enabler.finishCollapse();
+		
+		// Create your animation to collapse here.
+		$collapsed_panel.style.display = "block";
+		$expanded_panel.style.display = "none";
+	}
+	
+	function collapse_finish() {
+		_isExpanded = false;
 	}
 })(jQuery);
