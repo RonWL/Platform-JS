@@ -13,8 +13,8 @@ $.dispatchPlatform = {
 		
 		$collapseImageOrText: "Collapse",		// If Rich Media Unit, Url of Image or Text contained in Button.  If Blank, will be an invisible div with copy "Collapse" located based on values in "$collapseBtnSizePos"
 		$expandImageOrText: "Expand",			// If Rich Media Unit, Url of Image or Text contained in Button.  If Blank, will be an invisible div with copy "Expand" located based on values in "$expandBtnSizePos"
-		$collapseBtnSizePos: [0, 0, 0, 0],		// Array of [Width, Height, X, Y] of Collapse Button if 0, will be set to default size of [200 - width, 30 - height, lower right corner of expand panel]
-		$expandBtnSizePos: [0, 0, 0, 0],		// Array of [Width, Height, X, Y] of Expand Button if 0, will be set to default size of [200 - width, 30 - height, lower right corner of collapse panel]
+		$collapseBtnSizePos: [0, 0, 0, 0, false],	// Array of [Width, Height, X, Y] of Collapse Button if 0, will be set to default size of [200 - width, 30 - height, lower right corner of expand panel]
+		$expandBtnSizePos: [0, 0, 0, 0, true],		// Array of [Width, Height, X, Y] of Expand Button if 0, will be set to default size of [200 - width, 30 - height, lower right corner of collapse panel]
 	}
 };
 
@@ -53,13 +53,13 @@ $.dispatchPlatform = {
 	var $ctas;
 	
 	var $script = document.createElement("script");
-	var $head = document.getElementsByTagName("head")[0];
 	
 	var ad_div;
 	var sdk_data;
 	
 	var bannerDiv;
 	var expandButton;
+
 	
     $.fn.extend({
         dispatchPlatform: function (params) 
@@ -82,7 +82,7 @@ $.dispatchPlatform = {
 					if (_isRich)
 					{
 						_expandable = opts.$expandable;
-						_expandDirection = opts.$expandSirection;
+						_expandDirection = opts.$expandDirection;
 						_expandedSize = opts.$expandedSize;
 						
 						if (_expandable)
@@ -96,7 +96,7 @@ $.dispatchPlatform = {
 							_expandBtnSizePos = opts.$expandBtnSizePos;	
 						}	
 					}
-					$head.prepend("<meta name='unit-size' content='width='" + _collapsedSize[0] + ", height='" + _collapsedSize[1] + "'>");	
+					$("head").prepend("<meta name='unit-size' content='width='" + _collapsedSize[0] + ", height='" + _collapsedSize[1] + "'>");	
 	
 					$script.type = "text/javascript";
 					$script.class = "skjs";
@@ -132,12 +132,17 @@ $.dispatchPlatform = {
     });
 	
 	function style_elements()
-	{		
+	{
+		$bg_exit = $("<div id='bg-exit' class='exit' />");
+				
 		if (_isRich && _expandable)
 		{
+			$("#collapsed-panel").prepend($bg_exit);
 			_newExpandedSize = [_expandedSize[0] - 2, _expandedSize[1] - 2];
 			
 			$("body").css({
+				"margin" : "0",
+				"padding" : "0",
 				"width" : _expandedSize[0] + "px",
 				"height" : _expandedSize[1] + "px"
 			});
@@ -145,53 +150,37 @@ $.dispatchPlatform = {
 			$("#main-panel").css({
 				"width" : _expandedSize[0] + "px",
 				"height" : _expandedSize[1] + "px",
-				"border" : "1px solid #000"
+				"position" : "absolute",
 			});
 			
 			$("#collapsed-panel").css({
 				"width" : _newCollapsedSize[0] + "px",
 				"height" : _newCollapsedSize[1] + "px",
+				"overflow" : "hidden",
+				"position" : "absolute",
 				"border" : "1px solid #000"
 			});
 			
 			$("#expanded-panel").css({
 				"width" : _newExpandedSize[0] + "px",
 				"height" : _newExpandedSize[1] + "px",
+				"overflow" : "hidden",
+				"position" : "absolute",
+				"display" : "none",
 				"border" : "1px solid #000"
 			});
+			$bg_expanded_exit = $("<div id='bg-exp-exit' class='exit' />");
+			$("#expanded-panel").prepend($bg_expanded_exit);
 			
-			switch (_expandDirection)
-			{
-				case "up" :
-					$("#expanded-panel").css({
-						"transform" : "translate(0, " + _expandedSize[1] + "px)"
-					});
-					
-					break;
-					
-				case "down" :
-					$("#expanded-panel").css({
-						"transform" : "translate(0, " + -_expandedSize[1] + "px)"
-					});
-					
-					break;
-					
-				case "left" :
-					$("#expanded-panel").css({
-						"transform" : "translate(" + _expandedSize[0] + "px, 0)"
-					});
-					
-					break;
-					
-				case "right" :
-					$("#expanded-panel").css({
-						"transform" : "translate(" + -_expandedSize[0] + "px, 0)"
-					});
-					
-					break;
-			}
+			reset_expandable();
 			
+			$("#bg-exp-exit").css({
+				"width" : _expandedSize[0] + "px",
+				"height" : _expandedSize[1] + "px"
+			});
 		} else {
+			$("#main-panel").prepend($bg_exit);
+			
 			$("body").css({
 				"width" : _collapsedSize[0] + "px",
 				"height" : _collapsedSize[1] + "px"
@@ -202,6 +191,44 @@ $.dispatchPlatform = {
 				"height" : _newCollapsedSize[1] + "px",
 				"border" : "1px solid #000"
 			});		
+		}
+		$("#bg-exit").css({
+			"width" : _collapsedSize[0] + "px",
+			"height" : _collapsedSize[1] + "px"
+		});
+	}
+	
+	function reset_expandable()
+	{
+		switch (_expandDirection)
+		{
+			case "up" :
+				$("#expanded-panel").css({
+					"top" : _expandedSize[1] + "px"
+				});
+				
+				break;
+				
+			case "down" :
+				$("#expanded-panel").css({
+					"top" : -_expandedSize[1] + "px"
+				});
+				
+				break;
+				
+			case "left" :
+				$("#expanded-panel").css({
+					"left" : _expandedSize[0] + "px"
+				});
+				
+				break;
+				
+			case "right" :
+				$("#expanded-panel").css({
+					"left" : -_expandedSize[0] + "px"
+				});
+				
+				break;
 		}
 	}
 	
@@ -305,20 +332,39 @@ $.dispatchPlatform = {
 	
 	function init_ctas()
 	{
+		$btnExpandCTA = document.createElement("div");
+		$btnCloseCTA = document.createElement("div");
+		
+		$btnCloseCTA = $($btnCloseCTA);
+		$btnExpandCTA = $($btnExpandCTA);
+		
 		//Create Elements
-		var $btns = [[$btnCloseCTA,"ctaClose"], [$btnExpandCTA,"ctaExpand"]];
+		var $btns = Array([$btnCloseCTA,"ctaClose"], [$btnExpandCTA,"ctaExpand"]);
 		
 		$.each([_collapseImageOrText, _expandImageOrText], function($idx, $str)
 		{
+			$btns[$idx][0] = $($btns[$idx][0]);
 			if ($str.indexOf(".jpg") !== -1 || $str.indexOf(".jpeg") !== -1 || $str.indexOf(".png") !== -1)
 			{
-				$btns[$idx][0] = $("<div data-cta-type='image' id='" + $btns[$idx][1] + "' class='cta'><img src=" + $str + "></div>");
+				$btns[$idx][0]
+					.attr("data-cta-type", "image")
+					.attr("id", $btns[$idx][1])
+					.attr("class", "cta")
+					.append($("<img src=" + $str + ">"));
 			} else if ($str !== "") 
 			{
-				$btns[$idx][0] = $("<div data-cta-type='text' id='" + $btns[$idx][1] + "' class='cta'>" + $str + "</div>");
-			} else {
-				$btns[$idx][0] = $("<div data-cta-type='text' id='" + $btns[$idx][1] + "' class='cta'>Click To Expand</div>");
-				$btns[$idx][0].css({"opacity":"0"});
+				$btns[$idx][0]
+					.attr("data-cta-type", "text")
+					.attr("id", $btns[$idx][1])
+					.attr("class", "cta")
+					.text($str);
+			} else {				
+				$btns[$idx][0]
+					.attr("data-cta-type", "text")
+					.attr("id", $btns[$idx][1])
+					.attr("class", "cta")
+					.css({"opacity":"0"})
+					.text("Click To Expand");
 			}
 		});
 		
@@ -328,6 +374,8 @@ $.dispatchPlatform = {
 	
 		$expanded_panel = $("#expanded-panel");
 		$expanded_panel.prepend($btnCloseCTA);
+		
+		console.log($btnCloseCTA);
 		
 		$btnCloseCTA.css({
 			"width" : _collapseBtnSizePos[0] + "px",
@@ -343,6 +391,14 @@ $.dispatchPlatform = {
 			});
 		}
 		
+		if (!_collapseBtnSizePos[4])
+		{
+			$btnCloseCTA.css({
+				"display" : "none",
+				"opacity" : "0"
+			});
+		}
+		
 		$btnExpandCTA.css({
 			"width" : _expandBtnSizePos[0] + "px",
 			"height" : _expandBtnSizePos[1] + "px",
@@ -354,6 +410,14 @@ $.dispatchPlatform = {
 			$btnExpandCTA.find("img").css({
 				"width" : _expandBtnSizePos[0] + "px",
 				"height" : _expandBtnSizePos[1] + "px"			
+			});
+		}
+		
+		if (!_expandBtnSizePos[4])
+		{
+			$btnCloseCTA.css({
+				"display" : "none",
+				"opacity" : "0"
 			});
 		}
 		
@@ -439,7 +503,7 @@ $.dispatchPlatform = {
 					Enabler.exit("Background Exit");
 					if (_expandable && _isExpanded)
 					{
-						end_expanded();
+						trigger_unit_collapse();
 					}
 					
 					break;
@@ -453,6 +517,12 @@ $.dispatchPlatform = {
 	}
 	function addEventListeners()
 	{
+		$btnExpandCTA = document.getElementById("ctaExpand");
+		$btnCloseCTA = document.getElementById("ctaClose");
+		
+		$bg_exit = document.getElementById("bg-exit");
+		$bg_expanded_exit = document.getElementById("bg-exp-exit");
+		
 		if (_isRich)
 		{ 
 			if (_expandable)
@@ -473,12 +543,12 @@ $.dispatchPlatform = {
 						break;
 						
 					case "SK" :
-						$btnExpandCTA.addEventListener("click", handleExpandButtonClick);
+						$btnExpandCTA.addEventListener("click", trigger_unit_expand);
 						
 						break;
 				}
-				$bg_exit.addEventListener("click", bgExitHandler, false);
-				$bg_expanded_exit.addEventListener("click", bgExitHandler, false);
+				$bg_exit.addEventListener("click", background_exit, false);
+				$bg_expanded_exit.addEventListener("click", background_exit, false);
 			}
 		} else {
 			document.getElementById("main-panel").addEventListener("click", function()
@@ -524,28 +594,46 @@ $.dispatchPlatform = {
 	/*		Doubleclick Specific Events Fired by Expansion	*/
 	
 	function expand_start() 
-	{
-		Enabler.finishExpand();
+	{	
+		$collapsed_panel.css({
+			"display" : "none"
+		});
+		$expanded_panel.css({
+			"display" : "block"
+		});	
 		
-		// Create your animation to expand here.
-		$collapsed_panel.style.display = "none";
-		$expanded_panel.style.display = "block";
+		$expanded_panel.animate({
+			top: 0,
+			left: 0,
+		}, 500, function() 
+		{
+			Enabler.finishExpand();
+		});
 	} 
 	
-	function expand_finish() { 
+	function expand_finish() 
+	{ 
 		_isExpanded = true;
 		init_expanded_animation();
 	}
 	
-	function collapse_start() {
+	function collapse_start() 
+	{		
 		Enabler.finishCollapse();
 		
 		// Create your animation to collapse here.
-		$collapsed_panel.style.display = "block";
-		$expanded_panel.style.display = "none";
+		$collapsed_panel.css({
+			"display" : "block"
+		});
+		$expanded_panel.css({
+			"display" : "none"
+		});
+		
+		reset_expandable();
 	}
 	
-	function collapse_finish() {
+	function collapse_finish()
+	{
 		_isExpanded = false;
 	}
 })(jQuery);
