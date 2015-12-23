@@ -35,9 +35,20 @@
 	
 	<script>
 		$(document).dispatchPlatform({
-			$platform:"DC", 						//	Options are for now "DC" -> DoubleClick & "SK" -> Sizmek
-			$isRich: false,							//	If this is set to false, the plugin will bypass functionality setup of a rich media unit
-			$collapsedSize:	[300, 250]				//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit* (Replaces the "_dimensions" parameter)
+			$platform:"DC", 						//	Options are at the moment "DC" -> DoubleClick & "SK" -> Sizmek
+			$isRich: true,							//	If this is set to false, the plugin will bypass functionality setup of a rich media unit
+			$loadPolitely: true,					//	Whether or not the unit takes the extra step of using a polite loader *NA if not a RM Unit*
+			
+			$expandable: true,						//	Whether or not the Unit Expands - If this is set to false, the "$collapsed" parameter will be the units dimensions
+			$expandDirection: "down",				//	If "$expandable" parameter is set to true, direction in which the unit expands ["Up", "Down", "Left", "Right"]
+			$collapsedSize:	[300, 250],				//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
+			$collapseAnimates: true,				// 	If Rich Media Unit and Expandable, determines if the collapsed state has animation 
+			$expandedSize:	[550, 250],				//	Size ([Width, Height]) of the expanded state of the unit *NA if not a RM Unit*
+			
+			$collapseImageOrText: "Collapse",		// If Rich Media Unit, Url of Image or Text contained in Button.  If Blank, will be an invisible div with copy "Collapse" located based on values in "$collapseBtnSizePos"
+			$expandImageOrText: "Expand",			// If Rich Media Unit, Url of Image or Text contained in Button.  If Blank, will be an invisible div with copy "Expand" located based on values in "$expandBtnSizePos"
+			$collapseBtnSizePos: [0, 0, 0, 0, false],	// Array of [Width, Height, X, Y] of Collapse Button if 0, will be set to default size of [200 - width, 30 - height, lower right corner of expand panel]
+			$expandBtnSizePos: [0, 0, 0, 0, true],		// Array of [Width, Height, X, Y] of Expand Button if 0, will be set to default size of [200 - width, 30 - height, lower right corner of collapse panel]
 		});
 	</script>
 
