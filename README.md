@@ -1,6 +1,6 @@
 # Platform-JS
 Ad Tool Streamlining the Process to Digital Ad Creation
 
-More Information on Usage and Updates are located within the Wiki
+Platform JS supports both Rich Media and Standard Ad building for multiple platforms such as DoubleClick & Sizmek/MediaMind
 
-Rich Media Support Coming Soon...
+More Information on Usage and Updates are located within the Wiki
