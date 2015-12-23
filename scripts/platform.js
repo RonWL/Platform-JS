@@ -9,6 +9,7 @@ $.dispatchPlatform = {
 		$expandable: true,						//	Whether or not the Unit Expands - If this is set to false, the "$collapsed" parameter will be the units dimensions
 		$expandDirection: "down",				//	If "$expandable" parameter is set to true, direction in which the unit expands ["Up", "Down", "Left", "Right"]
 		$collapsedSize:	[300, 250],				//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
+		$collapseAnimates: true,				// 	If Rich Media Unit and Expandable, determines if the collapsed state has animation 
 		$expandedSize:	[550, 250],				//	Size ([Width, Height]) of the expanded state of the unit *NA if not a RM Unit*
 		
 		$collapseImageOrText: "Collapse",		// If Rich Media Unit, Url of Image or Text contained in Button.  If Blank, will be an invisible div with copy "Collapse" located based on values in "$collapseBtnSizePos"
@@ -28,6 +29,8 @@ $.dispatchPlatform = {
 	var _loadPolitely;
 	var _expandable;
 	var _expandDirection;
+	
+	var _collapsedAnimates;
 	
 	var _collapsedSize;
 	var _newCollapsedSize;
@@ -75,6 +78,8 @@ $.dispatchPlatform = {
 					_collapsedSize = opts.$collapsedSize;
 					
 					_loadPolitely = opts.$loadPolitely;
+					
+					_collapsedAnimates = opts.$collapsedAnimates;
 					
 					_collapsedSize = opts.$collapsedSize;
 					_newCollapsedSize = [_collapsedSize[0] - 2, _collapsedSize[1] - 2];
@@ -473,7 +478,12 @@ $.dispatchPlatform = {
 	
 	function ad_visibility_handler() 
 	{
-		init_animation();
+		if (_collapsedAnimates)
+		{
+			init_animation();
+		} else {
+			addEventListeners();
+		}
 	}
 	
 	
