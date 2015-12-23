@@ -1,20 +1,76 @@
 @charset "utf-8";
 /* CSS Document */
 
-body {
-	margin: 0;
-	padding: 0;
+#main-panel {
+	position: absolute;
+}
+
+/*   Collapsed Panel   */
+#collapsed-panel {
+	
+}
+
+/*   Expanded Panel   */
+#expanded-panel{
+	
+}
+
+.alphaed {
+	opacity: 0;
+	display: inline-block;
+}
+
+.cta {
+	cursor: pointer;
+	z-index: 100;
+	position: absolute;
+}
+
+.col-full {
+	width: 968px;
+	height: 88px;
+}
+
+.hidden {
+	opacity: 0;
+}
+
+.centered {
+	text-align: center;
 }
 
 .free {
 	position: absolute;
 }
 
-.full {
-	
+.exp-full {
+	height: 548px;
+    width: 968px;
 }
 
-#main-panel {
+.hidden {
+	opacity: 0;
+}
+
+.centered {
+	text-align: center;
+}
+
+.bg {
 	position: relative;
+	background-color: #000;
+}
+
+.exit {
+	z-index: 75;
 	cursor: pointer;
+	position: absolute;
+	top: 0;
+	left: 0;
+	cursor: pointer;
+	opacity: 0;
+}
+
+#bg-exp-exit {
+	
 }
