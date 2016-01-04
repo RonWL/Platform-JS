@@ -1,6 +1,6 @@
 /*
 "Platform-JS"
-This plugin was created in order to streamline the process of building standard compliant digital units, while giving developers involved in  advertising, the ability to customize the units.
+This plugin was created in order to streamline the process of building standard compliant digital ads, while giving developers involved the ability to customize the units.
 	
 Copyright (c) 2016 Ron W. LaGon - DDB Chicago
 
@@ -190,6 +190,10 @@ $.dispatchPlatform = {
 				"position" : "absolute",
 				"border" : "1px solid #000"
 			});
+			$(".col-full").css({
+				"width" : _newCollapsedSize[0] + "px",
+				"height" : _newCollapsedSize[1] + "px",
+			});
 			
 			$("#expanded-panel").css({
 				"width" : _newExpandedSize[0] + "px",
@@ -199,6 +203,11 @@ $.dispatchPlatform = {
 				"display" : "none",
 				"border" : "1px solid #000"
 			});
+			$(".exp-full").css({
+				"width" : _newCollapsedSize[0] + "px",
+				"height" : _newCollapsedSize[1] + "px",
+			});
+			
 			$bg_expanded_exit = $("<div id='bg-exp-exit' class='exit' />");
 			$("#expanded-panel").prepend($bg_expanded_exit);
 			
