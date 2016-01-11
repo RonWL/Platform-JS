@@ -25,7 +25,7 @@ SOFTWARE.
 
 $.dispatchPlatform = {
     id: 'Platform Dispatch',
-    version: '1.4.1',
+    version: '1.6.3',
     defaults: {
 		$platform:"DC", 						//	Options are at the moment "DC" -> DoubleClick & "SK" -> Sizmek
 		$isRich: true,							//	If this is set to false, the plugin will bypass functionality setup of a rich media unit
