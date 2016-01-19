@@ -25,7 +25,7 @@ SOFTWARE.
 
 $.dispatchPlatform = {
     id: 'Platform Dispatch',
-    version: '1.6.35',
+    version: '1.6.36',
     defaults: {
 		$platform:"DC", 						//	Options are at the moment "DC" -> DoubleClick & "SK" -> Sizmek
 		$isRich: false,							//	If this is set to false, the plugin will bypass functionality setup of a rich media unit
@@ -166,6 +166,11 @@ $.dispatchPlatform = {
 	function style_elements()
 	{
 		$bg_exit = $("<div id='bg-exit' class='exit' />");
+		
+		$("body").css({
+			"margin" : "0",
+			"padding" : "0"
+		});
 				
 		if (_isRich && _expandable)
 		{
@@ -173,8 +178,6 @@ $.dispatchPlatform = {
 			_newExpandedSize = [_expandedSize[0] - 2, _expandedSize[1] - 2];
 			
 			$("body").css({
-				"margin" : "0",
-				"padding" : "0",
 				"width" : _expandedSize[0] + "px",
 				"height" : _expandedSize[1] + "px"
 			});
@@ -437,6 +440,7 @@ $.dispatchPlatform = {
 			$btnCloseCTA.css({
 				"display" : "none",
 				"opacity" : "0"
+
 			});
 		}
 		
