@@ -25,10 +25,10 @@ SOFTWARE.
 
 $.dispatchPlatform = {
     id: 'Platform Dispatch',
-    version: '1.6.3',
+    version: '1.6.35',
     defaults: {
 		$platform:"DC", 						//	Options are at the moment "DC" -> DoubleClick & "SK" -> Sizmek
-		$isRich: true,							//	If this is set to false, the plugin will bypass functionality setup of a rich media unit
+		$isRich: false,							//	If this is set to false, the plugin will bypass functionality setup of a rich media unit
 		$loadPolitely: true,					//	Whether or not the unit takes the extra step of using a polite loader *NA if not a RM Unit*
 		
 		$expandable: true,						//	Whether or not the Unit Expands - If this is set to false, the "$collapsed" parameter will be the units dimensions
@@ -149,10 +149,12 @@ $.dispatchPlatform = {
 								
 								var $script_2 = document.createElement("script");
 								$script_2.append("EBModulesToLoad = ['EBCMD'];");
+								$("head").append($script_2);
 							}
 							break;
 					}
-					//console.log(_platform);
+					console.log(_platform);
+					$("head").append($script);
 					
 					style_elements();
 					window.addEventListener("load", init_platform);
