@@ -23,6 +23,7 @@
 	
 	<!-- Script tags have classes pertaining to which Third Party Ad Server they belong to -->
 	
+    <script class="dcjs" type="text/javascript" src="https://secure-ds.serving-sys.com/BurstingScript/EBLoader.js"></script>
 	<script class="dcjs" type="text/javascript" src="https://s0.2mdn.net/ads/studio/Enabler.js"></script>
 	<script type="text/javascript">
 		<!-- This is needed, because for some reason, the clicktag is not detected if included in an external js file -->
@@ -34,6 +35,8 @@
 	<!-- End Scripts Included-->
 	
 	<script>
+		var $ = jQuery.noConflict();
+		
 		$(document).dispatchPlatform({
 			$platform:"DC", 						//	Options are at the moment "DC" -> DoubleClick & "SK" -> Sizmek
 			$isRich: true,							//	If this is set to false, the plugin will bypass functionality setup of a rich media unit
