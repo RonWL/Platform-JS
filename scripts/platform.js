@@ -41,6 +41,21 @@ $.dispatchPlatform = {
 		$expandImageOrText: "Expand",			// If Rich Media Unit, Url of Image or Text contained in Button.  If Blank, will be an invisible div with copy "Expand" located based on values in "$expandBtnSizePos"
 		$collapseBtnSizePos: [0, 0, 0, 0, false],	// Array of [Width, Height, X, Y] of Collapse Button if 0, will be set to default size of [200 - width, 30 - height, lower right corner of expand panel]
 		$expandBtnSizePos: [0, 0, 0, 0, true],		// Array of [Width, Height, X, Y] of Expand Button if 0, will be set to default size of [200 - width, 30 - height, lower right corner of collapse panel]
+		
+		$hasVideo: true,						//	Does this unit contain a video								
+		$isYoutubeVid: [true, false],			//	Whether or not the Unit Uses the Youtube API to display video, and if the youtube player uses the standard youtube close button
+		$youtubeTracking: true,					//	Unit Consists of Youtube Video and is using Youtube Tracking (
+		$videoContainer: "",					//	The ID of the div that will be containing the video
+		$youtubeVidID: "vLlEBB-HlN8",			//	The Youtube Id of the video to be loaded
+		$showVidOnStart: false,					//	Determines if the video container is visible from the beginning of the unit animation / visibility. If Set to false, be sure to call the "fadeVidIn()" function.
+		$videoUrl: "",							//	If the video contained is not of Youtube, must supply Url of video (Bypassed if "$hasYoutube" is set to true)
+		$videoPosSize: [878, 496, 40, 25],		//	The Dimensions of the Video and it's parent Container, as well as the position of the Container [Width, Height, X, Y].
+		$vidQuality: "medium",					//	If the video contained is not of Youtube, must supply Url of video (Bypassed if "$hasYoutube" is set to false)
+		$videoVars: {							//	These are the options supplied to the Youtube Player API (https://support.google.com/richmedia/answer/6098219?hl=en&ref_topic=6098218)
+			'autoplay': 0, 							//	With autoplay enabled, the video won't get video views.
+			'rel': 0,								//	Show Relative Videos.
+			'showinfo': 0,							//	Show The Video's Information.
+  		}
 	}
 };
 
@@ -87,6 +102,26 @@ $.dispatchPlatform = {
 	
 	var bannerDiv;
 	var expandButton;
+	
+	var _hasVideo;
+	var _isYoutubeVid;
+	var _usesYoutubeClose;
+	var _youtubeTracking;
+	var _vidContainer;
+	var _youtubeVidID;
+	var _showVidOnStart;
+	var _videoUrl;
+	var _videoPosSize;
+	var _vidQuality;
+	var _videoVars;
+	
+	var _ytp;
+	var _firstPlay;  
+	var _videoReady;
+
+	var _isExpanded;
+	
+	var _player;
 
 	
     $.fn.extend({
@@ -114,6 +149,22 @@ $.dispatchPlatform = {
 						_expandable = opts.$expandable;
 						_expandDirection = opts.$expandDirection;
 						_expandedSize = opts.$expandedSize;
+						
+						_hasVideo = opts.$hasVideo;
+						
+						if (_hasVideo)
+						{
+							_isYoutubeVid = opts.$isYoutubeVid[0];
+							_usesYoutubeClose = opts.$isYoutubeVid[1];
+							_youtubeTracking = opts.$youtubeTracking;
+							_vidContainer = opts.$videoContainer;
+							_youtubeVidID = opts.$youtubeVidID;
+							_showVidOnStart = opts.$showVidOnStart;
+							_videoUrl = opts.$videoUrl;
+							_videoPosSize = opts.$videoPosSize;
+							_vidQuality = opts.$vidQuality;
+							_videoVars = opts.$videoVars;
+						}
 						
 						if (_expandable)
 						{
