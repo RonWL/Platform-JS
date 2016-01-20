@@ -102,6 +102,26 @@ $.dispatchPlatform = {
 	
 	var bannerDiv;
 	var expandButton;
+	
+	var _hasVideo;
+	var _isYoutubeVid;
+	var _usesYoutubeClose;
+	var _youtubeTracking;
+	var _vidContainer;
+	var _youtubeVidID;
+	var _showVidOnStart;
+	var _videoUrl;
+	var _videoPosSize;
+	var _vidQuality;
+	var _videoVars;
+	
+	var _ytp;
+	var _firstPlay;  
+	var _videoReady;
+
+	var _isExpanded;
+	
+	var _player;
 
 	
     $.fn.extend({
@@ -129,6 +149,22 @@ $.dispatchPlatform = {
 						_expandable = opts.$expandable;
 						_expandDirection = opts.$expandDirection;
 						_expandedSize = opts.$expandedSize;
+						
+						_hasVideo = opts.$hasVideo;
+						
+						if (_hasVideo)
+						{
+							_isYoutubeVid = opts.$isYoutubeVid[0];
+							_usesYoutubeClose = opts.$isYoutubeVid[1];
+							_youtubeTracking = opts.$youtubeTracking;
+							_vidContainer = opts.$videoContainer;
+							_youtubeVidID = opts.$youtubeVidID;
+							_showVidOnStart = opts.$showVidOnStart;
+							_videoUrl = opts.$videoUrl;
+							_videoPosSize = opts.$videoPosSize;
+							_vidQuality = opts.$vidQuality;
+							_videoVars = opts.$videoVars;
+						}
 						
 						if (_expandable)
 						{
