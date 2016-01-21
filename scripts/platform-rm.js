@@ -23,12 +23,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-$.dispatchPlatform = {
-    id: 'Platform Dispatch',
-    version: '1.6.36',
+$.dispatchRichMedia = {
+    id: 'Platform Dispatch - Rich Media',
+    version: '1.7',
     defaults: {
 		$platform:"DC", 						//	Options are at the moment "DC" -> DoubleClick & "SK" -> Sizmek
-		$isRich: false,							//	If this is set to false, the plugin will bypass functionality setup of a rich media unit
 		$loadPolitely: true,					//	Whether or not the unit takes the extra step of using a polite loader *NA if not a RM Unit*
 		
 		$expandable: true,						//	Whether or not the Unit Expands - If this is set to false, the "$collapsed" parameter will be the units dimensions
@@ -50,7 +49,6 @@ $.dispatchPlatform = {
 	
 	var _platform;
 	
-	var _isRich;
 	var _loadPolitely;
 	var _expandable;
 	var _expandDirection;
@@ -90,7 +88,7 @@ $.dispatchPlatform = {
 
 	
     $.fn.extend({
-        dispatchPlatform: function (params) 
+        dispatchRichMedia: function (params) 
 		{
             return this.each(function () 
 			{
@@ -126,38 +124,24 @@ $.dispatchPlatform = {
 							_expandBtnSizePos = opts.$expandBtnSizePos;	
 						}	
 					}
-
-					$script.type = "text/javascript";
-					
 					
 					switch (_platform)
 					{
 						case "DC" :    					
-							$(".skjs").remove();
+							append_script("https://s0.2mdn.net/ads/studio/Enabler.js", "head");
 							
 							break;
 							
 						case "SK" :
-							$(".dcjs").remove();
-							
-							if (!_isRich)
-							{
+							append_script("https://ds.serving-sys.com/BurstingScript/adKit/adkit.js", "head");
+							append_script(null, "head", "EBModulesToLoad = ['EBCMD'];");						
 								
-							} else {
-								$script.src = "http://ds.serving-sys.com/BurstingScript/adKit/adkit.js";
-								
-								var $script_2 = document.createElement("script");
-								$script_2.append("EBModulesToLoad = ['EBCMD'];");
-								$("head").append($script_2);
-							}
 							break;
-					}
-					//console.log(_platform);
-					$("head").prepend($script);
-					
+					}										
 					style_elements();
 					window.addEventListener("load", init_platform);
 				});
+				
 			});
         }
     });
@@ -685,5 +669,21 @@ $.dispatchPlatform = {
 	function collapse_finish()
 	{
 		_isExpanded = false;
+	}
+	
+	function append_script($source, $target, $custom)
+	{
+		var $tag = document.createElement("script");
+		$tag.type = "text/javascript";
+		if ($source !== null)
+		{
+			$tag.src = $source;
+		}
+		if ($custom !== "" &&  typeof($custom) !== undefined)
+		{
+			$($tag).append($custom);
+		}
+		
+		(document.getElementsByTagName($target)[0] || document.documentElement).appendChild($tag);
 	}
 })(jQuery);
