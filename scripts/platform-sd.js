@@ -60,10 +60,11 @@ $.dispatchStandard = {
 					switch (_platform)
 					{
 						case "DC" : 
-							append_script("https://s0.2mdn.net/ads/studio/Enabler.js", "head");
+							
 							break;
 							
 						case "SK" :
+							$(".dcjs").remove();
 							append_script("https://secure-ds.serving-sys.com/BurstingScript/EBLoader.js", "head");
 							break;
 					}					
