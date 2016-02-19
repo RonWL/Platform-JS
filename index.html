@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Platform Unit</title>
+	<title>Platform Standard</title>
 	
 	<!-- Fonts Included-->
 	
@@ -17,22 +17,19 @@
 	<link rel="stylesheet" href="styles/style.css" />
 	
 	<!-- Scripts Included-->
-
+	
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.17.0/TweenMax.min.js"></script>
 	
 	<!-- Script tags have classes pertaining to which Third Party Ad Server they belong to -->
 	
-    <script class="dcjs" type="text/javascript" src="https://s0.2mdn.net/ads/studio/Enabler.js"></script>
-    
-	<script type="text/javascript">
+	<script class="dcjs" type="text/javascript" src="https://s0.2mdn.net/ads/studio/Enabler.js"></script>
+	<script class="dcjs" type="text/javascript">
 		<!-- This is needed, because for some reason, the clicktag is not detected if included in an external js file -->
 		var clickTag = "http://google.com";
 	</script>
 	
 	<script type="text/javascript" src="scripts/platform-sd.js"></script>	<!-- This is the STANDARD Version of the Plugin -->
-    
-	<script type="text/javascript" src="scripts/platform-rm.js"></script>	<!-- This is the RICH MEDIA Version of the Plugin -->
     
 	<!-- End Scripts Included-->
 	
@@ -42,22 +39,6 @@
 		$(document).dispatchStandard({
 			$platform:"DC", 						//	Options are at the moment "DC" -> DoubleClick & "SK" -> Sizmek
 			$size:	[300, 250]						//	Size ([Width, Height]) of the unit
-		});
-		
-		$(document).dispatchRichMedia({
-			$platform:"DC", 						//	Options are at the moment "DC" -> DoubleClick & "SK" -> Sizmek
-			$loadPolitely: true,					//	Whether or not the unit takes the extra step of using a polite loader*
-			
-			$expandable: true,						//	Whether or not the Unit Expands - If this is set to false, the "$collapsed" parameter will be the units dimensions
-			$expandDirection: "down",				//	If "$expandable" parameter is set to true, direction in which the unit expands ["Up", "Down", "Left", "Right"]
-			$collapsedSize:	[300, 250],				//	Size ([Width, Height]) of the collapsed state of the unit
-			$collapseAnimates: true,				// 	If Rich Media Unit and Expandable, determines if the collapsed state has animation 
-			$expandedSize:	[550, 250],				//	Size ([Width, Height]) of the expanded state of the unit
-			
-			$collapseImageOrText: "Collapse",		// If Rich Media Unit, Url of Image or Text contained in Button.  If Blank, will be an invisible div with copy "Collapse" located based on values in "$collapseBtnSizePos"
-			$expandImageOrText: "Expand",			// If Rich Media Unit, Url of Image or Text contained in Button.  If Blank, will be an invisible div with copy "Expand" located based on values in "$expandBtnSizePos"
-			$collapseBtnSizePos: [0, 0, 0, 0, false],	// Array of [Width, Height, X, Y] of Collapse Button if 0, will be set to default size of [200 - width, 30 - height, lower right corner of expand panel]
-			$expandBtnSizePos: [0, 0, 0, 0, true],		// Array of [Width, Height, X, Y] of Expand Button if 0, will be set to default size of [200 - width, 30 - height, lower right corner of collapse panel]
 		});
 	</script>
 
@@ -73,26 +54,10 @@
 	
         <!-- ************* Custom Code Here ************* -->
 		
+       
+        
 		<!-- ************* End Custom Code ************* -->
 	
-	
-					<!-- Rich Media Unit -->
-		
-		<div id="collapsed-panel">
-		
-			<!-- ************* Custom Code Here ************* -->		
-		
-			<!-- ************* End Custom Code ************* -->
-			
-		</div>		
-		
-		<div id="expanded-panel">
-		
-			<!-- ************* Custom Code Here ************* -->		
-		
-			<!-- ************* End Custom Code ************* -->
-			
-		</div>
 		
     </div>
 </body>

@@ -59,15 +59,17 @@ $.dispatchStandard = {
 											
 					switch (_platform)
 					{
-						case "DC" : 
+						case "DC" :    					
+							$(".skjs").remove();
 							
 							break;
 							
 						case "SK" :
 							$(".dcjs").remove();
 							append_script("https://secure-ds.serving-sys.com/BurstingScript/EBLoader.js", "head");
+							
 							break;
-					}					
+					}				
 					style_elements();
 					window.addEventListener("load", init_platform);
 				});
