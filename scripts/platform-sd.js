@@ -25,7 +25,7 @@ SOFTWARE.
 
 $.dispatchStandard = {
     id: 'Platform Dispatch - Standard',
-    version: '1.7',
+    version: '1.8',
     defaults: {
 		$platform:"DC", 						//	Options are at the moment "DC" -> DoubleClick & "SK" -> Sizmek
 		$size:	[300, 250]						//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
@@ -66,7 +66,6 @@ $.dispatchStandard = {
 							
 						case "SK" :
 							$(".dcjs").remove();
-							append_script("https://secure-ds.serving-sys.com/BurstingScript/EBLoader.js", "head");
 							
 							break;
 					}				
