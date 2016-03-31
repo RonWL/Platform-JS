@@ -25,9 +25,9 @@ SOFTWARE.
 
 $.dispatchStandard = {
     id: 'Platform Dispatch - Standard',
-    version: '1.7',
+    version: '1.9',
     defaults: {
-		$platform:"DC", 						//	Options are at the moment "DC" -> DoubleClick & "SK" -> Sizmek
+		$platform:"DC", 						//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "" -> None
 		$size:	[300, 250]						//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
 	}
 };
@@ -66,9 +66,11 @@ $.dispatchStandard = {
 							
 						case "SK" :
 							$(".dcjs").remove();
-							append_script("https://secure-ds.serving-sys.com/BurstingScript/EBLoader.js", "head");
 							
 							break;
+							
+						case "" :
+							$(".skjs .dcjs").remove();
 					}				
 					style_elements();
 					window.addEventListener("load", init_platform);
@@ -124,6 +126,10 @@ $.dispatchStandard = {
 					init_handle();
 				}
 				break;
+				
+			case "" :
+				init_handle();
+				break;
 		}
 	}
 	
@@ -154,6 +160,11 @@ $.dispatchStandard = {
 				
 			case "SK" :
 				EB.clickthrough();
+				
+				break;
+				
+			case "" :
+				window.open(window.clickTag);
 				
 				break;
 		}
