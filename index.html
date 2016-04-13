@@ -35,11 +35,12 @@
 	<!-- End Scripts Included-->
 	
 	<script>
-		var $ = jQuery.noConflict();
+	var $ = jQuery.noConflict();
 		
 		$(document).dispatchStandard({
 			$platform:"DC", 						//	Options are at the moment "DC" -> DoubleClick & "SK" -> Sizmek
-			$size:	[300, 250]						//	Size ([Width, Height]) of the unit
+			$size:	[300, 600],						//	Size ([Width, Height]) of the unit
+			$borderColor: "#000"					//	Border Color, If Not Present, Border Will be default black (#000)
 		});
 	</script>
 
