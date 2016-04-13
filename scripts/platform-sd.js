@@ -25,10 +25,11 @@ SOFTWARE.
 
 $.dispatchStandard = {
     id: 'Platform Dispatch - Standard',
-    version: '1.10',
+    version: '1.11',
     defaults: {
 		$platform:"DC", 						//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "" -> None
-		$size:	[300, 250]						//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
+		$size:	[300, 250],						//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
+		$borderColor: "#000"
 	}
 };
 
@@ -39,6 +40,8 @@ $.dispatchStandard = {
 	var _platform;	
 	var _size;
 	var _newSize;
+	
+	var _borderColor;
 	
 	var $bg_exit;
 	
@@ -56,6 +59,8 @@ $.dispatchStandard = {
 					_platform = opts.$platform;
 					_size = opts.$size;
 					_newSize = [_size[0] - 2, _size[1] - 2];
+					
+					_borderColor = opts.$borderColor;
 											
 					switch (_platform)
 					{
@@ -96,7 +101,8 @@ $.dispatchStandard = {
 		$("#main-panel").css({
 			"width" : _newSize[0] + "px",
 			"height" : _newSize[1] + "px",
-			"border" : "1px solid #000"
+			"border" : "1px solid ",
+			"border-color" : _borderColor
 		});		
 		
 		$("#bg-exit").css({
