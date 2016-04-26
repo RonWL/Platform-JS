@@ -5,29 +5,10 @@
 	position: absolute;
 }
 
-/*   Collapsed Panel   */
-#collapsed-panel {
-	
-}
-
-/*   Expanded Panel   */
-#expanded-panel{
-	
-}
-
-.alphaed {
-	opacity: 0;
-	display: inline-block;
-}
-
 .cta {
 	cursor: pointer;
 	z-index: 100;
 	position: absolute;
-}
-
-.col-full {
-	
 }
 
 .hidden {
@@ -42,8 +23,8 @@
 	position: absolute;
 }
 
-.exp-full {
-	
+.fam {
+	position: relative;
 }
 
 .hidden {
@@ -65,15 +46,8 @@
 	position: absolute;
 	top: 0;
 	left: 0;
-	cursor: pointer;
 	opacity: 0;
 }
 
-#bg-exp-exit {
-	
-}
 
-/*   Expanded Panel   */
-#video-player {
-	
-}
+/*------------------------------------------------*/
