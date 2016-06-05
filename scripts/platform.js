@@ -1,0 +1,371 @@
+/*
+"Platform-JS"
+This plugin was created in order to streamline the process of building standard compliant digital ads, while giving developers involved the ability to customize the units.
+	
+Copyright (c) 2016 Ron W. LaGon - DDB Chicago
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+$.dispatch = {
+    id: 'Platform JS',
+    version: '2.0.1 - Aether',
+    defaults: {
+		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
+		$platform:"DC", 
+		
+		//	Select If the Unit is Dynamic or Static (Now ONLY Supports FlashTalking)
+		$dataType: "Static",
+		
+		//	If the Unit Will be Dynamic, This array will hold the elements to be Registered with the variables in the Manifest.js file (Flash Talking)
+		$dynElms: [],
+		
+		//	This Array holds the Variable(s) from which the elements in "$dynElms" will be populated with
+		$dynVars: [],
+		
+		//	How Many Clicktags will be used within the Unit (Other than the Default Click Thru).  If None, are provided, will default to 0.
+		$altTags: 0,
+		
+		//	The Elements that will Possess a CLick Tag.  Only Needed if the "$altTags" Option is Greater than 0.
+		$ctElms: [],
+		
+		//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
+		$size:	[300, 250],
+		
+		//	The border color of the unit (If None Given in Options, will Default to Black
+		$borderColor: "#000",
+		
+		//	The font included within the Unit (Especially Needed if Dynamic(Instant) Unit
+		$font: "'Arial', sans-serif",
+		
+		//	Sets a Logger for When Testing Edits / Updates to Plugin And / Or Unit Code	
+		$testing: false
+	}
+};
+
+(function ($) 
+{
+	"use strict";
+	
+	var _platform;	
+	var _size;
+	var _newSize;
+	
+	var _borderColor;
+	var _font;
+	var $bg_exit;
+	
+	
+	//FlashTalking Variable
+	var _$FT;
+	var $panel;
+	
+	var _data_type;
+	
+	var _dyn_elms;
+	var _dyn_vars;
+	
+	var _clicktags;
+	var _ct_elms;
+	
+	var _testing;
+	
+	
+    $.fn.extend({
+        dispatch: function (params) 
+		{
+            return this.each(function () 
+			{
+                var opts = $.extend({}, this.defaults, params);
+				
+				_platform = opts.$platform;
+				_size = opts.$size;
+				_newSize = [_size[0] - 2, _size[1] - 2];
+				
+				_font = opts.$font;
+				_borderColor = opts.$borderColor;
+				
+				//	FlashTalking Options Declared in Root of Plugin
+				_data_type = opts.$dataType;
+				
+				_dyn_elms = opts.$dynElms;
+				_dyn_vars = opts.$dynVars;
+						
+				_clicktags = opts.$clickTags;
+				_ct_elms = opts.$altTags;
+				
+				_testing = opts.$testing;
+				
+				//	Modify the Head or Body with the external script needed to create the platform-ready unit	
+				$(".extNN").empty();
+				
+				$(document).ready(function()
+				{					
+					switch (_platform)
+					{
+						//	Since DC & Sizmek's platform REQUIRES the external script tag within the main HTML file (NOT Ideal & Very Ugly), here we apply the clicktag hardcode
+						case "DC" :											
+							$("#EbloadJS").remove();
+							
+							var $click = "var clicktag = \"\";";
+							mod_js("Add", $click, "head", "dcjs");
+							
+							init_platform();
+							
+							break;
+							
+						case "SK" :
+							$("#EnablerJS").remove();
+							init_platform();
+							
+							break;
+							
+						case "FT" :	
+							$("#EnablerJS, #EbloadJS").remove();
+																										
+							var $ftsrc = "https://cdn.flashtalking.com/frameworks/js/api/2/9/html5API.js";
+							mod_js("Load", $ftsrc, "body", "ftjs", init_platform, "FtdynJS");
+							
+							break;
+							
+						case "" :						
+							break;
+					}
+				});
+			});
+        }
+    });
+	
+	function style_elements()
+	{
+		$bg_exit = $("<div id='bg-exit' class='exit' />");
+		
+		$("body").css({
+			"margin" : "0",
+			"padding" : "0",
+			"width" : _size[0] + "px",
+			"height" : _size[1] + "px"
+		});
+				
+		
+		$("#main-panel").prepend($bg_exit);
+			
+		$("#main-panel").css({
+			"width" : _newSize[0] + "px",
+			"height" : _newSize[1] + "px",
+			"border" : "1px solid ",
+			"font-family" : _font,
+			"border-color" : _borderColor
+		});		
+		
+		$("#bg-exit").css({
+			"width" : _size[0] + "px",
+			"height" : _size[1] + "px",
+			"z-index" : 300,
+			"cursor" : "pointer"
+		});
+	}
+	
+	var init_platform = function()
+	{		
+		doLog("Initializing Platform...");
+		style_elements();
+		
+		
+		//	Per each platform, we have to wait for their external scripts to load before continuing the unit's process
+		switch (_platform)
+		{
+			case "DC" :
+				if (Enabler.isInitialized()) 
+				{
+					init_handle();
+				} else {
+					Enabler.addEventListener(studio.events.StudioEvent.INIT, init_handle);
+				}
+				break;
+				
+			case "SK" :
+				if (!EB.isInitialized()) 
+				{
+					EB.addEventListener(EBG.EventName.EB_INITIALIZED, init_handle);
+				} else {
+					init_handle();
+				}
+				break;
+			
+			case "FT" :				
+			case "" :	
+				init_handle();
+				
+				break;
+		}
+	};
+	
+	function init_handle()
+	{
+		// Here we set up the elements that are included in the Unit to be read
+		
+		if (_platform === "FT")
+		{
+			//	This is the function that runs to prepare the tags for dynamic input 
+			//({ID of Tag (without the "#")}, {FT tag replacement}, {Any Extra Attributes for the Method to Add})
+			getSetAttr("main-panel", "ft-default", "clicktag=1");
+			
+			if (_data_type === "Dynamic")
+			{
+				$.each(_dyn_elms, function(idx, id) 
+				{					
+					var $newButes = "name='" + _dyn_vars[idx] + "'";
+					getSetAttr(id, "ft-dynamic", $newButes);
+				});
+			}
+		}
+		addEventListeners();
+		init_strd_setup();
+	}
+	
+	function init_strd_setup()
+	{
+		//	This tells the unit that it's ready to continue with the animation of the unit.
+		//	This method is located within the main "script.js" file.
+		init_animation();
+	}
+	/*		Listeners and Events	*/
+	
+	//	Controls the "exits" of each platform
+	function background_exit()
+	{
+		switch (_platform)
+		{
+			case "DC" :
+				Enabler.exit("clicktag");
+				
+				break;
+				
+			case "SK" :
+				EB.clickthrough();
+				
+				break;
+			
+			//	The "exit" for FlashTalking is handled through the platform dynamically, so does not require any assignment here.	
+			case "FT" :
+				
+				break;
+		}
+	}
+	function addEventListeners()
+	{
+		//	If any additional clicktag elements have been added within the options, Flashtalking API applies the coding to them.
+		//	Otherwise, the main panel (ususally the standard) will trigger the "background exit"
+		$panel = document.getElementById("main-panel");
+		if (_platform === "FT")
+		{
+			if (_clicktags)
+			{
+				for (var c = 0; c <= _clicktags.length; c++)
+				{
+					_$FT.applyClickTag($(_ct_elms[c]), c);
+				}
+			}
+		} else {
+			$panel.addEventListener("click", function()
+			{
+				background_exit();
+			});
+		}
+	}
+	
+	function mod_js($mod, $code, $tgtTag, $class, $callback, $id)
+	{
+		var $sc = document.createElement("script");
+/*>*/	doLog("Code Being Added.........." + $code);
+    	$sc.type = "text/javascript";
+		switch($mod)
+		{
+			case "Add" :
+				$sc.innerText = $code;
+				break;
+				
+			case "Load" :
+				$sc.src = $code;
+				if ($callback) { $sc.onload = $callback; }
+				break;
+		}
+		if ($id) { $sc.id = $id; }
+		if ($class) { $sc.className = $class; }
+		
+    	document.getElementsByTagName($tgtTag)[0].appendChild($sc);
+	}
+	
+	
+	//	This method handles all of the replacement of tags that will be fed dynamic content. (FlashTalking)
+	function getSetAttr($id, $rplceTag, $rplceAttrs)
+	{
+		var $elm = document.getElementById($id);
+/*>*/	doLog($elm);
+		
+		if ($rplceTag === "ft-default" || $($elm).is("img"))
+		{
+/*>*/		doLog("Type 1");
+			
+			if ($elm.attributes)
+			{
+				var $attrs = [];
+
+				$attrs[0] = [];
+				$attrs[1] = [];
+				
+				$.each($elm.attributes, function() 
+				{
+/*>*/				doLog("Name: " + this.name);
+/*>*/				doLog("Value: " + this.value);
+				
+					$attrs[0].push(this.name);
+					$attrs[1].push(this.value);
+				});
+				$($elm).replaceWith($("<" + $rplceTag + " " + $rplceAttrs + ">" + $elm.innerHTML + "</" + $rplceTag + ">"));
+				
+				var $newElm = document.getElementsByTagName($rplceTag);
+/*>*/			doLog("New Elm: " + $newElm.id);
+				$.each($attrs, function(idx)
+				{
+					$($newElm).attr($attrs[0][idx], $attrs[1][idx]);
+				});
+				$attrs[0].length = 0; $attrs[1].length = 0; $attrs.length = 0;
+			} else {
+				$($elm).replaceWith($("<" + $rplceTag + ">" + $elm.innerHTML + "</" + $rplceTag + ">"));
+			}
+		} else {
+/*>*/		doLog("Type 2");
+			
+			var $html = $($elm).innerHTML;
+			$($elm).html("<" + $rplceTag + " " + $rplceAttrs + ">" + $html + "</" + $rplceTag + ">");
+		}
+		
+	}
+	
+	function doLog($string)
+	{
+		if (_testing)
+		{
+			console.log($string);
+		}
+	}
+	
+})(jQuery);

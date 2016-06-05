@@ -2,66 +2,85 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta charset="utf-8">
+	<meta name="unit-size" content="width=300,height=250">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Platform Standard</title>
+	<title>Platform JS 2.01 - Aether</title>
 	
 	<!-- Fonts Included-->
 	
 		<!--
 			E.g. -> <link href="http://fonts.googleapis.com/css?family=Oswald" rel="stylesheet" type="text/css">
 		-->
-	
+		
 	<!-- End Fonts Included-->
 	
 	<link rel="stylesheet" href="styles/style.css" />
 	
 	<!-- Scripts Included-->
-	
+
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.17.0/TweenMax.min.js"></script>
 	
-	<!-- Script tags have classes pertaining to which Third Party Ad Server they belong to -->
-	
-	<script class="skjs" type="text/javascript" src="https://secure-ds.serving-sys.com/BurstingScript/EBLoader.js"></script>
-	
-	<script class="dcjs" type="text/javascript" src="https://s0.2mdn.net/ads/studio/Enabler.js"></script>
-	<script class="dcjs" type="text/javascript">
-		var clickTag = "";
-	</script>
-	
-	<script type="text/javascript" src="scripts/platform-sd.js"></script>	<!-- This is the STANDARD Version of the Plugin -->
+    <!-- Since DC & Sizmek's platform REQUIRES the external script tag within the main HTML file, here we apply the tag (NOT Ideal & Very Ugly) -->
+    <script type="text/javascript" id="EnablerJS" class="dcjs" src="https://s0.2mdn.net/ads/studio/Enabler.js"></script>
+    <script type="text/javascript" id="EbloadJS" class="skjs" src=" https://secure-ds.serving-sys.com/BurstingScript/EBLoader.js"></script>
+    
+	<script type="text/javascript" src="scripts/platform.js"></script>
     
 	<!-- End Scripts Included-->
 	
-	<script>
-	var $ = jQuery.noConflict();
+	<script type="text/javascript">
 		
-		$(document).dispatchStandard({
-			$platform:"DC", 						//	Options are at the moment "DC" -> DoubleClick & "SK" -> Sizmek
-			$size:	[300, 600],						//	Size ([Width, Height]) of the unit
-			$borderColor: "#939598"					//	Border Color, If Not Present, Border Will be default black (#000)
+		$(document).dispatch({	
+			//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
+			$platform:"DC", 
+			
+			//	Select If the Unit is Dynamic or Static (Now ONLY Supports FlashTalking)
+			$dataType: "Static",
+			
+			//	If the Unit Will be Dynamic, This array will hold the elements to be Registered with the variables in the Manifest.js file (Flash Talking)
+			$dynElms: [],
+			
+			//	This Array holds the Variable(s) from which the elements in "$dynElms" will be populated with
+			$dynVars: [],
+			
+			//	How Many Clicktags will be used within the Unit (Other than the Default Click Thru).  If None, are provided, will default to 0.
+			$altTags: 0,
+			
+			//	The Elements that will Possess a CLick Tag.  Only Needed if the "$altTags" Option is Greater than 0.
+			$ctElms: [],
+			
+			//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
+			$size:	[300, 250],
+			
+			//	The border color of the unit (If None Given in Options, will Default to Black
+			$borderColor: "#000",
+			
+			//	The font included within the Unit (Especially Needed if Dynamic(Instant) Unit
+			$font: "'Arial', sans-serif",
+			
+			//	Sets a Logger for When Testing Edits / Updates to Plugin And / Or Unit Code	
+			$testing: true
 		});
+		
 	</script>
-
+    
 </head>
 
 <body>
 
 	<script src="scripts/script.js"></script>
-	
+
     <div id="main-panel">
-	
-				 <!-- Standard Display Unit -->
 	
         <!-- ************* Custom Code Here ************* -->
 		
-       
-        
+			
+		
 		<!-- ************* End Custom Code ************* -->
-	
 		
     </div>
+   
 </body>
-
 </html>

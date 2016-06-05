@@ -2,52 +2,25 @@
 /* CSS Document */
 
 #main-panel {
-	position: absolute;
-}
-
-.cta {
 	cursor: pointer;
-	z-index: 100;
 	position: absolute;
+	overflow: hidden;
 }
 
-.hidden {
-	opacity: 0;
+img {
+	width: 100%;
+	height: 100%;
 }
 
-.centered {
-	text-align: center;
+.full {
+	
 }
 
 .free {
 	position: absolute;
 }
 
-.fam {
-	position: relative;
-}
-
-.hidden {
-	opacity: 0;
-}
-
 .centered {
 	text-align: center;
 }
 
-.bg {
-	position: relative;
-	background-color: #000;
-}
-
-.exit {
-	z-index: 75;
-	cursor: pointer;
-	position: absolute;
-	top: 0;
-	left: 0;
-	opacity: 0;
-}
-
-
-/*------------------------------------------------*/
