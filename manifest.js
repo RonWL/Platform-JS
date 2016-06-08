@@ -1,5 +1,6 @@
 /*	version: "v2.1.0 - Apollo"	*/
 
+
 FT.manifest({
 	"filename":"index.html",
 	"width":300,
