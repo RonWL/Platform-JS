@@ -20,7 +20,6 @@
 	<!-- Scripts Included-->
 
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.17.0/TweenMax.min.js"></script>
 	
     <!-- Since DC & Sizmek's platform REQUIRES the external script tag within the main HTML file, here we apply the tag (NOT Ideal & Very Ugly) -->
     <script type="text/javascript" id="EnablerJS" class="dcjs" src="https://s0.2mdn.net/ads/studio/Enabler.js"></script>
@@ -35,6 +34,10 @@
 		$(document).dispatch({	
 			//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 			$platform:"DC", 
+			
+			//	Option to Load External Animation Library or Not (Greensock {1 - "Max", 2 - "Lite"}).  If None Chosen, will default to not loading the Tweening Engine.
+			//	The loaded URI is the CDN endpoint to the latest version of GS.
+			$loadGS: 1,
 			
 			//	Select If the Unit is Dynamic or Static (Now ONLY Supports FlashTalking)
 			$dataType: "Static",

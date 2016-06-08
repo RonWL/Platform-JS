@@ -25,10 +25,14 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: '2.0.1 - Aether',
+    version: 'v2.1.0 - Apollo',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
+		
+		//	Option to Load External Animation Library or Not (Greensock {0 - None, 1 - "Lite", or 2 - "Max"}).  If None Chosen, will default to not loading the Tweening Engine.
+		//	The loaded URI is the CDN endpoint to the latest version of GS.
+		$loadGS: 0,
 		
 		//	Select If the Unit is Dynamic or Static (Now ONLY Supports FlashTalking)
 		$dataType: "Static",
@@ -45,13 +49,13 @@ $.dispatch = {
 		//	The Elements that will Possess a CLick Tag.  Only Needed if the "$altTags" Option is Greater than 0.
 		$ctElms: [],
 		
-		//	Size ([Width, Height]) of the unit
+		//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
 		$size:	[300, 250],
 		
-		//	The border color of the unit (If None Given in Options, will Default to Black)
+		//	The border color of the unit (If None Given in Options, will Default to Black
 		$borderColor: "#000",
 		
-		//	The font included within the Unit (Especially Needed if Dynamic / Instant Unit)
+		//	The font included within the Unit (Especially Needed if Dynamic(Instant) Unit
 		$font: "'Arial', sans-serif",
 		
 		//	Sets a Logger for When Testing Edits / Updates to Plugin And / Or Unit Code	
@@ -63,7 +67,8 @@ $.dispatch = {
 {
 	"use strict";
 	
-	var _platform;	
+	var _platform;
+	var _loadGS;	
 	var _size;
 	var _newSize;
 	
@@ -95,6 +100,7 @@ $.dispatch = {
                 var opts = $.extend({}, this.defaults, params);
 				
 				_platform = opts.$platform;
+				_loadGS = opts.$loadGS;
 				_size = opts.$size;
 				_newSize = [_size[0] - 2, _size[1] - 2];
 				
@@ -126,13 +132,13 @@ $.dispatch = {
 							var $click = "var clicktag = \"\";";
 							mod_js("Add", $click, "head", "dcjs");
 							
-							init_platform();
+							get_animation_assets();
 							
 							break;
 							
 						case "SK" :
 							$("#EnablerJS").remove();
-							init_platform();
+							get_animation_assets();
 							
 							break;
 							
@@ -140,7 +146,7 @@ $.dispatch = {
 							$("#EnablerJS, #EbloadJS").remove();
 																										
 							var $ftsrc = "https://cdn.flashtalking.com/frameworks/js/api/2/9/html5API.js";
-							mod_js("Load", $ftsrc, "body", "ftjs", init_platform, "FtdynJS");
+							mod_js("Load", $ftsrc, "body", "ftjs", get_animation_assets, "FtdynJS");
 							
 							break;
 							
@@ -151,6 +157,32 @@ $.dispatch = {
 			});
         }
     });
+	
+	function get_animation_assets()
+	{
+		if (_loadGS)
+		{
+			var $gs_prefix = "https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/"; 
+			var $gs_end;
+			var $gs_url;
+			
+			switch (_loadGS)
+			{
+				case 1 :
+					$gs_end = "TweenMax.min.js";
+					break;
+					
+				case 2 :
+					$gs_end = "TweenLite.min.js";
+					break;
+			}
+			$gs_url = $gs_prefix + $gs_end;
+			mod_js("Load", $gs_url, "head", "anjs", init_platform, "GsJS");
+			
+		} else {
+			init_platform();
+		}
+	}
 	
 	function style_elements()
 	{
