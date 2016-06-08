@@ -45,13 +45,13 @@ $.dispatch = {
 		//	The Elements that will Possess a CLick Tag.  Only Needed if the "$altTags" Option is Greater than 0.
 		$ctElms: [],
 		
-		//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
+		//	Size ([Width, Height]) of the unit
 		$size:	[300, 250],
 		
-		//	The border color of the unit (If None Given in Options, will Default to Black
+		//	The border color of the unit (If None Given in Options, will Default to Black)
 		$borderColor: "#000",
 		
-		//	The font included within the Unit (Especially Needed if Dynamic(Instant) Unit
+		//	The font included within the Unit (Especially Needed if Dynamic / Instant Unit)
 		$font: "'Arial', sans-serif",
 		
 		//	Sets a Logger for When Testing Edits / Updates to Plugin And / Or Unit Code	
@@ -364,8 +364,16 @@ $.dispatch = {
 	{
 		if (_testing)
 		{
+			console.log(log_date() + " -----> ");
 			console.log($string);
 		}
+	}
+	
+	function log_date() 
+	{
+    	var d = new Date($.now());
+    	var time = d.getHours() + " : " + d.getMinutes() + " : " + d.getSeconds() + " . " + d.getMilliseconds();
+    	return (time); 
 	}
 	
 })(jQuery);
