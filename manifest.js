@@ -1,4 +1,4 @@
-/*	version: "v2.1.0 - Apollo"	*/
+/*	version: "v2.4.0 - Ares"	*/
 
 
 FT.manifest({
