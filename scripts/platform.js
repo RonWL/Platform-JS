@@ -25,7 +25,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v2.1.0 - Apollo',
+    version: 'v2.4.0 - Ares',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -264,7 +264,9 @@ $.dispatch = {
 				$.each(_dyn_elms, function(idx, id) 
 				{					
 					var $newButes = "name='" + _dyn_vars[idx] + "'";
-					getSetAttr(id, "ft-dynamic", $newButes);
+					doLog("New Attributes " + idx + " : " + $newButes);
+					
+					getSetAttr(_dyn_elms[idx], "ft-dynamic", $newButes);
 				});
 			}
 		}
@@ -349,8 +351,9 @@ $.dispatch = {
 	//	This method handles all of the replacement of tags that will be fed dynamic content. (FlashTalking)
 	function getSetAttr($id, $rplceTag, $rplceAttrs)
 	{
+		doLog("Replacement Attributes: " + $rplceAttrs);
 		var $elm = document.getElementById($id);
-/*>*/	doLog($elm);
+/*>*/	doLog("Found Element: " + $elm.id);
 		
 		if ($rplceTag === "ft-default" || $($elm).is("img"))
 		{
@@ -365,15 +368,17 @@ $.dispatch = {
 				
 				$.each($elm.attributes, function() 
 				{
-/*>*/				doLog("Name: " + this.name);
-/*>*/				doLog("Value: " + this.value);
-				
+					if (this.name !== "id")
+					{
+/*>*/					doLog("Name: " + this.name);
+/*>*/					doLog("Value: " + this.value);
+					}
 					$attrs[0].push(this.name);
 					$attrs[1].push(this.value);
 				});
-				$($elm).replaceWith($("<" + $rplceTag + " " + $rplceAttrs + ">" + $elm.innerHTML + "</" + $rplceTag + ">"));
+				$($elm).replaceWith($("<" + $rplceTag + " id=" + $id + " " + $rplceAttrs + ">" + $elm.innerHTML + "</" + $rplceTag + ">"));
 				
-				var $newElm = document.getElementsByTagName($rplceTag);
+				var $newElm = document.getElementById($id);
 /*>*/			doLog("New Elm: " + $newElm.id);
 				$.each($attrs, function(idx)
 				{
@@ -396,8 +401,7 @@ $.dispatch = {
 	{
 		if (_testing)
 		{
-			console.log(log_date() + " -----> ");
-			console.log($string);
+			console.log(log_date() + " -----> " + $string);
 		}
 	}
 	
