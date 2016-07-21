@@ -25,7 +25,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v2.4.0 - Ares',
+    version: 'v2.4.1 - Ares',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -74,7 +74,6 @@ $.dispatch = {
 	
 	var _borderColor;
 	var _font;
-	var $bg_exit;
 	
 	
 	//FlashTalking Variable
@@ -185,18 +184,13 @@ $.dispatch = {
 	}
 	
 	function style_elements()
-	{
-		$bg_exit = $("<div id='bg-exit' class='exit' />");
-		
+	{		
 		$("body").css({
 			"margin" : "0",
 			"padding" : "0",
 			"width" : _size[0] + "px",
 			"height" : _size[1] + "px"
 		});
-				
-		
-		$("#main-panel").prepend($bg_exit);
 			
 		$("#main-panel").css({
 			"width" : _newSize[0] + "px",
@@ -205,13 +199,6 @@ $.dispatch = {
 			"font-family" : _font,
 			"border-color" : _borderColor
 		});		
-		
-		$("#bg-exit").css({
-			"width" : _size[0] + "px",
-			"height" : _size[1] + "px",
-			"z-index" : 300,
-			"cursor" : "pointer"
-		});
 	}
 	
 	var init_platform = function()
