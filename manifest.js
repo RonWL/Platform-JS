@@ -5,14 +5,14 @@ FT.manifest({
 	"clickTagCount":1,
 	"instantAds":[
 		{
-			"name":"frame_1_bg", 
+			"name":"test_image", 
 			"type":"image", 
-			"default":"images/SS_Pot_Pie/frame_1_bg.jpg"
+			"default":"path/to/local/image.jpg"
 		},
 		{
-			"name":"copy1_line1", 
+			"name":"copy_var", 
 			"type":"text", 
-			"default":"Homestyle recipe."
+			"default":"Some Copy Here."
 		}
 	]
 });

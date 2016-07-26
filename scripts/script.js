@@ -1,4 +1,4 @@
-/*	version: "v2.4.0 - Ares"	*/
+/*	version: "v2.4.5"	*/
 
 $.noConflict();
 var $ = jQuery;
