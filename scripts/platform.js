@@ -60,7 +60,7 @@ $.dispatch = {
 		$font: "'Arial', sans-serif",
 		
 		//	Does the Unit have "Replay" Functionality
-		$replay: true,
+		$replay: false,
 		
 		//	If the Unit Has a replay Button, Vars for Button (Array of [{hexcolor}, {size}, {position: "topLeft", "topRight", "bottomLeft", or "bottomRight"}])
 		$replayVars: ["#000", "20px", "topRight"],
@@ -238,25 +238,27 @@ $.dispatch = {
 	
 	function init_replay_btn()
 	{
-		$replayElm = $("<div id='replayBtn' class='free'><h3 id='replay_txt'><b>&#8634;</b></h3></div>");
+		$replayElm = $("<div id='replayBtn' class='free'><h3 id='replay_txt'>&#10227;</h3></div>");
 		$replayElm = $($replayElm);
 		
 		get_replay_position(_replayVars[2]);
 		
 		$replayElm.css({
 			"z-index" : "10",
-			"transform" : "scaleX(-1) rotate(-85deg)",
+			"transform" : "rotate(-32deg)",
 			"color" : _replayVars[0]
-		});
-		$replayElm.find("h3").css({
-			"font-family" : "'Arial', sans-serif",
-			"margin" : "0",
-			"color" : _replayVars[0],
-			"font-size" : _replayVars[1],
-			"line-height" : _replayVars[1]
 		});
 		$("#main-panel").prepend($replayElm);
 		$replayElm.hide();
+		
+		$("#replayBtn h3").css({
+			"font-family" : "\'Work Sans\', sans-serif",
+			"margin" : "0",
+			"color" : _replayVars[0],
+			"font-size" : _replayVars[1],
+			"font-weight" : "900",
+			"line-height" : "20px"
+		});
 	}
 	
 	$.fn.dispatch.show_replay = function()
@@ -469,6 +471,7 @@ $.dispatch = {
 				{
 					$($newElm).attr($attrs[0][idx], $attrs[1][idx]);
 				});
+
 				$attrs[0].length = 0; $attrs[1].length = 0; $attrs.length = 0;
 			} else {
 				$($elm).replaceWith($("<" + $rplceTag + ">" + $elm.innerHTML + "</" + $rplceTag + ">"));
