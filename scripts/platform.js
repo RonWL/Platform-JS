@@ -23,9 +23,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v2.4.5',
+    version: 'v3',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -58,6 +59,12 @@ $.dispatch = {
 		//	The font included within the Unit (Especially Needed if Dynamic(Instant) Unit
 		$font: "'Arial', sans-serif",
 		
+		//	Does the Unit have "Replay" Functionality
+		$replay: true,
+		
+		//	If the Unit Has a replay Button, Vars for Button (Array of [{hexcolor}, {size}, {position: "topLeft", "topRight", "bottomLeft", or "bottomRight"}])
+		$replayVars: ["#000", "20px", "topRight"],
+		
 		//	Sets a Logger for When Testing Edits / Updates to Plugin And / Or Unit Code	
 		$testing: false
 	}
@@ -74,6 +81,10 @@ $.dispatch = {
 	
 	var _borderColor;
 	var _font;
+	
+	var _replay;
+	var $replayElm;
+	var _replayVars;
 	
 	
 	//FlashTalking Variable
@@ -115,10 +126,13 @@ $.dispatch = {
 				_clicktags = opts.$clickTags;
 				_ct_elms = opts.$altTags;
 				
+				_replay = opts.$replay;
+				_replayVars = opts.$replayVars;
+				
 				_testing = opts.$testing;
 				
 				//	Modify the Head or Body with the external script needed to create the platform-ready unit	
-				$(".extNN").empty();
+				$(".extHC").empty();
 				
 				$(document).ready(function()
 				{					
@@ -149,7 +163,9 @@ $.dispatch = {
 							
 							break;
 							
-						case "" :						
+						case "" :
+							$("#EnablerJS, #EbloadJS").remove();
+							get_animation_assets();						
 							break;
 					}
 				});
@@ -183,6 +199,82 @@ $.dispatch = {
 		}
 	}
 	
+	function get_replay_position($var)
+	{
+		var $xCoord = 1;
+		var $yCoord = 1;
+		
+		switch ($var)
+		{
+			case "topLeft" :
+				$replayElm.css({
+					"top" : $yCoord + "px",
+					"left" : $xCoord + "px"
+				});
+				break;
+				
+			case "topRight" :
+				$replayElm.css({
+					"top" : + $yCoord + "px",
+					"right" : $xCoord + "px"
+				});
+				break;
+				
+			case "bottomLeft" :
+				$replayElm.css({
+					"bottom" : $yCoord + "px",
+					"left" : $xCoord + "px"
+				});
+				break;
+				
+			case "bottomRight" :
+				$replayElm.css({
+					"bottom" : $yCoord + "px",
+					"right" : $xCoord + "px"
+				});
+				break;
+		}
+	}
+	
+	function init_replay_btn()
+	{
+		$replayElm = $("<div id='replayBtn' class='free'><h3 id='replay_txt'><b>&#8634;</b></h3></div>");
+		$replayElm = $($replayElm);
+		
+		get_replay_position(_replayVars[2]);
+		
+		$replayElm.css({
+			"z-index" : "10",
+			"transform" : "scaleX(-1) rotate(-85deg)",
+			"color" : _replayVars[0]
+		});
+		$replayElm.find("h3").css({
+			"font-family" : "'Arial', sans-serif",
+			"margin" : "0",
+			"color" : _replayVars[0],
+			"font-size" : _replayVars[1],
+			"line-height" : _replayVars[1]
+		});
+		$("#main-panel").prepend($replayElm);
+		$replayElm.hide();
+	}
+	
+	$.fn.dispatch.show_replay = function()
+	{
+		doLog("Showing Replay");
+		$replayElm = $("#replayBtn");
+		
+		$replayElm.fadeIn(800, function()
+		{
+			$(this).on("click", function(evt)
+			{
+				$(this).off("click");
+				$(this).hide();
+				reset_unit();
+			});
+		});
+	};
+	
 	function style_elements()
 	{		
 		$("body").css({
@@ -198,7 +290,13 @@ $.dispatch = {
 			"border" : "1px solid ",
 			"font-family" : _font,
 			"border-color" : _borderColor
-		});		
+		});	
+		
+		if (_replay)
+		{
+			doLog("Initing Replay");
+			init_replay_btn();
+		}
 	}
 	
 	var init_platform = function()

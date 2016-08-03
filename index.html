@@ -5,7 +5,7 @@
 	<meta name="unit-size" content="width=300,height=250">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Platform JS v2.4.5</title>
+	<title>Platform JS v3</title>
 	
 	<!-- Fonts Included-->
 	
@@ -62,6 +62,12 @@
 			
 			//	The font included within the Unit (Especially Needed if Dynamic / Instant Unit)
 			$font: "'Arial', sans-serif",
+			
+			//	Does the Unit have "Replay" Functionality
+			$replay: true,
+			
+			//	If the Unit Has a replay Button, Vars for Button (Array of [{hexcolor}, {size}, {position: "topLeft", "topRight", "bottomLeft", or "bottomRight"}])
+			$replayVars: ["#444", "25px", "topRight"],
 			
 			//	Sets a Logger for When Testing Edits / Updates to Plugin And / Or Unit Code	
 			$testing: true
