@@ -238,14 +238,14 @@ $.dispatch = {
 	
 	function init_replay_btn()
 	{
-		$replayElm = $("<div id='replayBtn' class='free'><h3 id='replay_txt'>&#10227;</h3></div>");
+		$replayElm = $("<div id='replayBtn' class='free'><h3 id='replay_txt'>&#8635;</h3></div>");
 		$replayElm = $($replayElm);
 		
 		get_replay_position(_replayVars[2]);
 		
 		$replayElm.css({
 			"z-index" : "10",
-			"transform" : "rotate(-32deg)",
+			"transform" : "rotate(135deg)",
 			"color" : _replayVars[0]
 		});
 		$("#main-panel").prepend($replayElm);
@@ -471,7 +471,6 @@ $.dispatch = {
 				{
 					$($newElm).attr($attrs[0][idx], $attrs[1][idx]);
 				});
-
 				$attrs[0].length = 0; $attrs[1].length = 0; $attrs.length = 0;
 			} else {
 				$($elm).replaceWith($("<" + $rplceTag + ">" + $elm.innerHTML + "</" + $rplceTag + ">"));
