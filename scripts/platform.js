@@ -201,8 +201,8 @@ $.dispatch = {
 	
 	function get_replay_position($var)
 	{
-		var $xCoord = 1;
-		var $yCoord = 1;
+		var $xCoord = 0;
+		var $yCoord = 0;
 		
 		switch ($var)
 		{
@@ -238,26 +238,25 @@ $.dispatch = {
 	
 	function init_replay_btn()
 	{
-		$replayElm = $("<div id='replayBtn' class='free'><h3 id='replay_txt'>&#8635;</h3></div>");
+		var $svgCode = $("<svg id='_ÎÓÈ_1' data-name='—ÎÓÈ_1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 321.97'><path d='M249,354.63A110.64,110.64,0,1,1,321.6,159l-49.53,41.23L410,229.37,406.14,88.58l-45.36,37.75a160.93,160.93,0,1,0,40.69,174.93l-51.32-8.5A110.69,110.69,0,0,1,249,354.63Z' transform='translate(-90 -83.01)' class='replayGraphic'></svg>");
+		
+		$replayElm = $("<div id='replayBtn' class='free'></div>");
 		$replayElm = $($replayElm);
+		$replayElm.append($svgCode);
 		
 		get_replay_position(_replayVars[2]);
 		
 		$replayElm.css({
 			"z-index" : "10",
-			"transform" : "rotate(135deg)",
-			"color" : _replayVars[0]
+			"padding" : "5px",
+			"width" : _replayVars[1] + "px",
+			"height" : _replayVars[1] + "px"
 		});
 		$("#main-panel").prepend($replayElm);
 		$replayElm.hide();
 		
-		$("#replayBtn h3").css({
-			"font-family" : "\'Work Sans\', sans-serif",
-			"margin" : "0",
-			"color" : _replayVars[0],
-			"font-size" : _replayVars[1],
-			"font-weight" : "900",
-			"line-height" : "20px"
+		$("#replayBtn .replayGraphic").css({
+			"fill" : _replayVars[0]
 		});
 	}
 	
