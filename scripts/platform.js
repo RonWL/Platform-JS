@@ -26,7 +26,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v3',
+    version: 'v3.1',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -252,7 +252,7 @@ $.dispatch = {
 			"width" : _replayVars[1] + "px",
 			"height" : _replayVars[1] + "px"
 		});
-		$("#main-panel").prepend($replayElm);
+		$("#unit-container").prepend($replayElm);
 		$replayElm.hide();
 		
 		$("#replayBtn .replayGraphic").css({
@@ -279,8 +279,11 @@ $.dispatch = {
 	function style_elements()
 	{		
 		$("body").css({
-			"margin" : "0",
-			"padding" : "0",
+			"width" : _size[0] + "px",
+			"height" : _size[1] + "px"
+		});
+			
+		$("#unit-container").css({
 			"width" : _size[0] + "px",
 			"height" : _size[1] + "px"
 		});
@@ -288,9 +291,8 @@ $.dispatch = {
 		$("#main-panel").css({
 			"width" : _newSize[0] + "px",
 			"height" : _newSize[1] + "px",
-			"border" : "1px solid ",
 			"font-family" : _font,
-			"border-color" : _borderColor
+			"border-color" : _borderColor,
 		});	
 		
 		if (_replay)
