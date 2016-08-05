@@ -26,7 +26,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v3.2',
+    version: 'v3.2.1',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -284,15 +284,15 @@ $.dispatch = {
 		});
 			
 		$("#unit-container").css({
-			"width" : _size[0] + "px",
-			"height" : _size[1] + "px"
+			"width" : _newSize[0] + "px",
+			"height" : _newSize[1] + "px",
+			"font-family" : _font,
+			"border" : "1px solid " + _borderColor
 		});
 			
 		$("#main-panel").css({
 			"width" : _newSize[0] + "px",
-			"height" : _newSize[1] + "px",
-			"font-family" : _font,
-			"border-color" : _borderColor,
+			"height" : _newSize[1] + "px"
 		});	
 		
 		if (_replay)
