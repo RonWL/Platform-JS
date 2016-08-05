@@ -1,4 +1,4 @@
-/*	version: "v3.1"	*/
+/*	version: "v3.2"	*/
 
 $.noConflict();
 var $ = jQuery;
