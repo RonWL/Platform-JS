@@ -26,7 +26,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v3.2.1',
+    version: 'v4',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -63,7 +63,7 @@ $.dispatch = {
 		$replay: false,
 		
 		//	If the Unit Has a replay Button, Vars for Button (Array of [{hexcolor}, {size}, {position: "topLeft", "topRight", "bottomLeft", or "bottomRight"}])
-		$replayVars: ["#000", "20px", "topRight"],
+		$replayVars: ["#000", 20, "topRight"],
 		
 		//	Sets a Logger for When Testing Edits / Updates to Plugin And / Or Unit Code	
 		$testing: false
@@ -86,6 +86,7 @@ $.dispatch = {
 	var $replayElm;
 	var _replayVars;
 	
+	var $bg_exit;
 	
 	//FlashTalking Variable
 	var _$FT;
@@ -135,22 +136,23 @@ $.dispatch = {
 				$(".extHC").empty();
 				
 				$(document).ready(function()
-				{					
+				{	
+					var $click;				
 					switch (_platform)
 					{
 						//	Since DC & Sizmek's platform REQUIRES the external script tag within the main HTML file (NOT Ideal & Very Ugly), here we apply the clicktag hardcode
 						case "DC" :											
 							$("#EbloadJS").remove();
 							
-							var $click = "var clicktag = \"\";";
+							$click = "var clicktag = \"\";";
 							mod_js("Add", $click, "head", "dcjs");
 							
-							get_animation_assets();
+							var $dcsrc = "https://s0.2mdn.net/ads/studio/Enabler.js";
+							mod_js("Load", $dcsrc, "head", "dcjs", get_animation_assets, "EnablerJS");
 							
 							break;
 							
 						case "SK" :
-							$("#EnablerJS").remove();
 							get_animation_assets();
 							
 							break;
@@ -158,13 +160,17 @@ $.dispatch = {
 						case "FT" :	
 							$("#EnablerJS, #EbloadJS").remove();
 																										
-							var $ftsrc = "https://cdn.flashtalking.com/frameworks/js/api/2/9/html5API.js";
+							var $ftsrc = "http://cdn.flashtalking.com/frameworks/js/api/2/9/html5API.js";
 							mod_js("Load", $ftsrc, "body", "ftjs", get_animation_assets, "FtdynJS");
 							
 							break;
 							
 						case "" :
 							$("#EnablerJS, #EbloadJS").remove();
+							
+							$click = "var clicktag = \"\";";
+							mod_js("Add", $click, "head", "dcjs");
+							
 							get_animation_assets();						
 							break;
 					}
@@ -343,18 +349,23 @@ $.dispatch = {
 		
 		if (_platform === "FT")
 		{
+			_$FT = new FT;
 			//	This is the function that runs to prepare the tags for dynamic input 
 			//({ID of Tag (without the "#")}, {FT tag replacement}, {Any Extra Attributes for the Method to Add})
-			getSetAttr("main-panel", "ft-default", "clicktag=1");
 			
 			if (_data_type === "Dynamic")
 			{
-				$.each(_dyn_elms, function(idx, id) 
-				{					
-					var $newButes = "name='" + _dyn_vars[idx] + "'";
-					doLog("New Attributes " + idx + " : " + $newButes);
+				$.each(_dyn_elms, function($idx) 
+				{
+					var $name = "name";
+					var $val = 	_dyn_vars[$idx];				
+					doLog("New Attributes " + $idx + " : " + $name + " = " + $val);
 					
-					getSetAttr(_dyn_elms[idx], "ft-dynamic", $newButes);
+					var $newAttrs = [];
+					$newAttrs.push([$name, $val]);
+					
+					getSetAttr(_dyn_elms[$idx], "ft-dynamic", $newAttrs);
+					$newAttrs.length = 0;
 				});
 			}
 		}
@@ -387,7 +398,10 @@ $.dispatch = {
 			
 			//	The "exit" for FlashTalking is handled through the platform dynamically, so does not require any assignment here.	
 			case "FT" :
+				break;
 				
+			case "" :
+				window.open("clicktag");
 				break;
 		}
 	}
@@ -395,17 +409,20 @@ $.dispatch = {
 	{
 		//	If any additional clicktag elements have been added within the options, Flashtalking API applies the coding to them.
 		//	Otherwise, the main panel (ususally the standard) will trigger the "background exit"
-		$panel = document.getElementById("main-panel");
 		if (_platform === "FT")
 		{
+			$panel = _$FT.query("#main-panel");
+  			_$FT.applyClickTag($panel, 1);
+			
 			if (_clicktags)
 			{
 				for (var c = 0; c <= _clicktags.length; c++)
 				{
 					_$FT.applyClickTag($(_ct_elms[c]), c);
 				}
-			}
+			} 
 		} else {
+			$panel = document.getElementById("main-panel");
 			$panel.addEventListener("click", function()
 			{
 				background_exit();
@@ -443,16 +460,16 @@ $.dispatch = {
 		var $elm = document.getElementById($id);
 /*>*/	doLog("Found Element: " + $elm.id);
 		
-		if ($rplceTag === "ft-default" || $($elm).is("img"))
+		if ($($elm).is("img"))
 		{
 /*>*/		doLog("Type 1");
 			
 			if ($elm.attributes)
 			{
-				var $attrs = [];
+				var $transAttrs = [];
 
-				$attrs[0] = [];
-				$attrs[1] = [];
+				$transAttrs[0] = [];
+				$transAttrs[1] = [];
 				
 				$.each($elm.attributes, function() 
 				{
@@ -461,18 +478,12 @@ $.dispatch = {
 /*>*/					doLog("Name: " + this.name);
 /*>*/					doLog("Value: " + this.value);
 					}
-					$attrs[0].push(this.name);
-					$attrs[1].push(this.value);
+					$transAttrs[0].push(this.name);
+					$transAttrs[1].push(this.value);
 				});
-				$($elm).replaceWith($("<" + $rplceTag + " id=" + $id + " " + $rplceAttrs + ">" + $elm.innerHTML + "</" + $rplceTag + ">"));
-				
-				var $newElm = document.getElementById($id);
-/*>*/			doLog("New Elm: " + $newElm.id);
-				$.each($attrs, function(idx)
-				{
-					$($newElm).attr($attrs[0][idx], $attrs[1][idx]);
-				});
-				$attrs[0].length = 0; $attrs[1].length = 0; $attrs.length = 0;
+				var $newElm = $($elm).returnReplaced($("<" + $rplceTag + ">" + $elm.innerHTML + "</" + $rplceTag + ">"));
+				$newElm.prop("id", $id);
+				replace_attributes($newElm, $id, $rplceAttrs, $transAttrs);				
 			} else {
 				$($elm).replaceWith($("<" + $rplceTag + ">" + $elm.innerHTML + "</" + $rplceTag + ">"));
 			}
@@ -480,16 +491,66 @@ $.dispatch = {
 /*>*/		doLog("Type 2");
 			
 			var $html = $($elm).innerHTML;
-			$($elm).html("<" + $rplceTag + " " + $rplceAttrs + ">" + $html + "</" + $rplceTag + ">");
+			$($elm).html("<" + $rplceTag + ">" + $html + "</" + $rplceTag + ">");
+			
+			$($elm).find($rplceTag).after(function()
+			{
+				replace_attributes($(this), $id, $rplceAttrs);
+			});
 		}
+	}
+	
+	function replace_attributes($elm, $id, $rplceAttrs, $transAttrs)
+	{
+		if ($rplceAttrs)
+		{
+			doLog("Supplying New Attributes to:");
+			doLog($elm);
+			
+			doLog("Attributes being Supplied:");
+			doLog($rplceAttrs);
+			
+			doLog($rplceAttrs.length);
+			$.each($rplceAttrs, function($idx) 
+			{
+				doLog("In Loop, Supplying attribute: ");
+				doLog($rplceAttrs[$idx][0]);
+				doLog(", of value: ");
+				doLog($rplceAttrs[$idx][1]);
+				
+				$elm.prop($rplceAttrs[$idx][0], $rplceAttrs[$idx][1]);
+			});
+		} 
 		
+		if ($transAttrs)
+		{
+			doLog("Transferring Attributes to: ");
+			doLog($elm);
+			
+			doLog("Attributes being Transferred: ");
+			doLog($transAttrs);
+			
+			$.each($transAttrs, function($idx)
+			{
+				doLog("In Loop, Transferring attribute: ");
+				doLog($transAttrs[0][$idx]);
+				doLog(", of value: ");
+				doLog($transAttrs[1][$idx]);
+				
+				$elm.prop($transAttrs[0][$idx], $transAttrs[1][$idx]);
+			});
+			$transAttrs[0].length = 0; $transAttrs[1].length = 0; $transAttrs.length = 0;
+		}
 	}
 	
 	function doLog($string)
 	{
 		if (_testing)
 		{
-			console.log(log_date() + " -----> " + $string);
+			if (window.console)
+			{
+				console.log($string);
+			}
 		}
 	}
 	
@@ -499,5 +560,13 @@ $.dispatch = {
     	var time = d.getHours() + " : " + d.getMinutes() + " : " + d.getSeconds() + " . " + d.getMilliseconds();
     	return (time); 
 	}
+	
+	$.fn.returnReplaced = function(a) 
+	{
+    	var $a = $(a);
+
+    	this.replaceWith($a);
+    	return $a;
+	};
 	
 })(jQuery);
