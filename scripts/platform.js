@@ -401,7 +401,7 @@ $.dispatch = {
 				break;
 				
 			case "" :
-				window.open("clicktag");
+				window.open(window.clicktag);
 				break;
 		}
 	}
@@ -547,10 +547,7 @@ $.dispatch = {
 	{
 		if (_testing)
 		{
-			if (window.console)
-			{
-				console.log($string);
-			}
+			doLog($string);
 		}
 	}
 	
