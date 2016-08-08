@@ -26,7 +26,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v4',
+    version: 'v4.0.2',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -256,7 +256,9 @@ $.dispatch = {
 			"z-index" : "10",
 			"padding" : "5px",
 			"width" : _replayVars[1] + "px",
-			"height" : _replayVars[1] + "px"
+			"height" : _replayVars[1] + "px",
+			
+			"transition ": "all 0.3s ease-in-out 0s"
 		});
 		$("#unit-container").prepend($replayElm);
 		$replayElm.hide();
@@ -279,6 +281,29 @@ $.dispatch = {
 				$(this).hide();
 				reset_unit();
 			});
+			
+			var timer;
+			$(this).hover(function() 
+			{
+				var angle = 0,
+					$this = $(this);
+			
+				timer = setInterval(function() 
+				{
+					angle += 25;
+					$this.css({
+						"transform" : "rotate(" + angle + "deg)"
+					});
+				}, 50);
+			},
+			function() 
+			{
+				timer && clearInterval(timer);
+				$(this).css({
+					"transform" : "rotate(0deg)"
+				});
+			});
+		
 		});
 	};
 	
