@@ -86,8 +86,6 @@ $.dispatch = {
 	var $replayElm;
 	var _replayVars;
 	
-	var $bg_exit;
-	
 	//FlashTalking Variable
 	var _$FT;
 	var $panel;
@@ -137,6 +135,8 @@ $.dispatch = {
 				
 				$(document).ready(function()
 				{	
+					$("meta[name=unit-size]").attr("content", "width=" + _size[0] + ",height=" + _size[1]);
+				
 					var $click;				
 					switch (_platform)
 					{
@@ -574,13 +574,6 @@ $.dispatch = {
 		{
 			doLog($string);
 		}
-	}
-	
-	function log_date() 
-	{
-    	var d = new Date($.now());
-    	var time = d.getHours() + " : " + d.getMinutes() + " : " + d.getSeconds() + " . " + d.getMilliseconds();
-    	return (time); 
 	}
 	
 	$.fn.returnReplaced = function(a) 
