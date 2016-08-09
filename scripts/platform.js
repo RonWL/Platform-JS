@@ -26,7 +26,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v4.0.2',
+    version: 'v4.0.3',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -244,7 +244,7 @@ $.dispatch = {
 	
 	function init_replay_btn()
 	{
-		var $svgCode = $("<svg id='_ÎÓÈ_1' data-name='—ÎÓÈ_1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 321.97'><path d='M249,354.63A110.64,110.64,0,1,1,321.6,159l-49.53,41.23L410,229.37,406.14,88.58l-45.36,37.75a160.93,160.93,0,1,0,40.69,174.93l-51.32-8.5A110.69,110.69,0,0,1,249,354.63Z' transform='translate(-90 -83.01)' class='replayGraphic'></svg>");
+		var $svgCode = $("<svg id='replaySVG' data-name='replaySVG' xmlns='http://www.w3.org/2000/svg' x='0' y='0' width='100%' height='100%' viewBox='0 0 320 320'><title>replayBtn</title><path d='M159,269.95C98,268.89,49.29,218.7,50.36,158.08S101.92,49,162.92,50.05A110.15,110.15,0,0,1,231.6,75.56l-49.53,41L320,145.46,316.14,5.54,270.78,43.06a160.84,160.84,0,0,0-107-43C74.91-1.52,1.58,68.86,0,157.2S69.27,318.43,158.16,320A161,161,0,0,0,311.48,216.91l-51.32-8.45A110.76,110.76,0,0,1,159,269.95Z' class='replayGraphic' /></svg>");
 		
 		$replayElm = $("<div id='replayBtn' class='free'></div>");
 		$replayElm = $($replayElm);
@@ -252,14 +252,33 @@ $.dispatch = {
 		
 		get_replay_position(_replayVars[2]);
 		
+		if (_replayVars[1] >= 20)
+		{
+			$replayElm.css({
+				"width" : _replayVars[1] + "px",
+				"height" : _replayVars[1] + "px",
+				"padding" : "5px"
+			});
+		} else {
+			$replayElm.css({
+				"width" : _replayVars[1] + "px",
+				"height" : "25px",
+				"padding" : "0 5px"
+			});
+		}
+		
 		$replayElm.css({
 			"z-index" : "10",
-			"padding" : "5px",
-			"width" : _replayVars[1] + "px",
-			"height" : _replayVars[1] + "px",
 			
+			"-webkit-transform-origin" : "50% 50%",
+			"-moz-transform-origin" : "50% 50%",
+			"-o-transform-origin" : "50% 50%",
+			"transform-origin" : "50% 50%",
+			
+
 			"transition ": "all 0.3s ease-in-out 0s"
 		});
+		
 		$("#unit-container").prepend($replayElm);
 		$replayElm.hide();
 		
