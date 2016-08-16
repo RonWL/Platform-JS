@@ -591,7 +591,7 @@ $.dispatch = {
 	{
 		if (_testing)
 		{
-			doLog($string);
+			console.log($string);
 		}
 	}
 	
