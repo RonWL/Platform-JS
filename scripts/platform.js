@@ -26,7 +26,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v4.0.3',
+    version: 'v4.1',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -84,6 +84,7 @@ $.dispatch = {
 	
 	var _replay;
 	var $replayElm;
+	var $replayShadow;
 	var _replayVars;
 	
 	//FlashTalking Variable
@@ -275,10 +276,72 @@ $.dispatch = {
 			"-o-transform-origin" : "50% 50%",
 			"transform-origin" : "50% 50%",
 			
-
 			"transition ": "all 0.3s ease-in-out 0s"
 		});
 		
+		if (_replayVars[3])
+		{
+			var $shadowCode = $("<svg id='replayShadow' data-name='replayShadow' xmlns='http://www.w3.org/2000/svg' x='0' y='0' width='100%' height='100%' viewBox='0 0 320 320'><title>replayShadow</title><path d='M159,269.95C98,268.89,49.29,218.7,50.36,158.08S101.92,49,162.92,50.05A110.15,110.15,0,0,1,231.6,75.56l-49.53,41L320,145.46,316.14,5.54,270.78,43.06a160.84,160.84,0,0,0-107-43C74.91-1.52,1.58,68.86,0,157.2S69.27,318.43,158.16,320A161,161,0,0,0,311.48,216.91l-51.32-8.45A110.76,110.76,0,0,1,159,269.95Z' class='shadowGraphic' /></svg>"); 
+			
+			$replayShadow = $("<span id='replayShadow' class='free'></span>");
+			$replayShadow = $($replayShadow);
+			$replayShadow.append($shadowCode);
+			
+			if (_replayVars[1] >= 20)
+			{
+				$replayShadow.css({
+					"width" : _replayVars[1] + "px",
+					"height" : _replayVars[1] + "px",
+					"padding" : "5px"
+				});
+			} else {
+				$replayShadow.css({
+					"width" : _replayVars[1] + "px",
+					"height" : "25px",
+					"padding" : "0 5px"
+				});
+			}
+			
+			$replayShadow.css({
+				"z-index" : "-1",
+				"opacity" : "0.5",
+			});
+			$("#replayShadow .shadowGraphic").css({
+				"fill" : "#000",
+			});
+			
+			switch (_replayVars[2])
+			{
+				case "topLeft" :
+					$replayShadow.css({
+						"left" : "1px",
+						"top" : "1px",
+					});
+					break;
+					
+				case "topRight" :
+					$replayShadow.css({
+						"left" : "-1px",
+						"top" : "1px",
+					});
+					break;
+					
+				case "bottomLeft" :
+					$replayShadow.css({
+						"left" : "1px",
+						"top" : "-1px",
+					});
+					break;
+					
+				case "bottomRight" :
+					$replayShadow.css({
+						"left" : "-1px",
+						"top" : "-1px",
+					});
+					break; 
+				}
+		}
+		$replayElm.append($replayShadow);
 		$("#unit-container").prepend($replayElm);
 		$replayElm.hide();
 		
