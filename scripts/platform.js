@@ -148,8 +148,7 @@ $.dispatch = {
 							$click = "var clicktag = \"\";";
 							mod_js("Add", $click, "head", "dcjs");
 							
-							var $dcsrc = "https://s0.2mdn.net/ads/studio/Enabler.js";
-							mod_js("Load", $dcsrc, "head", "dcjs", get_animation_assets, "EnablerJS");
+							get_animation_assets();
 							
 							break;
 							
@@ -159,7 +158,7 @@ $.dispatch = {
 							break;
 							
 						case "FT" :	
-							$("#EnablerJS, #EbloadJS").remove();
+							$("#EbloadJS").remove();
 																										
 							var $ftsrc = "http://cdn.flashtalking.com/frameworks/js/api/2/9/html5API.js";
 							mod_js("Load", $ftsrc, "body", "ftjs", get_animation_assets, "FtdynJS");
