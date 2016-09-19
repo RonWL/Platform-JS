@@ -26,7 +26,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v4.1',
+    version: 'v4.1.3',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -473,16 +473,28 @@ $.dispatch = {
 					getSetAttr(_dyn_elms[$idx], "ft-dynamic", $newAttrs);
 					$newAttrs.length = 0;
 				});
-			}
+				_$FT.on("instantads", function()
+				{
+					addEventListeners();
+					init_strd_setup();
+				});
+			} else {
+				addEventListeners();
+				init_strd_setup(); 
+			} 
+		} else {
+			addEventListeners();
+			init_strd_setup(); 
 		}
-		addEventListeners();
-		init_strd_setup();
 	}
 	
 	function init_strd_setup()
 	{
 		//	This tells the unit that it's ready to continue with the animation of the unit.
 		//	This method is located within the main "script.js" file.
+		$("#unit-container").css({
+			"opacity" : "1"
+		});
 		init_animation();
 	}
 	/*		Listeners and Events	*/
