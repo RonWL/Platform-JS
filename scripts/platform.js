@@ -492,10 +492,10 @@ $.dispatch = {
 	{
 		//	This tells the unit that it's ready to continue with the animation of the unit.
 		//	This method is located within the main "script.js" file.
-		$("#unit-container").css({
-			"opacity" : "1"
-		});
-		init_animation();
+		$("#unit-container").fadeIn("fast", function()
+		{
+    		init_animation();
+  		});
 	}
 	/*		Listeners and Events	*/
 	
@@ -621,6 +621,8 @@ $.dispatch = {
 	function replace_attributes($elm, $id, $rplceAttrs, $transAttrs)
 	{
 		if ($rplceAttrs)
+
+
 		{
 			doLog("Supplying New Attributes to:");
 			doLog($elm);
