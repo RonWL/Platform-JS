@@ -441,7 +441,17 @@ $.dispatch = {
 				}
 				break;
 			
-			case "FT" :				
+			case "FT" :
+				_$FT = new FT;	
+				if (_data_type === "Dynamic")
+				{
+					_$FT.on("instantads", function()
+					{
+						init_handle();
+					});
+				} else {
+					init_handle();
+				}
 			case "" :	
 				init_handle();
 				
@@ -455,7 +465,6 @@ $.dispatch = {
 		
 		if (_platform === "FT")
 		{
-			_$FT = new FT;
 			//	This is the function that runs to prepare the tags for dynamic input 
 			//({ID of Tag (without the "#")}, {FT tag replacement}, {Any Extra Attributes for the Method to Add})
 			
@@ -473,29 +482,17 @@ $.dispatch = {
 					getSetAttr(_dyn_elms[$idx], "ft-dynamic", $newAttrs);
 					$newAttrs.length = 0;
 				});
-				_$FT.on("instantads", function()
-				{
-					addEventListeners();
-					init_strd_setup();
-				});
-			} else {
-				addEventListeners();
-				init_strd_setup(); 
-			} 
-		} else {
-			addEventListeners();
-			init_strd_setup(); 
+			}
 		}
+		addEventListeners();
+		init_strd_setup();
 	}
 	
 	function init_strd_setup()
 	{
 		//	This tells the unit that it's ready to continue with the animation of the unit.
 		//	This method is located within the main "script.js" file.
-		$("#unit-container").fadeIn("fast", function()
-		{
-    		init_animation();
-  		});
+		init_animation();
 	}
 	/*		Listeners and Events	*/
 	
@@ -621,8 +618,6 @@ $.dispatch = {
 	function replace_attributes($elm, $id, $rplceAttrs, $transAttrs)
 	{
 		if ($rplceAttrs)
-
-
 		{
 			doLog("Supplying New Attributes to:");
 			doLog($elm);

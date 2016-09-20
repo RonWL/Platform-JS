@@ -12,7 +12,6 @@ body {
 	position: relative;
 	cursor: pointer;
 	overflow: hidden;
-	opacity: 0;
 }
 
 #main-panel {
