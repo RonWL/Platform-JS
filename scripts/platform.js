@@ -1,6 +1,7 @@
 /*
 "Platform-JS"
 This plugin was created in order to streamline the process of building standard compliant digital ads, while giving developers involved the ability to customize the units.
+Github link for more Info: https://github.com/DDB-Chicago/Platform-JS/releases
 	
 Copyright (c) 2016 Ron W. LaGon - DDB Chicago
 
