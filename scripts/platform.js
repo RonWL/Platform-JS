@@ -27,7 +27,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v4.1.5',
+    version: 'v4.1.6',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -84,6 +84,8 @@ $.dispatch = {
 	var _font;
 	
 	var _replay;
+	var $replayHold;
+	var $replayContainer;
 	var $replayElm;
 	var $replayShadow;
 	var _replayVars;
@@ -214,28 +216,28 @@ $.dispatch = {
 		switch ($var)
 		{
 			case "topLeft" :
-				$replayElm.css({
+				$replayHold.css({
 					"top" : $yCoord + "px",
 					"left" : $xCoord + "px"
 				});
 				break;
 				
 			case "topRight" :
-				$replayElm.css({
+				$replayHold.css({
 					"top" : + $yCoord + "px",
 					"right" : $xCoord + "px"
 				});
 				break;
 				
 			case "bottomLeft" :
-				$replayElm.css({
+				$replayHold.css({
 					"bottom" : $yCoord + "px",
 					"left" : $xCoord + "px"
 				});
 				break;
 				
 			case "bottomRight" :
-				$replayElm.css({
+				$replayHold.css({
 					"bottom" : $yCoord + "px",
 					"right" : $xCoord + "px"
 				});
@@ -247,30 +249,49 @@ $.dispatch = {
 	{
 		var $svgCode = $("<svg id='replaySVG' data-name='replaySVG' xmlns='http://www.w3.org/2000/svg' x='0' y='0' width='100%' height='100%' viewBox='0 0 320 320'><title>replayBtn</title><path d='M159,269.95C98,268.89,49.29,218.7,50.36,158.08S101.92,49,162.92,50.05A110.15,110.15,0,0,1,231.6,75.56l-49.53,41L320,145.46,316.14,5.54,270.78,43.06a160.84,160.84,0,0,0-107-43C74.91-1.52,1.58,68.86,0,157.2S69.27,318.43,158.16,320A161,161,0,0,0,311.48,216.91l-51.32-8.45A110.76,110.76,0,0,1,159,269.95Z' class='replayGraphic' /></svg>");
 		
+		$replayHold = $("<div id='replayHolder' class='free'></div>");
+		$replayContainer = $("<div id='replay'></div>");
 		$replayElm = $("<div id='replayBtn' class='free'></div>");
 		$replayElm = $($replayElm);
+		$replayContainer = $($replayContainer);
+		$replayHold = $($replayHold);
 		$replayElm.append($svgCode);
+		$replayContainer.append($replayElm);
+		$replayHold.append($replayContainer);
 		
 		get_replay_position(_replayVars[2]);
 		
 		if (_replayVars[1] >= 20)
 		{
+			$replayHold.css({
+				"width" : _replayVars[1] + 10 + "px",
+				"height" : _replayVars[1] + 10 + "px"
+			});
 			$replayElm.css({
 				"width" : _replayVars[1] + "px",
 				"height" : _replayVars[1] + "px",
 				"padding" : "5px"
 			});
 		} else {
+			$replayHold.css({
+				"width" : _replayVars[1] + 10 + "px",
+				"height" : "25px"
+			});
 			$replayElm.css({
 				"width" : _replayVars[1] + "px",
 				"height" : "25px",
 				"padding" : "0 5px"
 			});
 		}
+		$replayHold.css({
+			"z-index" : "10"
+		});
+		$replayContainer.css({
+				"position" : "relative"
+			});
+		
 		
 		$replayElm.css({
-			"z-index" : "10",
-			
 			"-webkit-transform-origin" : "50% 50%",
 			"-moz-transform-origin" : "50% 50%",
 			"-o-transform-origin" : "50% 50%",
@@ -283,7 +304,7 @@ $.dispatch = {
 		{
 			var $shadowCode = $("<svg id='replayShadow' data-name='replayShadow' xmlns='http://www.w3.org/2000/svg' x='0' y='0' width='100%' height='100%' viewBox='0 0 320 320'><title>replayShadow</title><path d='M159,269.95C98,268.89,49.29,218.7,50.36,158.08S101.92,49,162.92,50.05A110.15,110.15,0,0,1,231.6,75.56l-49.53,41L320,145.46,316.14,5.54,270.78,43.06a160.84,160.84,0,0,0-107-43C74.91-1.52,1.58,68.86,0,157.2S69.27,318.43,158.16,320A161,161,0,0,0,311.48,216.91l-51.32-8.45A110.76,110.76,0,0,1,159,269.95Z' class='shadowGraphic' /></svg>"); 
 			
-			$replayShadow = $("<span id='replayShadow' class='free'></span>");
+			$replayShadow = $("<div id='replayShadow' class='free'></div>");
 			$replayShadow = $($replayShadow);
 			$replayShadow.append($shadowCode);
 			
@@ -305,6 +326,13 @@ $.dispatch = {
 			$replayShadow.css({
 				"z-index" : "-1",
 				"opacity" : "0.5",
+				
+				"-webkit-transform-origin" : "50% 50%",
+				"-moz-transform-origin" : "50% 50%",
+				"-o-transform-origin" : "50% 50%",
+				"transform-origin" : "50% 50%",
+			
+				"transition ": "all 0.3s ease-in-out 0s"
 			});
 			$("#replayShadow .shadowGraphic").css({
 				"fill" : "#000",
@@ -341,9 +369,9 @@ $.dispatch = {
 					break; 
 				}
 		}
-		$replayElm.append($replayShadow);
-		$("#unit-container").prepend($replayElm);
-		$replayElm.hide();
+		$replayContainer.append($replayShadow);
+		$("#unit-container").prepend($replayHold);
+		$replayContainer.hide();
 		
 		$("#replayBtn .replayGraphic").css({
 			"fill" : _replayVars[0]
@@ -353,9 +381,9 @@ $.dispatch = {
 	$.fn.dispatch.show_replay = function()
 	{
 		doLog("Showing Replay");
-		$replayElm = $("#replayBtn");
+		$replayContainer = $("#replay");
 		
-		$replayElm.fadeIn(800, function()
+		$replayContainer.fadeIn(800, function()
 		{
 			$(this).on("click", function(evt)
 			{
@@ -364,16 +392,21 @@ $.dispatch = {
 				reset_unit();
 			});
 			
-			var timer;
+			var timer,
+			$replayElm = $("#replayBtn"),
+			$replayShadow = $("#replayShadow");
+			
 			$(this).hover(function() 
 			{
-				var angle = 0,
-					$this = $(this);
+				var angle = 0;
 			
 				timer = setInterval(function() 
 				{
 					angle += 25;
-					$this.css({
+					$replayElm.css({
+						"transform" : "rotate(" + angle + "deg)"
+					});
+					$replayShadow.css({
 						"transform" : "rotate(" + angle + "deg)"
 					});
 				}, 50);
@@ -381,7 +414,10 @@ $.dispatch = {
 			function() 
 			{
 				timer && clearInterval(timer);
-				$(this).css({
+				$replayElm.css({
+					"transform" : "rotate(0deg)"
+				});
+				$replayShadow.css({
 					"transform" : "rotate(0deg)"
 				});
 			});
