@@ -27,7 +27,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v4.1.6',
+    version: 'v4.1.7',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -48,8 +48,11 @@ $.dispatch = {
 		//	How Many Clicktags will be used within the Unit (Other than the Default Click Thru).  If None, are provided, will default to 0.
 		$altTags: 0,
 		
-		//	The Elements that will Possess a CLick Tag.  Only Needed if the "$altTags" Option is Greater than 0.
+		//	The Elements that will Possess a Click Tag.  Only Needed if the "$altTags" Option is Greater than 0.
 		$ctElms: [],
+		
+		//	This is put in place in the event the developer wants to assign a dynamic clicktag.
+		$defClickTag: "",
 		
 		//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
 		$size:	[300, 250],
@@ -101,6 +104,7 @@ $.dispatch = {
 	
 	var _clicktags;
 	var _ct_elms;
+	var _def_clickTag;
 	
 	var _testing;
 	
@@ -128,6 +132,7 @@ $.dispatch = {
 						
 				_clicktags = opts.$clickTags;
 				_ct_elms = opts.$altTags;
+				_def_clickTag = opts.$defClickTag;
 				
 				_replay = opts.$replay;
 				_replayVars = opts.$replayVars;
@@ -163,7 +168,7 @@ $.dispatch = {
 						case "FT" :	
 							$("#EbloadJS").remove();
 																										
-							var $ftsrc = "http://cdn.flashtalking.com/frameworks/js/api/2/9/html5API.js";
+							var $ftsrc = "https://cdn.flashtalking.com/frameworks/js/api/2/10/html5API.js";
 							mod_js("Load", $ftsrc, "body", "ftjs", get_animation_assets, "FtdynJS");
 							
 							break;
@@ -569,7 +574,13 @@ $.dispatch = {
 		if (_platform === "FT")
 		{
 			$panel = _$FT.query("#main-panel");
-  			_$FT.applyClickTag($panel, 1);
+			
+			if (_def_clickTag !== "")
+			{
+				_$FT.applyClickTag($panel, 1, _def_clickTag);
+			} else {
+				_$FT.applyClickTag($panel, 1);
+			}
 			
 			if (_clicktags)
 			{
