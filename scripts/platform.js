@@ -27,7 +27,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v4.1.7',
+    version: 'v4.1.8',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -51,7 +51,7 @@ $.dispatch = {
 		//	The Elements that will Possess a Click Tag.  Only Needed if the "$altTags" Option is Greater than 0.
 		$ctElms: [],
 		
-		//	This is put in place in the event the developer wants to assign a dynamic clicktag.
+		//	This is put in place in the event the developer wants to assign a target for the clicktag.
 		$defClickTag: "",
 		
 		//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
@@ -575,8 +575,12 @@ $.dispatch = {
 		{
 			$panel = _$FT.query("#main-panel");
 			
-			if (_def_clickTag !== "")
+			var $dyn_click = _$FT.instantAds.clickTag;
+			
+			if ($dyn_click !== "")
 			{
+				_$FT.applyClickTag($panel, 1, $dyn_click);
+			} else if (_def_clickTag !== "") {
 				_$FT.applyClickTag($panel, 1, _def_clickTag);
 			} else {
 				_$FT.applyClickTag($panel, 1);
