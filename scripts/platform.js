@@ -27,7 +27,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v4.1.8',
+    version: 'v4.2.0',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -435,6 +435,12 @@ $.dispatch = {
 		$("body").css({
 			"width" : _size[0] + "px",
 			"height" : _size[1] + "px"
+		});
+		
+		$.each($("img"), function()
+		{
+			$(this).prop("draggable", false)
+					.css("-moz-user-select", "none");
 		});
 			
 		$("#unit-container").css({
