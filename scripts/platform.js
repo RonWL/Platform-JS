@@ -27,10 +27,13 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v4.2.0',
+    version: 'v4.2.1',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
+		
+		//	If Platform is Doubleclick, Options are at the moment true -> Unit IS Going through DC Studio, false -> Unit Not DC Studio Unit	
+		$isDCS:true,
 		
 		//	Option to Load External Animation Library or Not (Greensock {0 - None, 1 - "Lite", or 2 - "Max"}).  If None Chosen, will default to not loading the Tweening Engine.
 		//	The loaded URI is the CDN endpoint to the latest version of GS.
@@ -79,6 +82,8 @@ $.dispatch = {
 	"use strict";
 	
 	var _platform;
+	var _dcs;
+	
 	var _loadGS;	
 	var _size;
 	var _newSize;
@@ -117,6 +122,7 @@ $.dispatch = {
                 var opts = $.extend({}, this.defaults, params);
 				
 				_platform = opts.$platform;
+				_dcs = opts.$isDCS;
 				_loadGS = opts.$loadGS;
 				_size = opts.$size;
 				_newSize = [_size[0] - 2, _size[1] - 2];
@@ -555,7 +561,12 @@ $.dispatch = {
 		switch (_platform)
 		{
 			case "DC" :
-				Enabler.exit("clicktag");
+				if (_dcs)
+				{
+					Enabler.exit("clicktag");
+				} else {
+					window.open(window.clickTag);
+				}
 				
 				break;
 				
@@ -602,6 +613,8 @@ $.dispatch = {
 		} else {
 			$panel = document.getElementById("main-panel");
 			$panel.addEventListener("click", function()
+
+
 			{
 				background_exit();
 			});
