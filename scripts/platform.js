@@ -27,7 +27,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v4.2.1',
+    version: 'v4.2.2',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -109,6 +109,7 @@ $.dispatch = {
 	
 	var _clicktags;
 	var _ct_elms;
+	var $dyn_click;
 	var _def_clickTag;
 	
 	var _testing;
@@ -515,6 +516,7 @@ $.dispatch = {
 			
 			if (_data_type === "Dynamic")
 			{
+				$dyn_click = _$FT.instantAds.clickTag;
 				$.each(_dyn_elms, function($idx) 
 				{
 					var $name = "name";
@@ -592,9 +594,7 @@ $.dispatch = {
 		{
 			$panel = _$FT.query("#main-panel");
 			
-			var $dyn_click = _$FT.instantAds.clickTag;
-			
-			if ($dyn_click !== "")
+			if ($dyn_click !== null && $dyn_click !== "undefined" && $dyn_click !== "")
 			{
 				_$FT.applyClickTag($panel, 1, $dyn_click);
 			} else if (_def_clickTag !== "") {
