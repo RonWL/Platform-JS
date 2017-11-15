@@ -27,13 +27,13 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v4.2.2',
+    version: 'v4.3',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
 		
 		//	If Platform is Doubleclick, Options are at the moment true -> Unit IS Going through DC Studio, false -> Unit Not DC Studio Unit	
-		$isDCS:true,
+		$isDCS:false,
 		
 		//	Option to Load External Animation Library or Not (Greensock {0 - None, 1 - "Lite", or 2 - "Max"}).  If None Chosen, will default to not loading the Tweening Engine.
 		//	The loaded URI is the CDN endpoint to the latest version of GS.
@@ -41,6 +41,9 @@ $.dispatch = {
 		
 		//	Select If the Unit is Dynamic or Static (Now ONLY Supports FlashTalking)
 		$dataType: "Static",
+		
+		//	Select If the Unit Standard Display or Rich Media Unit ({ST - Standard, RM - Rich Media}) (Now ONLY Supports FlashTalking)
+		$unitType: "ST",
 		
 		//	If the Unit Will be Dynamic, This array will hold the elements to be Registered with the variables in the Manifest.js file (Flash Talking)
 		$dynElms: [],
@@ -59,6 +62,24 @@ $.dispatch = {
 		
 		//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
 		$size:	[300, 250],
+		
+		//	Collapse Button Content can be image or text
+		$collapseBtnContent: "Click to Collapse",
+		
+		//	Expanded Size ([Width, Height]) of the EXPANDED state of the unit
+		$expSize:	[300, 250],
+		
+		//	Collapse Button Content can be image or text
+		$expandBtnContent: "Click to Expand",
+		
+		//	Toggle Whether or not the Expanded panel has a clicktag
+		$expandedHasClickTag: false,
+		
+		//	Alternate Element to Assign the Expanded Clicktag to
+		$altButtonClickTag: "",
+		
+		//	Determine Whether or not the RMU is AutoExpand
+		$isAutoExpand: false,
 		
 		//	The border color of the unit (If None Given in Options, will Default to Black
 		$borderColor: "#000",
@@ -103,6 +124,27 @@ $.dispatch = {
 	var $panel;
 	
 	var _data_type;
+	var _unit_type;
+	
+	//RM Assets
+	var $collapsed;
+	var $expanded;
+	var $expBtn;
+	var $colBtn;
+	var _expSize;
+	var _newExpSize;
+	
+	var _col_btn_con;
+	var _exp_btn_con;
+	
+	var _expandedHasClickTag;
+	var _altButtonClickTag;
+	var $altClickTagElm;
+	
+	var $altFTClickElm;
+	
+	var _isAutoExpand;
+	
 	
 	var _dyn_elms;
 	var _dyn_vars;
@@ -133,6 +175,26 @@ $.dispatch = {
 				
 				//	FlashTalking Options Declared in Root of Plugin
 				_data_type = opts.$dataType;
+				_unit_type = opts.$unitType;
+				
+				if (_unit_type === "RM")
+				{
+					_expSize = opts.$expSize;
+					_newExpSize = [_expSize[0] - 2, _expSize[1] - 2];
+					
+					_col_btn_con = opts.$collapseBtnContent;
+					_exp_btn_con = opts.$expandBtnContent;
+					
+					_isAutoExpand = opts.$isAutoExpand;
+					
+					switch (_platform)
+					{
+						case "FT" :
+							_expandedHasClickTag = opts.$expandedHasClickTag;
+							_altButtonClickTag = opts.$altButtonClickTag;
+							break;
+					}
+				}
 				
 				_dyn_elms = opts.$dynElms;
 				_dyn_vars = opts.$dynVars;
@@ -438,7 +500,115 @@ $.dispatch = {
 	};
 	
 	function style_elements()
-	{		
+	{
+		if (_unit_type === "ST")
+		{
+			$("#unit-container").css({
+				"width" : _newSize[0] + "px",
+				"height" : _newSize[1] + "px",
+				"font-family" : _font,
+				"border" : "1px solid " + _borderColor
+			});
+
+			$("#main-panel").css({
+				"width" : _newSize[0] + "px",
+				"height" : _newSize[1] + "px"
+			});	
+
+			if (_replay)
+			{
+				doLog("Initing Replay");
+				init_replay_btn();
+			}
+		} else {
+			$("#col").css({
+				"z-index" : "20",
+				"position" : "absolute",
+				"width" : _newSize[0] + "px",
+				"height" : _newSize[1] + "px",
+				"font-family" : _font,
+				"border" : "1px solid " + _borderColor
+			});
+			if (_expandedHasClickTag)
+			{
+				$("#exp").css({
+					"z-index" : "1",
+					"position" : "absolute",
+					"width" : _expSize[0] + "px",
+					"height" : _expSize[1] + "px",
+					"display" : "none",
+					"font-family" : _font,
+					"background-color" : "#fff",
+					"cursor" : "pointer"
+				});
+			} else {
+				$("#exp").css({
+					"z-index" : "1",
+					"position" : "absolute",
+					"width" : _expSize[0] + "px",
+					"height" : _expSize[1] + "px",
+					"display" : "none",
+					"font-family" : _font,
+					"background-color" : "#fff",
+					"cursor" : "pointer"
+				});
+			}
+			
+			var $exp_border = $("<div id='exp-border' />");
+			$("#exp").prepend($exp_border);
+			
+			$exp_border.css({
+				"z-index" : "19",
+				"width" : _newExpSize[0] + "px",
+				"height" : _newExpSize[1] + "px",
+				"position" : "absolute",
+				"border" : "1px solid " + _borderColor,
+				"pointer-events" : "none"
+			});
+			
+			$(".full-col").css({
+				"width" : _newSize[0] + "px",
+				"height" : _newSize[1] + "px"
+			});
+			$(".full-exp").css({
+				"width" : _expSize[0] + "px",
+				"height" : _expSize[1] + "px"
+			});
+			
+			if (_platform === "FT")
+			{
+				if (_exp_btn_con.indexOf(".png") !== -1)
+				{
+					$("#col").before("<div id='exp_btn' class='free rm-btn'><img src='" + _exp_btn_con + "' alt='Collapse Content' /></div>");
+				} else {
+					$("#col").before("<div id='exp_btn' class='free rm-btn'>" + _exp_btn_con + "</div>");
+				}
+				if (_col_btn_con.indexOf(".png") !== -1)
+				{
+					$("#exp").before("<div id='exp_mask'></div><div id='col_btn' class='free rm-btn'><img src='" + _col_btn_con + "' alt='Expand Content' /></div>");
+				} else {
+					$("#exp").before("<div id='exp_mask'></div><div id='col_btn' class='free rm-btn'>" + _col_btn_con + "</div>");
+				}
+				
+				$("#col_btn").css({
+					"display" : "none",
+					"z-index" : "19"
+				});
+				$("#exp_btn").css({
+					"z-index" : "39"
+				});
+				$("#exp_mask").css({
+					"z-index" : "10",
+					"position" : "absolute",
+					"width" : _expSize[0] + "px",
+					"height" : _expSize[1] * 3 + "px",
+					"left" : "1px",
+					"display" : "none",
+					"top" : -1 - (_expSize[1] * 2) + "px"
+				});
+			}
+		}
+		
 		$("body").css({
 			"width" : _size[0] + "px",
 			"height" : _size[1] + "px"
@@ -449,24 +619,7 @@ $.dispatch = {
 			$(this).prop("draggable", false)
 					.css("-moz-user-select", "none");
 		});
-			
-		$("#unit-container").css({
-			"width" : _newSize[0] + "px",
-			"height" : _newSize[1] + "px",
-			"font-family" : _font,
-			"border" : "1px solid " + _borderColor
-		});
-			
-		$("#main-panel").css({
-			"width" : _newSize[0] + "px",
-			"height" : _newSize[1] + "px"
-		});	
-		
-		if (_replay)
-		{
-			doLog("Initing Replay");
-			init_replay_btn();
-		}
+		$("body").show();
 	}
 	
 	var init_platform = function()
@@ -514,7 +667,10 @@ $.dispatch = {
 			//	This is the function that runs to prepare the tags for dynamic input 
 			//({ID of Tag (without the "#")}, {FT tag replacement}, {Any Extra Attributes for the Method to Add})
 			
-			if (_data_type === "Dynamic")
+			if (_unit_type === "RM")
+			{
+				setup_FT_RM();
+			} else if (_data_type === "Dynamic")
 			{
 				$dyn_click = _$FT.instantAds.clickTag;
 				$.each(_dyn_elms, function($idx) 
@@ -545,6 +701,25 @@ $.dispatch = {
 			init_strd_setup(); 
 		}
 	}
+	
+	
+	function setup_FT_RM()
+	{
+		doLog("Initializing FlashTalking Rich Media Setup...");
+		
+		$collapsed = _$FT.$("#col");
+		$expanded = _$FT.$("#exp");
+		$expBtn = _$FT.$("#exp_btn");
+		$colBtn = _$FT.$("#col_btn");
+		
+		if (_altButtonClickTag !== "")
+		{
+			$altClickTagElm = document.getElementById(_altButtonClickTag);
+			$altFTClickElm = _$FT.$($altClickTagElm);
+		}
+		addEventListeners();
+	}
+	
 	
 	function init_strd_setup()
 	{
@@ -590,31 +765,114 @@ $.dispatch = {
 	{
 		//	If any additional clicktag elements have been added within the options, Flashtalking API applies the coding to them.
 		//	Otherwise, the main panel (ususally the standard) will trigger the "background exit"
+		
 		if (_platform === "FT")
 		{
-			$panel = _$FT.query("#main-panel");
-			
-			if ($dyn_click !== null && $dyn_click !== "undefined" && $dyn_click !== "")
+			if (_unit_type === "RM")
 			{
-				_$FT.applyClickTag($panel, 1, $dyn_click);
-			} else if (_def_clickTag !== "") {
-				_$FT.applyClickTag($panel, 1, _def_clickTag);
-			} else {
-				_$FT.applyClickTag($panel, 1);
-			}
-			
-			if (_clicktags)
-			{
-				for (var c = 0; c <= _clicktags.length; c++)
+				_$FT.applyClickTag($collapsed, 1);
+				
+				if (_expandedHasClickTag)
 				{
-					_$FT.applyClickTag($(_ct_elms[c]), c);
+					if (_altButtonClickTag !== "")
+					{
+						_$FT.applyClickTag($altFTClickElm, 2);
+					} else {
+						_$FT.applyClickTag($expanded, 2);
+					}
 				}
-			} 
+				
+				$expBtn.on("click", function(){
+					setTimeout(function() {
+						$collapsed.css({"display" : "none"});
+						$expBtn.css({"display" : "none"});
+					}, 150);
+					
+					$("body").css({
+						"width" : _expSize[0] + "px",
+						"height" : _expSize[1] + "px"
+					});
+					
+					$("#exp_mask").css({"display" : "block"});
+					$expanded.css({"display" : "block"});
+					$colBtn.css({"display" : "block"});
+					
+					$("#exp_mask").animate({
+						"top": 1
+					}, 600, "linear", function() {
+						$("#exp_mask").css({"display" : "none"});
+						doLog("Expanded Panel Should Be Visible");
+					});
+					_$FT.expand();
+					on_expand();
+				});
+				
+				$colBtn.on("click", function(){
+					$collapsed.css({"display" : "block"});
+					$expBtn.css({"display" : "block"});
+					
+					$("#exp_mask").css({
+						"display" : "block",
+						"top": -1 - (_newExpSize[1] * 2)
+					});
+					$expanded.css({"display" : "none"});
+					$colBtn.css({"display" : "none"});
+					
+					$("#exp_mask").css({"display" : "none"});
+					doLog("Collapsed Panel Should Be Visible");
+					
+					_$FT.contract();
+					on_collapse();
+				});
+				
+				var collapse = function(e){
+					if(e && e.type) {
+						_$FT.contract();
+					}
+				};
+				_$FT.on("contract", on_collapse);
+				
+				
+				$($altFTClickElm).on("click", function() {
+					$($colBtn).trigger("click");
+				});
+				
+				if (_isAutoExpand)
+				{
+					doLog("Should be AutoExpanding Now...");
+					setTimeout(function() {
+						$($expBtn).trigger("click");
+						
+						$col_timer = setTimeout(function() {
+							$($colBtn).trigger("click");
+						}, 8000);
+					}, 1000);
+				} else {
+					init_animation();
+				}
+			} else {
+				$panel = _$FT.query("#main-panel");
+			
+				if ($dyn_click !== null && $dyn_click !== "undefined" && $dyn_click !== "")
+				{
+					_$FT.applyClickTag($panel, 1, $dyn_click);
+				} else if (_def_clickTag !== "") {
+					_$FT.applyClickTag($panel, 1, _def_clickTag);
+				} else {
+					_$FT.applyClickTag($panel, 1);
+				}
+
+				if (_clicktags)
+				{
+					for (var c = 0; c <= _clicktags.length; c++)
+					{
+						_$FT.applyClickTag($(_ct_elms[c]), c);
+					}
+				} 
+			}
 		} else {
 			$panel = document.getElementById("main-panel");
 			$panel.addEventListener("click", function()
-
-
 			{
 				background_exit();
 			});
