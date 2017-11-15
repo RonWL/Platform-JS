@@ -5,7 +5,7 @@
 	<meta name="unit-size">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Platform JS v4.1.8</title>
+	<title>Platform JS v4.3</title>
 	
 	<!-- Fonts Included-->
 	
@@ -37,46 +37,70 @@
 		$(document).dispatch({	
 			//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 			$platform:"DC", 
-			
-			//	Option to Load External Animation Library or Not (Greensock {1 - "Max", 2 - "Lite"}).  If None Chosen, will default to not loading the Tweening Engine.
+
+			//	If Platform is Doubleclick, Options are at the moment true -> Unit IS Going through DC Studio, false -> Unit Not DC Studio Unit	
+			$isDCS:false,
+
+			//	Option to Load External Animation Library or Not (Greensock {0 - None, 1 - "Lite", or 2 - "Max"}).  If None Chosen, will default to not loading the Tweening Engine.
 			//	The loaded URI is the CDN endpoint to the latest version of GS.
-			$loadGS: 1,
-			
+			$loadGS: 0,
+
 			//	Select If the Unit is Dynamic or Static (Now ONLY Supports FlashTalking)
 			$dataType: "Static",
-			
+
+			//	Select If the Unit Standard Display or Rich Media Unit ({ST - Standard, RM - Rich Media}) (Now ONLY Supports FlashTalking)
+			$unitType: "ST",
+
 			//	If the Unit Will be Dynamic, This array will hold the elements to be Registered with the variables in the Manifest.js file (Flash Talking)
 			$dynElms: [],
-			
+
 			//	This Array holds the Variable(s) from which the elements in "$dynElms" will be populated with
 			$dynVars: [],
-			
+
 			//	How Many Clicktags will be used within the Unit (Other than the Default Click Thru).  If None, are provided, will default to 0.
 			$altTags: 0,
-			
-			//	The Elements that will Possess a CLick Tag.  Only Needed if the "$altTags" Option is Greater than 0.
+
+			//	The Elements that will Possess a Click Tag.  Only Needed if the "$altTags" Option is Greater than 0.
 			$ctElms: [],
-			
+
 			//	This is put in place in the event the developer wants to assign a target for the clicktag.
 			$defClickTag: "",
-			
-			//	Size ([Width, Height]) of the unit
+
+			//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
 			$size:	[300, 250],
-			
-			//	The border color of the unit (If None Given in Options, will Default to Black)
+
+			//	Collapse Button Content can be image or text
+			$collapseBtnContent: "Click to Collapse",
+
+			//	Expanded Size ([Width, Height]) of the EXPANDED state of the unit
+			$expSize:	[300, 250],
+
+			//	Collapse Button Content can be image or text
+			$expandBtnContent: "Click to Expand",
+
+			//	Toggle Whether or not the Expanded panel has a clicktag
+			$expandedHasClickTag: false,
+
+			//	Alternate Element to Assign the Expanded Clicktag to
+			$altButtonClickTag: "",
+
+			//	Determine Whether or not the RMU is AutoExpand
+			$isAutoExpand: false,
+
+			//	The border color of the unit (If None Given in Options, will Default to Black
 			$borderColor: "#000",
-			
-			//	The font included within the Unit (Especially Needed if Dynamic / Instant Unit)
+
+			//	The font included within the Unit (Especially Needed if Dynamic(Instant) Unit
 			$font: "'Arial', sans-serif",
-			
+
 			//	Does the Unit have "Replay" Functionality
-			$replay: true,
-			
-			//	If the Unit Has a replay Button, Vars for Button (Array of [{hexcolor}, {size}, {position: "topLeft", "topRight", "bottomLeft", or "bottomRight"}, {dropshadow}])
-			$replayVars: ["#444", 25, "topRight", true],
-			
+			$replay: false,
+
+			//	If the Unit Has a replay Button, Vars for Button (Array of [{hexcolor}, {size}, {position: "topLeft", "topRight", "bottomLeft", or "bottomRight"}])
+			$replayVars: ["#000", 20, "topRight"],
+
 			//	Sets a Logger for When Testing Edits / Updates to Plugin And / Or Unit Code	
-			$testing: true
+			$testing: false
 		});
 		
 	</script>
