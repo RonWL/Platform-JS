@@ -35,7 +35,7 @@ $.dispatch = {
 		//	If Platform is Doubleclick, Options are at the moment true -> Unit IS Going through DC Studio, false -> Unit Not DC Studio Unit	
 		$isDCS:false,
 		
-		//	Option to Load External Animation Library or Not (Greensock {0 - None, 1 - "Lite", or 2 - "Max"}).  If None Chosen, will default to not loading the Tweening Engine.
+		//	Option to Load External Animation Library or Not (Greensock {0 - None, 1 - "Max", or 2 - "Lite"}).  If None Chosen, will default to not loading the Tweening Engine.
 		//	The loaded URI is the CDN endpoint to the latest version of GS.
 		$loadGS: 0,
 		
