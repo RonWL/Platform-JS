@@ -527,6 +527,7 @@ $.dispatch = {
 				"width" : _newSize[0] + "px",
 				"height" : _newSize[1] + "px",
 				"font-family" : _font,
+				"overflow" : "hidden",
 				"border" : "1px solid " + _borderColor
 			});
 			if (_expandedHasClickTag)
