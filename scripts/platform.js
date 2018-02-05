@@ -27,7 +27,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v4.3',
+    version: 'v5',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -80,6 +80,9 @@ $.dispatch = {
 		
 		//	Determine Whether or not the RMU is AutoExpand
 		$isAutoExpand: false,
+		
+		//	If the Unit is Rich, Does it have video - Array [true/false, video container (element - $("----")), video name (listed in manifest.js), width, height, autoplay, controls, muted]
+		$video: [],
 		
 		//	The border color of the unit (If None Given in Options, will Default to Black
 		$borderColor: "#000",
@@ -144,6 +147,9 @@ $.dispatch = {
 	var $altFTClickElm;
 	
 	var _isAutoExpand;
+	var _video;
+	var $ft_video;
+	var _autoplay;
 	
 	
 	var _dyn_elms;
@@ -192,6 +198,8 @@ $.dispatch = {
 						case "FT" :
 							_expandedHasClickTag = opts.$expandedHasClickTag;
 							_altButtonClickTag = opts.$altButtonClickTag;
+							
+							_video = opts.$video;
 							break;
 					}
 				}
@@ -713,6 +721,30 @@ $.dispatch = {
 		$expBtn = _$FT.$("#exp_btn");
 		$colBtn = _$FT.$("#col_btn");
 		
+		
+		if (_video.length !== 0 && _video[0] === true)
+		{
+			var $vid_holder = _$FT.$(_video[1]);
+			_$FT.insertVideo({
+				parent: $vid_holder,
+				video: _video[2],
+				controls: _video[6],
+				muted: _video[7],
+				width: _video[3],
+				height: _video[4]
+			});
+			
+			if (_video[5] === true) {
+				_autoplay = true;
+			}
+			
+			$(_video[1]).find("ft-video").attr({
+				"id" : "ft_video"
+			});
+			$ft_video = _$FT.$("#ft_video");
+		}
+		
+		
 		if (_altButtonClickTag !== "")
 		{
 			$altClickTagElm = document.getElementById(_altButtonClickTag);
@@ -784,6 +816,7 @@ $.dispatch = {
 				}
 				
 				$expBtn.on("click", function(){
+					trigger_video("expand");
 					setTimeout(function() {
 						$collapsed.css({"display" : "none"});
 						$expBtn.css({"display" : "none"});
@@ -809,6 +842,7 @@ $.dispatch = {
 				});
 				
 				$colBtn.on("click", function(){
+					trigger_video("collapse");
 					$collapsed.css({"display" : "block"});
 					$expBtn.css({"display" : "block"});
 					
@@ -844,9 +878,28 @@ $.dispatch = {
 					setTimeout(function() {
 						$($expBtn).trigger("click");
 						
-						$col_timer = setTimeout(function() {
+						if (_video.length !== 0 && _video[0] === true)
+						{
+							if (!$ft_video[0].playing) {
+								
+							}
+						}
+						
+						var $col_timer = setTimeout(function() {
 							$($colBtn).trigger("click");
+							if (_video.length !== 0 && _video[0] === true)
+							{
+								_autoplay = true;
+							}
 						}, 8000);
+						
+						if (_video.length !== 0 && _video[0] === true)
+						{
+							$ft_video.on("play", function() {
+								clearTimeout($col_timer);
+								doLog("Timer Should be clearing...");
+							});
+						}
 					}, 1000);
 				} else {
 					init_animation();
@@ -879,6 +932,23 @@ $.dispatch = {
 			});
 		}
 	}
+	
+	function trigger_video($action)
+	{
+		switch ($action)
+		{
+			case "expand" :
+				if (_autoplay === true) {
+					$ft_video[0].play();
+				}
+				break;
+				
+			case "collapse" :
+				$ft_video[0].pause();
+				break;
+		}
+	}
+	
 	
 	function mod_js($mod, $code, $tgtTag, $class, $callback, $id)
 	{
