@@ -868,9 +868,15 @@ $.dispatch = {
 				_$FT.on("contract", on_collapse);
 				
 				
-				$($altFTClickElm).on("click", function() {
-					$($colBtn).trigger("click");
-				});
+				if ($($altFTClickElm)) {
+					$($altFTClickElm).on("click", function() {
+						$($colBtn).trigger("click");
+					});
+				} else {
+					$($expanded).on("click", function() {
+						$($colBtn).trigger("click");
+					});
+				}
 				
 				if (_isAutoExpand)
 				{
