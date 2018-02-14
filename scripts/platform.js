@@ -31,73 +31,74 @@ $.dispatch = {
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
-		
+
 		//	If Platform is Doubleclick, Options are at the moment true -> Unit IS Going through DC Studio, false -> Unit Not DC Studio Unit	
 		$isDCS:false,
-		
+
 		//	Option to Load External Animation Library or Not (Greensock {0 - None, 1 - "Max", or 2 - "Lite"}).  If None Chosen, will default to not loading the Tweening Engine.
 		//	The loaded URI is the CDN endpoint to the latest version of GS.
 		$loadGS: 0,
-		
+
 		//	Select If the Unit is Dynamic or Static (Now ONLY Supports FlashTalking)
 		$dataType: "Static",
-		
+
 		//	Select If the Unit Standard Display or Rich Media Unit ({ST - Standard, RM - Rich Media}) (Now ONLY Supports FlashTalking)
 		$unitType: "ST",
-		
-		//	If the Unit Will be Dynamic, This array will hold the elements to be Registered with the variables in the Manifest.js file (Flash Talking)
-		$dynElms: [],
-		
-		//	This Array holds the Variable(s) from which the elements in "$dynElms" will be populated with
-		$dynVars: [],
-		
-		//	How Many Clicktags will be used within the Unit (Other than the Default Click Thru).  If None, are provided, will default to 0.
-		$altTags: 0,
-		
-		//	The Elements that will Possess a Click Tag.  Only Needed if the "$altTags" Option is Greater than 0.
-		$ctElms: [],
-		
-		//	This is put in place in the event the developer wants to assign a target for the clicktag.
-		$defClickTag: "",
-		
+
 		//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
 		$size:	[300, 250],
-		
-		//	Collapse Button Content can be image or text
-		$collapseBtnContent: "Click to Collapse",
-		
-		//	Expanded Size ([Width, Height]) of the EXPANDED state of the unit
-		$expSize:	[300, 250],
-		
-		//	Collapse Button Content can be image or text
-		$expandBtnContent: "Click to Expand",
-		
-		//	Toggle Whether or not the Expanded panel has a clicktag
-		$expandedHasClickTag: false,
-		
-		//	Alternate Element to Assign the Expanded Clicktag to
-		$altButtonClickTag: "",
-		
-		//	Determine Whether or not the RMU is AutoExpand
-		$isAutoExpand: false,
-		
-		//	If the Unit is Rich, Does it have video - Array [true/false, video container (element - $("----")), video name (listed in manifest.js), width, height, autoplay, controls, muted]
-		$video: [],
-		
+
 		//	The border color of the unit (If None Given in Options, will Default to Black
 		$borderColor: "#000",
-		
+
 		//	The font included within the Unit (Especially Needed if Dynamic(Instant) Unit
 		$font: "'Arial', sans-serif",
-		
+
 		//	Does the Unit have "Replay" Functionality
 		$replay: false,
-		
+
 		//	If the Unit Has a replay Button, Vars for Button (Array of [{hexcolor}, {size}, {position: "topLeft", "topRight", "bottomLeft", or "bottomRight"}])
 		$replayVars: ["#000", 20, "topRight"],
-		
+
 		//	Sets a Logger for When Testing Edits / Updates to Plugin And / Or Unit Code	
-		$testing: false
+		$testing: false,
+
+		//	If the Unit Will be Dynamic, This array will hold the elements to be Registered with the variables in the Manifest.js file (Flash Talking)
+		$dynElms: [],
+
+		//	This Array holds the Variable(s) from which the elements in "$dynElms" will be populated with
+		$dynVars: [],
+
+		//	How Many Clicktags will be used within the Unit (Other than the Default Click Thru).  If None, are provided, will default to 0.
+		$altTags: 0,
+
+		//	The Elements that will Possess a Click Tag.  Only Needed if the "$altTags" Option is Greater than 0.
+		$ctElms: [],
+
+		//	This is put in place in the event the developer wants to assign a target for the clicktag.
+		$defClickTag: "",
+
+		//	Collapse Button Content can be image or text
+		$collapseBtnContent: "Click to Collapse",
+
+		//	Expanded Size ([Width, Height]) of the EXPANDED state of the unit
+		$expSize:	[300, 250],
+
+		//	Collapse Button Content can be image or text
+		$expandBtnContent: "Click to Expand",
+
+		//	Toggle Whether or not the Expanded panel has a clicktag
+		$expandedHasClickTag: false,
+
+		//	Alternate Element to Assign the Expanded Clicktag to
+		$altButtonClickTag: "",
+
+		//	Determine Whether or not the RMU is AutoExpand
+		$isAutoExpand: false,
+
+		//	If the Unit is Rich, Does it have video - Array [true/false, container, video name (listed in manifest.js), width, height, autoplay, controls, muted]
+		//	  Ex: $video: [true, "#vid_holder", "yt_video", 408, 202, false, false, true]
+		$video: []
 	}
 };
 

@@ -45,7 +45,7 @@
 			//	If Platform is Doubleclick, Options are at the moment true -> Unit IS Going through DC Studio, false -> Unit Not DC Studio Unit	
 			$isDCS:false,
 
-			//	Option to Load External Animation Library or Not (Greensock {0 - None, 1 - "Lite", or 2 - "Max"}).  If None Chosen, will default to not loading the Tweening Engine.
+			//	Option to Load External Animation Library or Not (Greensock {0 - None, 1 - "Max", or 2 - "Lite"}).  If None Chosen, will default to not loading the Tweening Engine.
 			//	The loaded URI is the CDN endpoint to the latest version of GS.
 			$loadGS: 0,
 
@@ -54,6 +54,24 @@
 
 			//	Select If the Unit Standard Display or Rich Media Unit ({ST - Standard, RM - Rich Media}) (Now ONLY Supports FlashTalking)
 			$unitType: "ST",
+
+			//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
+			$size:	[300, 250],
+
+			//	The border color of the unit (If None Given in Options, will Default to Black
+			$borderColor: "#000",
+
+			//	The font included within the Unit (Especially Needed if Dynamic(Instant) Unit
+			$font: "'Arial', sans-serif",
+
+			//	Does the Unit have "Replay" Functionality
+			$replay: false,
+
+			//	If the Unit Has a replay Button, Vars for Button (Array of [{hexcolor}, {size}, {position: "topLeft", "topRight", "bottomLeft", or "bottomRight"}])
+			$replayVars: ["#000", 20, "topRight"],
+
+			//	Sets a Logger for When Testing Edits / Updates to Plugin And / Or Unit Code	
+			$testing: false,
 
 			//	If the Unit Will be Dynamic, This array will hold the elements to be Registered with the variables in the Manifest.js file (Flash Talking)
 			$dynElms: [],
@@ -69,9 +87,6 @@
 
 			//	This is put in place in the event the developer wants to assign a target for the clicktag.
 			$defClickTag: "",
-
-			//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
-			$size:	[300, 250],
 
 			//	Collapse Button Content can be image or text
 			$collapseBtnContent: "Click to Collapse",
@@ -90,24 +105,10 @@
 
 			//	Determine Whether or not the RMU is AutoExpand
 			$isAutoExpand: false,
-			
+
 			//	If the Unit is Rich, Does it have video - Array [true/false, container, video name (listed in manifest.js), width, height, autoplay, controls, muted]
-			$video: [true, "#vid_holder", "yt_video", 408, 202, false, false, true],
-
-			//	The border color of the unit (If None Given in Options, will Default to Black
-			$borderColor: "#000",
-
-			//	The font included within the Unit (Especially Needed if Dynamic(Instant) Unit
-			$font: "'Arial', sans-serif",
-
-			//	Does the Unit have "Replay" Functionality
-			$replay: false,
-
-			//	If the Unit Has a replay Button, Vars for Button (Array of [{hexcolor}, {size}, {position: "topLeft", "topRight", "bottomLeft", or "bottomRight"}])
-			$replayVars: ["#000", 20, "topRight"],
-
-			//	Sets a Logger for When Testing Edits / Updates to Plugin And / Or Unit Code	
-			$testing: false
+			//	  Ex: $video: [true, "#vid_holder", "yt_video", 408, 202, false, false, true]
+			$video: []
 		});
 		
 	</script>
