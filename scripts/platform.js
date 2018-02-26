@@ -27,7 +27,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v5',
+    version: 'v5.25',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -96,8 +96,8 @@ $.dispatch = {
 		//	Determine Whether or not the RMU is AutoExpand
 		$isAutoExpand: false,
 
-		//	If the Unit is Rich, Does it have video - Array [true/false, container, video name (listed in manifest.js), width, height, autoplay, controls, muted]
-		//	  Ex: $video: [true, "#vid_holder", "yt_video", 408, 202, false, false, true]
+		//	If the Unit is Rich, Does it have video - Array [true/false, container, video name (listed in manifest.js), still image, width, height, autoplay, controls, muted]
+		//	  Ex: $video: [true, "#vid_holder", "yt_video", "still_frame.jpg", 408, 202, false, false, true]
 		$video: []
 	}
 };
@@ -726,13 +726,19 @@ $.dispatch = {
 		if (_video.length !== 0 && _video[0] === true)
 		{
 			var $vid_holder = _$FT.$(_video[1]);
-			_$FT.insertVideo({
-				parent: $vid_holder,
-				video: _video[2],
-				controls: _video[6],
-				muted: _video[7],
-				width: _video[3],
-				height: _video[4]
+			$vid_holder.append($("<img class='stillFrame' src='" + _video[3] + "' alt='still frame' />"));
+			
+			$vid_holder.on("click", function(evt) {
+				$(".stillFrame").detach();
+				
+				_$FT.insertVideo({
+					parent: $vid_holder,
+					video: _video[2],
+					controls: _video[7],
+					muted: _video[8],
+					width: _video[4],
+					height: _video[5]
+				});
 			});
 			
 			if (_video[5] === true) {
