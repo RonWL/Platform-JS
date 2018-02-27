@@ -27,7 +27,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v5.25',
+    version: 'v5.5',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -143,12 +143,12 @@ $.dispatch = {
 	
 	var _expandedHasClickTag;
 	var _altButtonClickTag;
-	var $altClickTagElm;
 	
 	var $altFTClickElm;
 	
 	var _isAutoExpand;
 	var _video;
+	var $vid_holder;
 	var $ft_video;
 	var _autoplay;
 	
@@ -411,6 +411,7 @@ $.dispatch = {
 				"opacity" : "0.5",
 				
 				"-webkit-transform-origin" : "50% 50%",
+
 				"-moz-transform-origin" : "50% 50%",
 				"-o-transform-origin" : "50% 50%",
 				"transform-origin" : "50% 50%",
@@ -725,37 +726,22 @@ $.dispatch = {
 		
 		if (_video.length !== 0 && _video[0] === true)
 		{
-			var $vid_holder = _$FT.$(_video[1]);
-			$vid_holder.append($("<img class='stillFrame' src='" + _video[3] + "' alt='still frame' />"));
+			$vid_holder = _$FT.$(_video[1]);
+			$vid_holder.append($("<img id='stillFrame' src='" + _video[3] + "' alt='still frame' />"));
 			
 			$vid_holder.on("click", function(evt) {
-				$(".stillFrame").detach();
-				
-				_$FT.insertVideo({
-					parent: $vid_holder,
-					video: _video[2],
-					controls: _video[7],
-					muted: _video[8],
-					width: _video[4],
-					height: _video[5]
-				});
+				trigger_video("start");		
 			});
 			
-			if (_video[5] === true) {
+			if (_video[6] === true) {
 				_autoplay = true;
 			}
-			
-			$(_video[1]).find("ft-video").attr({
-				"id" : "ft_video"
-			});
-			$ft_video = _$FT.$("#ft_video");
 		}
 		
 		
 		if (_altButtonClickTag !== "")
 		{
-			$altClickTagElm = document.getElementById(_altButtonClickTag);
-			$altFTClickElm = _$FT.$($altClickTagElm);
+			$altFTClickElm = _$FT.$("#" + _altButtonClickTag);
 		}
 		addEventListeners();
 	}
@@ -891,24 +877,16 @@ $.dispatch = {
 					setTimeout(function() {
 						$($expBtn).trigger("click");
 						
-						if (_video.length !== 0 && _video[0] === true)
-						{
-							if (!$ft_video[0].playing) {
-								
-							}
-						}
-						
 						var $col_timer = setTimeout(function() {
 							$($colBtn).trigger("click");
-							if (_video.length !== 0 && _video[0] === true)
-							{
-								_autoplay = true;
-							}
+							_isAutoExpand = false;
 						}, 8000);
 						
-						if (_video.length !== 0 && _video[0] === true)
+						if ($("#stillFrame").length)
 						{
-							$ft_video.on("play", function() {
+							$("#stillFrame").on("click", function(evt) {
+								_isAutoExpand = false;
+								trigger_video("expand");
 								clearTimeout($col_timer);
 								doLog("Timer Should be clearing...");
 							});
@@ -950,16 +928,47 @@ $.dispatch = {
 	{
 		switch ($action)
 		{
-			case "expand" :
-				if (_autoplay === true) {
-					$ft_video[0].play();
+			case "start" :
+				insert_video();
+				break;
+			case "expand" :					
+				if (_autoplay === true && _isAutoExpand === false) {
+					if ($("#stillFrame").length) {
+						insert_video();
+						setTimeout(function() {
+							$ft_video[0].play();
+						}, 1000);
+					} else {
+						$ft_video[0].play();
+					}					
 				}
 				break;
 				
 			case "collapse" :
-				$ft_video[0].pause();
+				if ($("#stillFrame").length) {
+					
+				} else {
+					$ft_video[0].pause();
+				}
 				break;
 		}
+	}
+	
+	function insert_video()
+	{
+		$($vid_holder).empty();
+		_$FT.insertVideo({
+			parent: $vid_holder,
+			video: _video[2],
+			controls: _video[7],
+			muted: _video[8],
+			width: _video[4],
+			height: _video[5]
+		});
+		$(_video[1]).find("ft-video").attr({
+			"id" : "ft_video"
+		});
+		$ft_video = _$FT.$("#ft_video");
 	}
 	
 	
