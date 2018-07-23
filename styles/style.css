@@ -46,6 +46,10 @@ img {
 	text-align: center;
 }
 
+.no-point {
+	pointer-events: none !important;
+}
+
 
 /* Expand / Collapse Buttons */
 .rm-btn {
