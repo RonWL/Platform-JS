@@ -27,7 +27,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v6.0',
+    version: 'v6.2',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -134,6 +134,7 @@ $.dispatch = {
 	var $collapsed;
 	var $expanded;
 	var $expBtn;
+	var $exp_mask_direction;
 	var $colBtn;
 	var _expSize;
 	var _newExpSize;
@@ -413,6 +414,7 @@ $.dispatch = {
 				"-webkit-transform-origin" : "50% 50%",
 
 
+
 				"-moz-transform-origin" : "50% 50%",
 				"-o-transform-origin" : "50% 50%",
 				"transform-origin" : "50% 50%",
@@ -609,15 +611,29 @@ $.dispatch = {
 				$("#exp_btn").css({
 					"z-index" : "39"
 				});
+				
 				$("#exp_mask").css({
 					"z-index" : "10",
 					"position" : "absolute",
-					"width" : _expSize[0] + "px",
-					"height" : _expSize[1] * 3 + "px",
-					"left" : "1px",
-					"display" : "none",
-					"top" : -1 - (_expSize[1] * 2) + "px"
+					"display" : "none"
 				});
+				if (_expSize[1] === _size[1]) {
+					$("#exp_mask").css({
+						"left" : -1 - (_expSize[0] * 2) + "px",
+						"top" : "1px",
+						"width" : _expSize[0] * 3 + "px",
+						"height" : _expSize[1] + "px"
+					}).addClass("gradient-leftRight");
+					$exp_mask_direction = "leftRight";
+				} else {
+					$("#exp_mask").css({
+						"left" : "1px",
+						"top" : -1 - (_expSize[1] * 2) + "px",
+						"width" : _expSize[0] + "px",
+						"height" : _expSize[1] * 3 + "px"
+					}).addClass("gradient-topDown");
+					$exp_mask_direction = "topDown";
+				}
 			}
 		}
 		
@@ -825,12 +841,25 @@ $.dispatch = {
 					$expanded.css({"display" : "block"});
 					$colBtn.css({"display" : "block"});
 					
-					$("#exp_mask").animate({
-						"top": 1
-					}, 600, "linear", function() {
-						$("#exp_mask").css({"display" : "none"});
-						doLog("Expanded Panel Should Be Visible");
-					});
+					switch ($exp_mask_direction) {
+						case "leftRight" :
+							$("#exp_mask").animate({
+								"left": 1
+							}, 600, "linear", function() {
+								$("#exp_mask").css({"display" : "none"});
+								doLog("Expanded Panel Should Be Visible");
+							});
+							break;
+							
+						case "topDown" :
+							$("#exp_mask").animate({
+								"top": 1
+							}, 600, "linear", function() {
+								$("#exp_mask").css({"display" : "none"});
+								doLog("Expanded Panel Should Be Visible");
+							});
+							break;
+					}
 					_$FT.expand();
 					on_expand();
 				});
