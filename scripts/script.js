@@ -1,4 +1,4 @@
-/*	version: "v4.1.6"	*/
+/*	version: "v6.0"	*/
 
 $.noConflict();
 var $ = jQuery;
@@ -23,6 +23,21 @@ function reset_unit()
 {
 	console.log("Resetting Unit...");
 	TweenMax.delayedCall(1, init_animation);
+}
+
+
+/************************************ Rich Media JS *****************************************/
+
+function on_expand()
+{
+	"use strict";
+	
+}
+
+function on_collapse()
+{
+	"use strict";
+	
 }
 
 /*********************************************************************************************/

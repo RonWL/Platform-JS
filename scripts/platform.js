@@ -27,7 +27,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v5.5',
+    version: 'v6.0',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -98,7 +98,7 @@ $.dispatch = {
 
 		//	If the Unit is Rich, Does it have video - Array [true/false, container, video name (listed in manifest.js), still image, width, height, autoplay, controls, muted]
 		//	  Ex: $video: [true, "#vid_holder", "yt_video", "still_frame.jpg", 408, 202, false, false, true]
-		$video: []
+		$video: [false]
 	}
 };
 
@@ -411,6 +411,7 @@ $.dispatch = {
 				"opacity" : "0.5",
 				
 				"-webkit-transform-origin" : "50% 50%",
+
 
 				"-moz-transform-origin" : "50% 50%",
 				"-o-transform-origin" : "50% 50%",
@@ -926,31 +927,35 @@ $.dispatch = {
 	
 	function trigger_video($action)
 	{
-		switch ($action)
-		{
-			case "start" :
-				insert_video();
-				break;
-			case "expand" :					
-				if (_autoplay === true && _isAutoExpand === false) {
-					if ($("#stillFrame").length) {
-						insert_video();
-						setTimeout(function() {
+		if (_video[0] !== false) {
+			switch ($action)
+			{
+				case "start" :
+					insert_video();
+					break;
+				case "expand" :					
+					if (_autoplay === true && _isAutoExpand === false) {
+						if ($("#stillFrame").length) {
+							insert_video();
+							setTimeout(function() {
+								$ft_video[0].play();
+							}, 1000);
+						} else {
 							$ft_video[0].play();
-						}, 1000);
+						}					
+					}
+					break;
+
+				case "collapse" :
+					if ($("#stillFrame").length) {
+
 					} else {
-						$ft_video[0].play();
-					}					
-				}
-				break;
-				
-			case "collapse" :
-				if ($("#stillFrame").length) {
-					
-				} else {
-					$ft_video[0].pause();
-				}
-				break;
+						$ft_video[0].pause();
+					}
+					break;
+			}
+		} else {
+			return;
 		}
 	}
 	
