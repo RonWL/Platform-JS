@@ -27,7 +27,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v6.2',
+    version: 'v6.3',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -136,6 +136,7 @@ $.dispatch = {
 	var $expBtn;
 	var $exp_mask_direction;
 	var $colBtn;
+	var $col_timer;
 	var _expSize;
 	var _newExpSize;
 	
@@ -270,6 +271,8 @@ $.dispatch = {
 	{
 		if (_loadGS)
 		{
+
+
 			var $gs_prefix = "https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/"; 
 			var $gs_end;
 			var $gs_url;
@@ -411,6 +414,7 @@ $.dispatch = {
 				"z-index" : "-1",
 				"opacity" : "0.5",
 				
+
 				"-webkit-transform-origin" : "50% 50%",
 
 
@@ -865,6 +869,10 @@ $.dispatch = {
 				});
 				
 				$colBtn.on("click", function(){
+					if (_isAutoExpand) {
+						_isAutoExpand = false;
+						clearTimeout($col_timer);
+					}
 					trigger_video("collapse");
 					$collapsed.css({"display" : "block"});
 					$expBtn.css({"display" : "block"});
@@ -907,7 +915,7 @@ $.dispatch = {
 					setTimeout(function() {
 						$($expBtn).trigger("click");
 						
-						var $col_timer = setTimeout(function() {
+						$col_timer = setTimeout(function() {
 							$($colBtn).trigger("click");
 							_isAutoExpand = false;
 						}, 8000);
