@@ -27,7 +27,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v6.3',
+    version: 'v6.5',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -77,7 +77,10 @@ $.dispatch = {
 
 		//	This is put in place in the event the developer wants to assign a target for the clicktag.
 		$defClickTag: "",
-
+		
+		//	Select If the Unit is an Expandable or Not)
+		$expands: false,
+		
 		//	Collapse Button Content can be image or text
 		$collapseBtnContent: "Click to Collapse",
 
@@ -137,6 +140,7 @@ $.dispatch = {
 	var $exp_mask_direction;
 	var $colBtn;
 	var $col_timer;
+	var _expands;
 	var _expSize;
 	var _newExpSize;
 	
@@ -188,20 +192,26 @@ $.dispatch = {
 				
 				if (_unit_type === "RM")
 				{
-					_expSize = opts.$expSize;
-					_newExpSize = [_expSize[0] - 2, _expSize[1] - 2];
-					
-					_col_btn_con = opts.$collapseBtnContent;
-					_exp_btn_con = opts.$expandBtnContent;
-					
-					_isAutoExpand = opts.$isAutoExpand;
+					_expands = opts.$expands;
+					if (_expands)
+					{
+						_expSize = opts.$expSize;
+						_newExpSize = [_expSize[0] - 2, _expSize[1] - 2];
+
+						_col_btn_con = opts.$collapseBtnContent;
+						_exp_btn_con = opts.$expandBtnContent;
+
+						_isAutoExpand = opts.$isAutoExpand;
+					}
 					
 					switch (_platform)
 					{
 						case "FT" :
-							_expandedHasClickTag = opts.$expandedHasClickTag;
-							_altButtonClickTag = opts.$altButtonClickTag;
-							
+							if (_expands)
+							{
+								_expandedHasClickTag = opts.$expandedHasClickTag;
+								_altButtonClickTag = opts.$altButtonClickTag;
+							}
 							_video = opts.$video;
 							break;
 					}
@@ -538,107 +548,123 @@ $.dispatch = {
 				init_replay_btn();
 			}
 		} else {
-			$("#col").css({
-				"z-index" : "20",
-				"position" : "absolute",
-				"width" : _newSize[0] + "px",
-				"height" : _newSize[1] + "px",
-				"font-family" : _font,
-				"overflow" : "hidden",
-				"border" : "1px solid " + _borderColor
-			});
-			if (_expandedHasClickTag)
+			if (_expands)
 			{
-				$("#exp").css({
-					"z-index" : "1",
+				$("#col").css({
+					"z-index" : "20",
 					"position" : "absolute",
-					"width" : _expSize[0] + "px",
-					"height" : _expSize[1] + "px",
-					"display" : "none",
+					"width" : _newSize[0] + "px",
+					"height" : _newSize[1] + "px",
 					"font-family" : _font,
-					"background-color" : "#fff",
-					"cursor" : "pointer"
+					"overflow" : "hidden",
+					"border" : "1px solid " + _borderColor
 				});
+				if (_expandedHasClickTag)
+				{
+					$("#exp").css({
+						"z-index" : "1",
+						"position" : "absolute",
+						"width" : _expSize[0] + "px",
+						"height" : _expSize[1] + "px",
+						"display" : "none",
+						"font-family" : _font,
+						"background-color" : "#fff",
+						"cursor" : "pointer"
+					});
+				} else {
+					$("#exp").css({
+						"z-index" : "1",
+						"position" : "absolute",
+						"width" : _expSize[0] + "px",
+						"height" : _expSize[1] + "px",
+						"display" : "none",
+						"font-family" : _font,
+						"background-color" : "#fff",
+						"cursor" : "pointer"
+					});
+				}
+
+				var $exp_border = $("<div id='exp-border' />");
+				$("#exp").prepend($exp_border);
+
+				$exp_border.css({
+					"z-index" : "19",
+					"width" : _newExpSize[0] + "px",
+					"height" : _newExpSize[1] + "px",
+					"position" : "absolute",
+					"border" : "1px solid " + _borderColor,
+					"pointer-events" : "none"
+				});
+				
+				$(".full-exp").css({
+					"width" : _expSize[0] + "px",
+					"height" : _expSize[1] + "px"
+				});
+				
+				if (_platform === "FT")
+				{
+					if (_exp_btn_con.indexOf(".png") !== -1)
+					{
+						$("#col").before("<div id='exp_btn' class='free rm-btn'><img src='" + _exp_btn_con + "' alt='Collapse Content' /></div>");
+					} else {
+						$("#col").before("<div id='exp_btn' class='free rm-btn'>" + _exp_btn_con + "</div>");
+					}
+					if (_col_btn_con.indexOf(".png") !== -1)
+					{
+						$("#exp").before("<div id='exp_mask'></div><div id='col_btn' class='free rm-btn'><img src='" + _col_btn_con + "' alt='Expand Content' /></div>");
+					} else {
+						$("#exp").before("<div id='exp_mask'></div><div id='col_btn' class='free rm-btn'>" + _col_btn_con + "</div>");
+					}
+
+					$("#col_btn").css({
+						"display" : "none",
+						"z-index" : "19"
+					});
+					$("#exp_btn").css({
+						"z-index" : "39"
+					});
+
+					$("#exp_mask").css({
+						"z-index" : "10",
+						"position" : "absolute",
+						"display" : "none"
+					});
+					if (_expSize[1] === _size[1]) {
+						$("#exp_mask").css({
+							"left" : -1 - (_expSize[0] * 2) + "px",
+							"top" : "1px",
+							"width" : _expSize[0] * 3 + "px",
+							"height" : _expSize[1] + "px"
+						}).addClass("gradient-leftRight");
+						$exp_mask_direction = "leftRight";
+					} else {
+						$("#exp_mask").css({
+							"left" : "1px",
+							"top" : -1 - (_expSize[1] * 2) + "px",
+							"width" : _expSize[0] + "px",
+							"height" : _expSize[1] * 3 + "px"
+						}).addClass("gradient-topDown");
+						$exp_mask_direction = "topDown";
+					}
+				}
 			} else {
-				$("#exp").css({
-					"z-index" : "1",
-					"position" : "absolute",
-					"width" : _expSize[0] + "px",
-					"height" : _expSize[1] + "px",
-					"display" : "none",
+				$("#unit-container").css({
+					"width" : _newSize[0] + "px",
+					"height" : _newSize[1] + "px",
 					"font-family" : _font,
-					"background-color" : "#fff",
-					"cursor" : "pointer"
+					"border" : "1px solid " + _borderColor
 				});
+
+				$("#main-panel").css({
+					"width" : _newSize[0] + "px",
+					"height" : _newSize[1] + "px"
+				});	
 			}
-			
-			var $exp_border = $("<div id='exp-border' />");
-			$("#exp").prepend($exp_border);
-			
-			$exp_border.css({
-				"z-index" : "19",
-				"width" : _newExpSize[0] + "px",
-				"height" : _newExpSize[1] + "px",
-				"position" : "absolute",
-				"border" : "1px solid " + _borderColor,
-				"pointer-events" : "none"
-			});
 			
 			$(".full-col").css({
 				"width" : _newSize[0] + "px",
 				"height" : _newSize[1] + "px"
 			});
-			$(".full-exp").css({
-				"width" : _expSize[0] + "px",
-				"height" : _expSize[1] + "px"
-			});
-			
-			if (_platform === "FT")
-			{
-				if (_exp_btn_con.indexOf(".png") !== -1)
-				{
-					$("#col").before("<div id='exp_btn' class='free rm-btn'><img src='" + _exp_btn_con + "' alt='Collapse Content' /></div>");
-				} else {
-					$("#col").before("<div id='exp_btn' class='free rm-btn'>" + _exp_btn_con + "</div>");
-				}
-				if (_col_btn_con.indexOf(".png") !== -1)
-				{
-					$("#exp").before("<div id='exp_mask'></div><div id='col_btn' class='free rm-btn'><img src='" + _col_btn_con + "' alt='Expand Content' /></div>");
-				} else {
-					$("#exp").before("<div id='exp_mask'></div><div id='col_btn' class='free rm-btn'>" + _col_btn_con + "</div>");
-				}
-				
-				$("#col_btn").css({
-					"display" : "none",
-					"z-index" : "19"
-				});
-				$("#exp_btn").css({
-					"z-index" : "39"
-				});
-				
-				$("#exp_mask").css({
-					"z-index" : "10",
-					"position" : "absolute",
-					"display" : "none"
-				});
-				if (_expSize[1] === _size[1]) {
-					$("#exp_mask").css({
-						"left" : -1 - (_expSize[0] * 2) + "px",
-						"top" : "1px",
-						"width" : _expSize[0] * 3 + "px",
-						"height" : _expSize[1] + "px"
-					}).addClass("gradient-leftRight");
-					$exp_mask_direction = "leftRight";
-				} else {
-					$("#exp_mask").css({
-						"left" : "1px",
-						"top" : -1 - (_expSize[1] * 2) + "px",
-						"width" : _expSize[0] + "px",
-						"height" : _expSize[1] * 3 + "px"
-					}).addClass("gradient-topDown");
-					$exp_mask_direction = "topDown";
-				}
-			}
 		}
 		
 		$("body").css({
@@ -739,11 +765,17 @@ $.dispatch = {
 	{
 		doLog("Initializing FlashTalking Rich Media Setup...");
 		
-		$collapsed = _$FT.$("#col");
-		$expanded = _$FT.$("#exp");
-		$expBtn = _$FT.$("#exp_btn");
-		$colBtn = _$FT.$("#col_btn");
-		
+		if (_expands)
+		{
+			$collapsed = _$FT.$("#col");
+			$expanded = _$FT.$("#exp");
+			$expBtn = _$FT.$("#exp_btn");
+			$colBtn = _$FT.$("#col_btn");
+			if (_altButtonClickTag !== "")
+			{
+				$altFTClickElm = _$FT.$("#" + _altButtonClickTag);
+			}
+		}
 		
 		if (_video.length !== 0 && _video[0] === true)
 		{
@@ -757,12 +789,6 @@ $.dispatch = {
 			if (_video[6] === true) {
 				_autoplay = true;
 			}
-		}
-		
-		
-		if (_altButtonClickTag !== "")
-		{
-			$altFTClickElm = _$FT.$("#" + _altButtonClickTag);
 		}
 		addEventListeners();
 	}
@@ -815,7 +841,7 @@ $.dispatch = {
 		
 		if (_platform === "FT")
 		{
-			if (_unit_type === "RM")
+			if (_unit_type === "RM" && _expands === true)
 			{
 				_$FT.applyClickTag($collapsed, 1);
 				
@@ -906,6 +932,7 @@ $.dispatch = {
 				} else {
 					$($expanded).on("click", function() {
 						$($colBtn).trigger("click");
+
 					});
 				}
 				
@@ -951,7 +978,8 @@ $.dispatch = {
 					{
 						_$FT.applyClickTag($(_ct_elms[c]), c);
 					}
-				} 
+				}
+				init_animation();
 			}
 		} else {
 			$panel = document.getElementById("main-panel");
