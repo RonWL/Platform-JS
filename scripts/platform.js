@@ -27,7 +27,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v6.5',
+    version: 'v6.75',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -100,7 +100,7 @@ $.dispatch = {
 		$isAutoExpand: false,
 
 		//	If the Unit is Rich, Does it have video - Array [true/false, container, video name (listed in manifest.js), still image, width, height, autoplay, controls, muted]
-		//	  Ex: $video: [true, "#vid_holder", "yt_video", "still_frame.jpg", 408, 202, false, false, true]
+		//	  Ex: $video: [true, "#vid_holder", "yt_video", "still_frame.jpg", 408, 202, [false,1000], false, true]
 		$video: [false]
 	}
 };
@@ -154,6 +154,7 @@ $.dispatch = {
 	
 	var _isAutoExpand;
 	var _video;
+	var $vid_delay;
 	var $vid_holder;
 	var $ft_video;
 	var _autoplay;
@@ -267,6 +268,7 @@ $.dispatch = {
 							$("#EnablerJS, #EbloadJS").remove();
 							
 							$click = "var clicktag = \"\";";
+
 							mod_js("Add", $click, "head", "dcjs");
 							
 							get_animation_assets();						
@@ -786,8 +788,14 @@ $.dispatch = {
 				trigger_video("start");		
 			});
 			
-			if (_video[6] === true) {
+			if (_video[6][0] === true) {
 				_autoplay = true;
+				
+				if(_video[6][1] == "undefined" || _video[6][1] === null) {
+					$vid_delay = 1000;
+				} else {
+					$vid_delay = _video[6][1] * 1000;
+				}
 			}
 		}
 		addEventListeners();
@@ -932,7 +940,6 @@ $.dispatch = {
 				} else {
 					$($expanded).on("click", function() {
 						$($colBtn).trigger("click");
-
 					});
 				}
 				
@@ -961,6 +968,10 @@ $.dispatch = {
 					init_animation();
 				}
 			} else {
+				if (_video[0] === true) {
+					_isAutoExpand = false;
+					trigger_video("expand");
+				}
 				$panel = _$FT.query("#main-panel");
 			
 				if ($dyn_click !== null && $dyn_click !== "undefined" && $dyn_click !== "")
@@ -998,13 +1009,15 @@ $.dispatch = {
 				case "start" :
 					insert_video();
 					break;
-				case "expand" :					
+				case "expand" :
+					console.log(_isAutoExpand);
 					if (_autoplay === true && _isAutoExpand === false) {
+						console.log("Inserting Video");
 						if ($("#stillFrame").length) {
 							insert_video();
 							setTimeout(function() {
 								$ft_video[0].play();
-							}, 1000);
+							}, $vid_delay);
 						} else {
 							$ft_video[0].play();
 						}					
