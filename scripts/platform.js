@@ -27,7 +27,7 @@ SOFTWARE.
 
 $.dispatch = {
     id: 'Platform JS',
-    version: 'v6.75',
+    version: 'v6.76',
     defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform:"DC", 
@@ -268,6 +268,8 @@ $.dispatch = {
 							$("#EnablerJS, #EbloadJS").remove();
 							
 							$click = "var clicktag = \"\";";
+
+
 
 							mod_js("Add", $click, "head", "dcjs");
 							
@@ -933,12 +935,12 @@ $.dispatch = {
 				_$FT.on("contract", on_collapse);
 				
 				
-				if ($($altFTClickElm)) {
-					$($altFTClickElm).on("click", function() {
+				if ($altFTClickElm) {
+					$altFTClickElm.on("click", function() {
 						$($colBtn).trigger("click");
 					});
 				} else {
-					$($expanded).on("click", function() {
+					$expanded.on("click", function() {
 						$($colBtn).trigger("click");
 					});
 				}
