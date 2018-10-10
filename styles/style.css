@@ -68,7 +68,7 @@ img {
 
 /* Collapsed Panel */
 
-#col {
+#collapsed-panel {
 	
 }
 
@@ -90,6 +90,6 @@ img {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 */
 }
 
-#exp {
+#expanded-panel {
 	
 }

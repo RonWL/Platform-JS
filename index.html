@@ -6,7 +6,7 @@
 	<meta name="unit-size">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Platform JS v6.75</title>
+	<title>Platform JS v7.1</title>
 	
 	<!-- Fonts Included-->
 	
@@ -41,10 +41,10 @@
 		
 		$(document).dispatch({	
 			//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
-			$platform:"DC", 
+			$platform: "DC",
 
 			//	If Platform is Doubleclick, Options are at the moment true -> Unit IS Going through DC Studio, false -> Unit Not DC Studio Unit	
-			$isDCS:false,
+			$isDCS: false,
 
 			//	Option to Load External Animation Library or Not (Greensock {0 - None, 1 - "Max", or 2 - "Lite"}).  If None Chosen, will default to not loading the Tweening Engine.
 			//	The loaded URI is the CDN endpoint to the latest version of GS.
@@ -57,7 +57,7 @@
 			$unitType: "ST",
 
 			//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
-			$size:	[300, 250],
+			$size: [300, 250],
 
 			//	The border color of the unit (If None Given in Options, will Default to Black
 			$borderColor: "#000",
@@ -88,7 +88,7 @@
 
 			//	This is put in place in the event the developer wants to assign a target for the clicktag.
 			$defClickTag: "",
-			
+
 			//	Select If the Unit is an Expandable or Not)
 			$expands: false,
 
@@ -96,12 +96,13 @@
 			$collapseBtnContent: "Click to Collapse",
 
 			//	Expanded Size ([Width, Height]) of the EXPANDED state of the unit
-			$expSize:	[300, 250],
+			$expSize: [300, 250],
 
 			//	Collapse Button Content can be image or text
 			$expandBtnContent: "Click to Expand",
 
 			//	Toggle Whether or not the Expanded panel has a clicktag
+
 			$expandedHasClickTag: false,
 
 			//	Alternate Element to Assign the Expanded Clicktag to
@@ -110,9 +111,9 @@
 			//	Determine Whether or not the RMU is AutoExpand
 			$isAutoExpand: false,
 
-			//	If the Unit is Rich, Does it have video - Array [true/false, container, video name (listed in manifest.js), width, height, autoplay, controls, muted]
-			//	  Ex: $video: [true, "#vid_holder", "yt_video", 408, 202, [true,5], false, true]
-			$video: []
+			//	If the Unit is Rich, Does it have video - Array [true/false, container, video name (listed in manifest.js), still image, width, height, autoplay, controls, muted, Youtube ID(Only for DC)]
+			//	  Ex: $video: [true, "#vid_holder", "yt_video", "still_frame.jpg", 408, 202, [false,1000], false, true, Youtube ID]
+			$video: [false]
 		});
 		
 	</script>
@@ -140,13 +141,13 @@
 	<!-- End Standard Unit Shell -->
 	
 	
-	<!-- Rich Media Shell -->
+	<!-- Rich Media Shell For DoubleClick, panels need to be nested inside of "main-panel" -->
 	
-	<div id="col">
+	<div id="collapsed-panel">
 		
 	</div>
 		
-	<div id="exp">
+	<div id="expanded-panel">
 		
 	</div>
 	
