@@ -727,6 +727,9 @@ $.dispatch = {
 		}
 	}
 
+	
+	// DoubleClick Rich Media Setup
+	
 	function setup_DC_RM() {
 		doLog("Initializing DoubleClick Rich Media Setup...");
 		Enabler.setExpandingPixelOffsets(0, 0, _expSize[0], _expSize[1]);
@@ -768,12 +771,18 @@ $.dispatch = {
 			} else {
 				clearInterval(yt_interval);
 			}
+		} else {
+			addEventListeners();
 		}
 	}
 
+	
+	// FlashTalking Rich Media Setup
+	
 	function setup_FT_RM() {
 		doLog("Initializing FlashTalking Rich Media Setup...");
-
+		doLog("Does this unit Expand: " + _expands);
+		
 		if (_expands) {
 			$collapsed = _$FT.$("#collapsed-panel");
 			$expanded = _$FT.$("#expanded-panel");
@@ -784,17 +793,38 @@ $.dispatch = {
 			}
 		}
 		if (_video.length !== 0 && _video[0] === true) {
+			doLog("Initializing FlashTalking Rich Media Video Setup");
 			init_video();
+		} else {
+			addEventListeners();
 		}
-		addEventListeners();
 	}
-
+	
+	
+	// Initialize Video Setup
+	
 	function init_video() {
 		switch (_platform) {
 			case "FT":
-				$vid_holder = _$FT.$(_video[1]);
-				setup_video_autoplay();
+				$vid_holder = _$FT.$("#" + _video[1]);
+				doLog("Video Container: " + _video[1]);
+				$vid_holder.append($("<img id='stillFrame' src='" + _video[3] + "' alt='still frame' />"));
 
+				$vid_holder.on("click", function(evt) {
+					trigger_video("start");		
+				});
+
+				if (_video[6][0] === true) {
+					_autoplay = true;
+
+					if(_video[6][1] == "undefined" || _video[6][1] === null) {
+						$vid_delay = 1000;
+					} else {
+						$vid_delay = _video[6][1] * 1000;
+					}
+				}
+				addEventListeners();
+				
 				break;
 
 			case "DC":
@@ -803,22 +833,6 @@ $.dispatch = {
 				$vid_holder.append($("<img id='stillFrame' src='" + _video[3] + "' alt='still frame' />"));
 				addEventListeners();
 				break;
-		}
-	}
-
-	function setup_video_autoplay() {
-		$vid_holder.on("click", function () {
-			trigger_video("start");
-		});
-
-		if (_video[6][0] === true) {
-			_autoplay = true;
-
-			if (_video[6][1] === "undefined" || _video[6][1] === null) {
-				$vid_delay = 1000;
-			} else {
-				$vid_delay = _video[6][1] * 1000;
-			}
 		}
 	}
 
@@ -1131,7 +1145,7 @@ $.dispatch = {
 					break;
 				case "expand":
 					if (_autoplay === true && _isAutoExpand === false) {
-						doLog("Inserting Video");
+						doLog("Inserting Video, AutoExpand: " + _isAutoExpand);
 						if ($("#stillFrame").length) {
 							insert_video();
 							if (_platform === "FT") {
@@ -1219,7 +1233,6 @@ $.dispatch = {
 						"onError" : on_player_error
 					}
 				});
-				
 				break;
 
 			case "FT":
@@ -1231,10 +1244,13 @@ $.dispatch = {
 					width: _video[4],
 					height: _video[5]
 				});
-				$(_video[1]).find("rm-video").attr({
+				$($vid_holder).find("ft-video").attr({
 					"id": "rm_video"
 				});
 				$rm_video = _$FT.$("#rm_video");
+				setTimeout(function () {
+					play_video();
+				}, $vid_delay);
 				break;
 		}
 	}
