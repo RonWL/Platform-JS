@@ -27,7 +27,7 @@ SOFTWARE.
 
 $.dispatch = {
 	id: 'Platform JS',
-	version: 'v7.1',
+	version: 'v7.2',
 	defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform: "DC",
@@ -242,11 +242,6 @@ $.dispatch = {
 					switch (_platform) {
 						//	Since DC & Sizmek's platform REQUIRES the external script tag within the main HTML file (NOT Ideal & Very Ugly), here we apply the clicktag hardcode
 						case "DC":
-							$("#EbloadJS").remove();
-
-							$click = "var clicktag = \"\";";
-							mod_js("Add", $click, "head", "dcjs");
-
 							get_animation_assets();
 
 							break;
@@ -257,15 +252,12 @@ $.dispatch = {
 							break;
 
 						case "FT":
-							$("#EbloadJS").remove();
-
 							var $ftsrc = "https://cdn.flashtalking.com/frameworks/js/api/2/10/html5API.js";
 							mod_js("Load", $ftsrc, "body", "ftjs", get_animation_assets, "FtdynJS");
 
 							break;
 
 						case "":
-							$("#EnablerJS, #EbloadJS").remove();
 							$click = "var clicktag = \"\";";
 							mod_js("Add", $click, "head", "dcjs");
 							get_animation_assets();
