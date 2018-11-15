@@ -27,7 +27,7 @@ SOFTWARE.
 
 $.dispatch = {
 	id: 'Platform JS',
-	version: 'v7.2',
+	version: 'v7.3',
 	defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform: "DC",
@@ -189,7 +189,11 @@ $.dispatch = {
 				_newSize = [_size[0] - 2, _size[1] - 2];
 
 				_font = opts.$font;
-				_borderColor = opts.$borderColor;
+				if (opts.$borderColor) {
+					_borderColor = opts.$borderColor;
+				} else {
+					_borderColor = "#000";
+				}
 
 				//	FlashTalking Options Declared in Root of Plugin
 				_data_type = opts.$dataType;
@@ -462,7 +466,6 @@ $.dispatch = {
 		$replayContainer.fadeIn(800, function () {
 			$(this).on("click", function () {
 				$(this).off("click");
-				$(this).hide();
 				reset_unit();
 			});
 			var timer,
