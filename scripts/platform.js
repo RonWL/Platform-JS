@@ -92,6 +92,7 @@ $.dispatch = {
 
 		//	Toggle Whether or not the Expanded panel has a clicktag
 
+
 		$expandedHasClickTag: false,
 
 		//	Alternate Element to Assign the Expanded Clicktag to
@@ -984,9 +985,11 @@ $.dispatch = {
 					init_animation();
 				}
 			} else {
-				if (_video[0] === true) {
-					_isAutoExpand = false;
-					trigger_video("start");
+				if (_video) {
+					if (_video[0] === true) {
+						_isAutoExpand = false;
+						trigger_video("start");
+					}
 				}
 				$panel = $("#main-panel");
 				init_animation();
