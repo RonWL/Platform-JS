@@ -467,6 +467,7 @@ $.dispatch = {
 		$replayContainer.fadeIn(800, function () {
 			$(this).on("click", function () {
 				$(this).off("click");
+				$(this).hide();
 				reset_unit();
 			});
 			var timer,
