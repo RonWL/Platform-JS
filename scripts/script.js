@@ -1,4 +1,4 @@
-/*	version: "v7.3"	*/
+/*	version: "v7.5"	*/
 
 $.noConflict();
 var $ = jQuery;
@@ -22,7 +22,9 @@ $(document).dispatch.show_replay();
 function reset_unit()
 {
 	console.log("Resetting Unit...");
-	TweenMax.delayedCall(1, init_animation);
+	setTimeout(function() {
+		init_animation();
+	}, 1000);
 }
 
 

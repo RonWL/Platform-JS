@@ -1,6 +1,6 @@
 @charset "utf-8";
 
-/*	version: "v7.3"	*/
+/*	version: "v7.5"	*/
 /* CSS Document */
 
 body, html {
@@ -30,13 +30,9 @@ img {
 	height: 100%;
 }
 
-.full-col {
-	
-}
+.full-col {}
 
-.full-exp {
-	
-}
+.full-exp {}
 
 .free {
 	position: absolute;
@@ -57,18 +53,14 @@ img {
 	cursor: pointer;
 }
 
-#expanded-panel {
-	
-}
-
-#collapsed-panel {
-	
-}
-
 
 /* Collapsed Panel */
 
 #collapsed-panel {
+	
+}
+
+#expand-button {
 	
 }
 
@@ -91,5 +83,9 @@ img {
 }
 
 #expanded-panel {
+	
+}
+
+#collapse-button {
 	
 }
