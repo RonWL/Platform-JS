@@ -93,6 +93,8 @@ $.dispatch = {
 		//	Toggle Whether or not the Expanded panel has a clicktag
 
 
+
+
 		$expandedHasClickTag: false,
 
 		//	Alternate Element to Assign the Expanded Clicktag to
@@ -248,7 +250,7 @@ $.dispatch = {
 						//	Since DC & Sizmek's platform REQUIRES the external script tag within the main HTML file (NOT Ideal & Very Ugly), here we apply the clicktag hardcode
 						case "DC":
 							var $dcsrc = "https://s0.2mdn.net/ads/studio/Enabler.js";
-							mod_js("Load", $dcsrc, "body", "dcjs", get_animation_assets, "EnablerJS");
+							mod_js("Load", $dcsrc, "head", "dcjs", get_animation_assets, "EnablerJS");
 
 							break;
 
@@ -863,6 +865,7 @@ $.dispatch = {
 						Enabler.requestCollapse();
 					}
 				} else {
+					doLog("Enabler Triggered Exit");
 					window.open(window.clickTag);
 				}
 				break;
@@ -894,6 +897,7 @@ $.dispatch = {
 				_$FT.applyClickTag($collapsed, 1);
 
 				if (_expandedHasClickTag) {
+
 					if (_altButtonClickTag !== "") {
 						_$FT.applyClickTag($altClickElm, 2);
 					} else {
@@ -1000,12 +1004,15 @@ $.dispatch = {
 						trigger_video("start");
 					}
 				}
-				$panel = $("#main-panel");
+				$panel = document.getElementById("main-panel");
+				$panel.addEventListener("click", function() {
+					background_exit();
+				});
 				init_animation();
 			}
 		} else {
-			$panel = $("#main-panel");
-			$panel.on("click", function () {
+			$panel = document.getElementById("main-panel");
+			$panel.addEventListener("click", function() {
 				background_exit();
 			});
 		}
@@ -1288,6 +1295,7 @@ $.dispatch = {
 				break;
 
 			case "Load":
+
 				$sc.src = $code;
 				if ($callback) {
 					$sc.onload = $callback;
