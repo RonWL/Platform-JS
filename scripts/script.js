@@ -6,10 +6,8 @@ var $ = jQuery;
 
 /************************************ Custom JS *****************************************/
 
-function init_animation()
-{
+function init_animation() {
 	"use strict";
-	
 	
 }
 
@@ -19,25 +17,20 @@ function init_animation()
 $(document).dispatch.show_replay();
 
 //	This function houses all resets and the restart for the unit if Replay is used:
-function reset_unit()
-{
-	console.log("Resetting Unit...");
-	setTimeout(function() {
-		init_animation();
-	}, 1000);
+function reset_unit() {
+	"use strict";
+	
 }
 
 
 /************************************ Rich Media JS *****************************************/
 
-function on_expand()
-{
+function on_expand() {
 	"use strict";
 	
 }
 
-function on_collapse()
-{
+function on_collapse() {
 	"use strict";
 	
 }
