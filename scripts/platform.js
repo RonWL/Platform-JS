@@ -469,7 +469,7 @@ $.dispatch = {
 			$(this).on("click", function () {
 				$(this).off("click");
 				$(this).hide();
-				reset_unit();
+				unit_reset();
 			});
 			var timer,
 				$replayElm = $("#replayBtn"),
@@ -499,6 +499,14 @@ $.dispatch = {
 				});
 		});
 	};
+	
+	function unit_reset() {
+		doLog("Resetting Unit...");
+		reset_unit();
+		setTimeout(function() {
+			init_animation();
+		}, 1000);
+	}
 
 	function style_elements() {
 		if (_unit_type === "ST") {
