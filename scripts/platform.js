@@ -247,7 +247,8 @@ $.dispatch = {
 					switch (_platform) {
 						//	Since DC & Sizmek's platform REQUIRES the external script tag within the main HTML file (NOT Ideal & Very Ugly), here we apply the clicktag hardcode
 						case "DC":
-							get_animation_assets();
+							var $dcsrc = "https://s0.2mdn.net/ads/studio/Enabler.js";
+							mod_js("Load", $dcsrc, "body", "dcjs", get_animation_assets, "EnablerJS");
 
 							break;
 
