@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+<!-- version: "v7.5" -->
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta charset="utf-8">
 	<meta name="unit-size">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Platform JS v4.1.8</title>
+	<title>Platform JS v7.5</title>
 	
 	<!-- Fonts Included-->
 	
@@ -19,64 +20,97 @@
 	
 	<!-- Scripts Included-->
 
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	
-    <!-- 
-		Since DC & Sizmek's platform REQUIRES the external script tag within the main HTML file, here we apply the tag (NOT Ideal & Very Ugly)
-		
-    	<script type="text/javascript" id="EnablerJS" class="dcjs" src="https://s0.2mdn.net/ads/studio/Enabler.js"></script>
-    	<script type="text/javascript" id="EbloadJS" class="skjs" src=" https://secure-ds.serving-sys.com/BurstingScript/EBLoader.js"></script>
-	-->
+	<!-- Insert Trafficking Agency API Here -->
     
 	<script type="text/javascript" src="scripts/platform.js"></script>
     
 	<!-- End Scripts Included-->
 	
+	<!-- Clicktag Variable Essential for Doubleclick API ONLY -->
+	<script type="text/javascript">
+		var clickTag = "";
+	</script>
+	
+	
 	<script type="text/javascript">
 		
 		$(document).dispatch({	
 			//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
-			$platform:"DC", 
-			
-			//	Option to Load External Animation Library or Not (Greensock {1 - "Max", 2 - "Lite"}).  If None Chosen, will default to not loading the Tweening Engine.
+			$platform: "DC",
+
+			//	If Platform is Doubleclick, Options are at the moment true -> Unit IS Going through DC Studio, false -> Unit Not DC Studio Unit	
+			$isDCS: false,
+
+			//	Option to Load External Animation Library or Not (Greensock {0 - None, 1 - "Max", or 2 - "Lite"}).  If None Chosen, will default to not loading the Tweening Engine.
 			//	The loaded URI is the CDN endpoint to the latest version of GS.
-			$loadGS: 1,
-			
+			$loadGS: 0,
+
 			//	Select If the Unit is Dynamic or Static (Now ONLY Supports FlashTalking)
 			$dataType: "Static",
-			
+
+			//	Select If the Unit Standard Display or Rich Media Unit ({ST - Standard, RM - Rich Media}) (Now ONLY Supports FlashTalking)
+			$unitType: "ST",
+
+			//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
+			$size: [300, 250],
+
+			//	The border color of the unit (If None Given in Options, will Default to Black
+			$borderColor: "#000",
+
+			//	The font included within the Unit (Especially Needed if Dynamic(Instant) Unit
+			$font: "'Arial', sans-serif",
+
+			//	Does the Unit have "Replay" Functionality
+			$replay: false,
+
+			//	If the Unit Has a replay Button, Vars for Button (Array of [{hexcolor}, {size}, {position: "topLeft", "topRight", "bottomLeft", or "bottomRight"}])
+			$replayVars: ["#000", 20, "topRight"],
+
+			//	Sets a Logger for When Testing Edits / Updates to Plugin And / Or Unit Code	
+			$testing: false,
+
 			//	If the Unit Will be Dynamic, This array will hold the elements to be Registered with the variables in the Manifest.js file (Flash Talking)
 			$dynElms: [],
-			
+
 			//	This Array holds the Variable(s) from which the elements in "$dynElms" will be populated with
 			$dynVars: [],
-			
+
 			//	How Many Clicktags will be used within the Unit (Other than the Default Click Thru).  If None, are provided, will default to 0.
 			$altTags: 0,
-			
-			//	The Elements that will Possess a CLick Tag.  Only Needed if the "$altTags" Option is Greater than 0.
+
+			//	The Elements that will Possess a Click Tag.  Only Needed if the "$altTags" Option is Greater than 0.
 			$ctElms: [],
-			
+
 			//	This is put in place in the event the developer wants to assign a target for the clicktag.
 			$defClickTag: "",
-			
-			//	Size ([Width, Height]) of the unit
-			$size:	[300, 250],
-			
-			//	The border color of the unit (If None Given in Options, will Default to Black)
-			$borderColor: "#000",
-			
-			//	The font included within the Unit (Especially Needed if Dynamic / Instant Unit)
-			$font: "'Arial', sans-serif",
-			
-			//	Does the Unit have "Replay" Functionality
-			$replay: true,
-			
-			//	If the Unit Has a replay Button, Vars for Button (Array of [{hexcolor}, {size}, {position: "topLeft", "topRight", "bottomLeft", or "bottomRight"}, {dropshadow}])
-			$replayVars: ["#444", 25, "topRight", true],
-			
-			//	Sets a Logger for When Testing Edits / Updates to Plugin And / Or Unit Code	
-			$testing: true
+
+			//	Select If the Unit is an Expandable or Not)
+			$expands: false,
+
+			//	Collapse Button Content can be image or text
+			$collapseBtnContent: "Click to Collapse",
+
+			//	Expanded Size ([Width, Height]) of the EXPANDED state of the unit
+			$expSize: [300, 250],
+
+			//	Collapse Button Content can be image or text
+			$expandBtnContent: "Click to Expand",
+
+			//	Toggle Whether or not the Expanded panel has a clicktag
+
+			$expandedHasClickTag: false,
+
+			//	Alternate Element to Assign the Expanded Clicktag to
+			$altButtonClickTag: "",
+
+			//	Determine Whether or not the RMU is AutoExpand
+			$isAutoExpand: false,
+
+			//	If the Unit is Rich, Does it have video - Array [true/false, container, video name (listed in manifest.js), still image, width, height, autoplay, controls, muted, Youtube ID(Only for DC)]
+			//	  Ex: $video: [true, "#vid_holder", "yt_video", "still_frame.jpg", 408, 202, [false,1000], false, true, Youtube ID]
+			$video: [false]
 		});
 		
 	</script>
@@ -86,6 +120,8 @@
 <body>
 
 	<script src="scripts/script.js"></script>
+	
+	<!-- Standard Unit Shell -->
 	
 	<div id="unit-container">
 		<div id="main-panel">
@@ -98,12 +134,27 @@
 		
 		</div>	
     </div>
+	
+	<!-- End Standard Unit Shell -->
+	
+	
+	<!-- Rich Media Shell; For DoubleClick, panels need to be nested inside of "main-panel" -->
+	
+	<div id="collapsed-panel">
+		
+	</div>
+		
+	<div id="expanded-panel">
+		
+	</div>
+	
+	<!-- End Rich Media Shell -->
  
  	<!-- External URLs Repo -->    
 	<!--    
-		<script class="extHC" type="text/javascript" src="https://s0.2mdn.net/ads/studio/Enabler.js"></script>
-		<script class="extHC" type="text/javascript" src="https://secure-ds.serving-sys.com/BurstingScript/EBLoader.js"></script>
-		<script class="extHC" type="text/javascript" src="https://cdn.flashtalking.com/frameworks/js/api/2/9/html5API.js"></script>
+		<script type="text/javascript" src="https://s0.2mdn.net/ads/studio/Enabler.js"></script>
+		<script type="text/javascript" src="https://secure-ds.serving-sys.com/BurstingScript/EBLoader.js"></script>
+		<script type="text/javascript" src="https://cdn.flashtalking.com/frameworks/js/api/2/10/html5API.js"></script>
 	-->
    
 </body>
