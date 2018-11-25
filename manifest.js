@@ -4,8 +4,12 @@
 
 FT.manifest({
 	"filename":"index.html",
-	"width":{/*width*/},
-	"height":{/*height*/},
+	
+	//  Unit Width
+	"width":300,
+	
+	//  Unit Height
+	"height":250,
 	
 	//	The clickTagCount includes the default clicktag unlike Platform.JS, which just needs any custom elements that have additional clickthrus
 	"clickTagCount":1,
@@ -47,7 +51,11 @@ FT.manifest({
 		
 		//  Expanded Panel Height
         "height":418,
+		
+		//  Offset of the expanded panel horizontally
         "indentAcross":0,
+		
+		//  Offset of the expanded panel vertically
         "indentDown":0
     }
 });
@@ -73,6 +81,10 @@ FT.manifest({
     },
 	//  The video name (developer given) and the url of video hosted on Youtube
 	"videos":[
-        {"name":"yt_video", "ref":"https://www.youtube.com/watch?v=CxKhCp4lKWA"}
+        {"name":"yt_video", "ref":"https://youtube video url here"}
     ]
 });
+
+/***********************************************************************************************************************************************************************/
+/* More Documantation on the FlashTalking API located here: https://flashtalkingus.atlassian.net/wiki/spaces/HTD/pages/205160493/HTML5+API+Templates+And+Documentation */
+/***********************************************************************************************************************************************************************/
