@@ -27,7 +27,7 @@ SOFTWARE.
 
 $.dispatch = {
 	id: 'Platform JS',
-	version: 'v7.5',
+	version: 'v7.5.2',
 	defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform: "DC",
@@ -247,11 +247,15 @@ $.dispatch = {
 
 					var $click;
 					switch (_platform) {
-						//	Since DC & Sizmek's platform REQUIRES the external script tag within the main HTML file (NOT Ideal & Very Ugly), here we apply the clicktag hardcode
+						//	Since DC & Sizmek's platform REQUIRES the external script tag within the main HTML file, here we apply the clicktag hardcode
 						case "DC":
-							var $dcsrc = "https://s0.2mdn.net/ads/studio/Enabler.js";
-							mod_js("Load", $dcsrc, "head", "dcjs", get_animation_assets, "EnablerJS");
-
+							if (_dcs) {
+								get_animation_assets();
+								// If going through DC Studio the Enabler.js script located within the script repository at the bottom of the index file will need to be placed within the head.
+							} else {
+								var $dcsrc = "https://s0.2mdn.net/ads/studio/Enabler.js";
+								mod_js("Load", $dcsrc, "head", "dcjs", get_animation_assets, "EnablerJS");
+							}
 							break;
 
 						case "SK":
