@@ -27,7 +27,7 @@ SOFTWARE.
 
 $.dispatch = {
 	id: 'Platform JS',
-	version: 'v7.5.2',
+	version: 'v7.5.4',
 	defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform: "DC",
@@ -1036,15 +1036,9 @@ $.dispatch = {
 				trigger_video("start");
 			});
 		}
-		switch (_platform) {
-			case "DC":
-				Enabler.requestExpand();
-				break;
-
-			case "FT":
-				$($expBtn).trigger("click");
-				break;
-		}
+		setTimeout(function () {
+			$($expBtn).trigger("click");
+		}, 1000);
 	}
 
 	function expand_init() {
