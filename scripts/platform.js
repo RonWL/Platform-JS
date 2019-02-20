@@ -27,7 +27,7 @@ SOFTWARE.
 
 $.dispatch = {
 	id: 'Platform JS',
-	version: 'v7.5.4',
+	version: 'v7.6',
 	defaults: {
 		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
 		$platform: "DC",
@@ -94,7 +94,6 @@ $.dispatch = {
 
 
 
-
 		$expandedHasClickTag: false,
 
 		//	Alternate Element to Assign the Expanded Clicktag to
@@ -149,9 +148,9 @@ $.dispatch = {
 
 	var _col_btn_con;
 	var _exp_btn_con;
-	
+
 	var _is_expanded;
-	
+
 	var _expandedHasClickTag;
 	var _altButtonClickTag;
 
@@ -162,10 +161,10 @@ $.dispatch = {
 	var $vid_delay;
 	var $vid_holder;
 	var $rm_video;
-	
+
 	var youtubeAPIReady = false;
 	var yt_interval;
-	
+
 	var _autoplay;
 
 
@@ -258,14 +257,15 @@ $.dispatch = {
 							}
 							break;
 
-						case "SK":
-							get_animation_assets();
-
-							break;
-
 						case "FT":
 							var $ftsrc = "https://cdn.flashtalking.com/frameworks/js/api/2/10/html5API.js";
 							mod_js("Load", $ftsrc, "body", "ftjs", get_animation_assets, "FtdynJS");
+
+							break;
+						
+						case "CV":
+						case "SK":
+							get_animation_assets();
 
 							break;
 
@@ -273,7 +273,7 @@ $.dispatch = {
 							$click = "var clicktag = \"\";";
 							mod_js("Add", $click, "head", "dcjs");
 							get_animation_assets();
-							
+
 							break;
 					}
 				});
@@ -281,6 +281,9 @@ $.dispatch = {
 		}
 	});
 
+	
+	// If GA is enabled, this pulls in the necessary tweening engine.
+	
 	function get_animation_assets() {
 		if (_loadGS) {
 
@@ -306,6 +309,9 @@ $.dispatch = {
 		}
 	}
 
+	
+	// The below handles all position, animation and functionality of the replay button if enabled.
+	
 	function get_replay_position($var) {
 		var $xCoord = 0;
 		var $yCoord = 0;
@@ -505,15 +511,18 @@ $.dispatch = {
 				});
 		});
 	};
-	
+
 	function unit_reset() {
 		doLog("Resetting Unit...");
 		reset_unit();
-		setTimeout(function() {
+		setTimeout(function () {
 			init_animation();
 		}, 1000);
 	}
 
+	
+	// The styling of the elements regardless of the platform being trafficked through
+	
 	function style_elements() {
 		if (_unit_type === "ST") {
 			$("#unit-container").css({
@@ -651,7 +660,7 @@ $.dispatch = {
 			"width": _newSize[0] + "px",
 			"height": _newSize[1] + "px"
 		});
-		
+
 		$("body").css({
 			"width": _size[0] + "px",
 			"height": _size[1] + "px"
@@ -664,40 +673,36 @@ $.dispatch = {
 		$("body").show();
 	}
 
+	
+	// The main trigger that handles platform specific setup
+	
 	var init_platform = function () {
 		doLog("Initializing Platform...");
 		style_elements();
 
 
 		//	Per each platform, we have to wait for their external scripts to load before continuing the unit's process
-		switch (_platform) {
-			case "DC":
-				if (Enabler.isInitialized()) {
-					init_handle();
-				} else {
-					Enabler.addEventListener(studio.events.StudioEvent.INIT, init_handle);
-				}
-				break;
-
-			case "SK":
-				if (!EB.isInitialized()) {
-					EB.addEventListener(EBG.EventName.EB_INITIALIZED, init_handle);
-				} else {
-					init_handle();
-				}
-				break;
-
-			case "FT":
-			case "":
+		if (_platform === "DC") {
+			if (Enabler.isInitialized()) {
 				init_handle();
-
-				break;
+			} else {
+				Enabler.addEventListener(studio.events.StudioEvent.INIT, init_handle);
+			}
+		} else if (_platform === "SK") {
+			if (!EB.isInitialized()) {
+				EB.addEventListener(EBG.EventName.EB_INITIALIZED, init_handle);
+			} else {
+				init_handle();
+			}
+		} else {
+			init_handle();
 		}
 	};
 
+	
+	// Here we set up the elements that are included in the Unit to be read
+	
 	function init_handle() {
-		// Here we set up the elements that are included in the Unit to be read
-
 		if (_platform === "FT") {
 			_$FT = new FT;
 			//	This is the function that runs to prepare the tags for dynamic input 
@@ -735,16 +740,19 @@ $.dispatch = {
 				addEventListeners();
 				init_strd_setup();
 			}
+		} else {
+			addEventListeners();
+			init_strd_setup();
 		}
 	}
 
-	
+
 	// DoubleClick Rich Media Setup
-	
+
 	function setup_DC_RM() {
 		doLog("Initializing DoubleClick Rich Media Setup...");
 		Enabler.setExpandingPixelOffsets(0, 0, _expSize[0], _expSize[1]);
-		
+
 		doLog("Does this unit Expand: " + _expands);
 		if (_expands) {
 			$collapsed = $("#collapsed-panel");
@@ -762,17 +770,17 @@ $.dispatch = {
 		}
 	}
 
+	
+	// This is the Polite Loader in case there is a video loading from Youtube for RM Units
+	
 	function polite_init() {
 		if (_video.length !== 0 && _video[0] === true) {
 			var $yt_url = "https://www.youtube.com/iframe_api";
 			mod_js("Load", $yt_url, "head", "ytjs", null, "ytJS");
-			
-			if (!youtubeAPIReady)
-			{
-				yt_interval = setInterval(function onYouTubeIframeAPIReady() 
-				{									
-					if (window.YT)
-					{
+
+			if (!youtubeAPIReady) {
+				yt_interval = setInterval(function onYouTubeIframeAPIReady() {
+					if (window.YT) {
 						clearInterval(yt_interval);
 						youtubeAPIReady = true;
 						doLog(youtubeAPIReady);
@@ -787,13 +795,13 @@ $.dispatch = {
 		}
 	}
 
-	
+
 	// FlashTalking Rich Media Setup
-	
+
 	function setup_FT_RM() {
 		doLog("Initializing FlashTalking Rich Media Setup...");
 		doLog("Does this unit Expand: " + _expands);
-		
+
 		if (_expands) {
 			$collapsed = _$FT.$("#collapsed-panel");
 			$expanded = _$FT.$("#expanded-panel");
@@ -810,10 +818,10 @@ $.dispatch = {
 			addEventListeners();
 		}
 	}
-	
-	
+
+
 	// Initialize Video Setup
-	
+
 	function init_video() {
 		switch (_platform) {
 			case "FT":
@@ -821,21 +829,21 @@ $.dispatch = {
 				doLog("Video Container: " + _video[1]);
 				$vid_holder.append($("<img id='stillFrame' src='" + _video[3] + "' alt='still frame' />"));
 
-				$vid_holder.on("click", function(evt) {
-					trigger_video("start");		
+				$vid_holder.on("click", function (evt) {
+					trigger_video("start");
 				});
 
 				if (_video[6][0] === true) {
 					_autoplay = true;
 
-					if(_video[6][1] == "undefined" || _video[6][1] === null) {
+					if (_video[6][1] == "undefined" || _video[6][1] === null) {
 						$vid_delay = 1000;
 					} else {
 						$vid_delay = _video[6][1] * 1000;
 					}
 				}
 				addEventListeners();
-				
+
 				break;
 
 			case "DC":
@@ -847,14 +855,7 @@ $.dispatch = {
 		}
 	}
 
-	function init_strd_setup() {
-		//	This tells the unit that it's ready to continue with the animation of the unit.
-		//	This method is located within the main "script.js" file.
-		$("#unit-container").css({
-			"opacity": "1"
-		});
-		init_animation();
-	}
+	
 	/*		Listeners and Events	*/
 
 	//	Controls the "exits" of each platform
@@ -864,7 +865,7 @@ $.dispatch = {
 				if (_dcs || _unit_type === "RM") {
 					doLog("Enabler Triggered Exit");
 					Enabler.exit("clicktag");
-					
+
 					if (_is_expanded) {
 						Enabler.requestCollapse();
 					}
@@ -886,12 +887,17 @@ $.dispatch = {
 				}
 				break;
 
+			case "CV":
+				window.open("<mpvc/>http://<mpck/>");
+				break;
+
 			case "":
 				window.open(window.clicktag);
 				break;
 		}
 	}
-
+	
+	
 	function addEventListeners() {
 		//	If any additional clicktag elements have been added within the options, Flashtalking API applies the coding to them.
 		//	Otherwise, the main panel (ususally the standard) will trigger the "background exit"
@@ -990,7 +996,7 @@ $.dispatch = {
 				$expBtn.on("click", function () {
 					Enabler.requestExpand();
 				});
-				
+
 				$colBtn.on("click", function () {
 					Enabler.requestCollapse();
 				});
@@ -1009,18 +1015,29 @@ $.dispatch = {
 					}
 				}
 				$panel = document.getElementById("main-panel");
-				$panel.addEventListener("click", function() {
+				$panel.addEventListener("click", function () {
 					background_exit();
 				});
 				init_animation();
 			}
 		} else {
 			$panel = document.getElementById("main-panel");
-			$panel.addEventListener("click", function() {
+			$panel.addEventListener("click", function () {
 				background_exit();
-			});
+			}, false);
 		}
 	}
+	
+	
+	function init_strd_setup() {
+		//	This tells the unit that it's ready to continue with the animation of the unit.
+		//	This method is located within the main "script.js" file.
+		$("#unit-container").css({
+			"opacity": "1"
+		});
+		init_animation();
+	}
+	
 
 	function setup_autoExpand() {
 		$col_timer = setTimeout(function () {
@@ -1040,7 +1057,8 @@ $.dispatch = {
 			$($expBtn).trigger("click");
 		}, 1000);
 	}
-
+	
+	
 	function expand_init() {
 		setTimeout(function () {
 			$collapsed.css({
@@ -1103,11 +1121,13 @@ $.dispatch = {
 		}
 	}
 
+	
 	function expand_finish() {
 		_is_expanded = true;
 		on_expand();
 	}
 
+	
 	function collapse_init() {
 		if (_isAutoExpand) {
 			_isAutoExpand = false;
@@ -1143,12 +1163,14 @@ $.dispatch = {
 			collapse_finish();
 		}
 	}
+
 	
 	function collapse_finish() {
 		_is_expanded = false;
 		on_collapse();
 	}
 
+	
 	function trigger_video($action) {
 		if (_video[0] !== false) {
 			switch ($action) {
@@ -1181,68 +1203,71 @@ $.dispatch = {
 			return;
 		}
 	}
+
 	
 	function play_video() {
 		switch (_platform) {
-			case "DC" :
+			case "DC":
 				$rm_video.playVideo();
 				break;
 
-			case "FT" :
+			case "FT":
 				$rm_video[0].play();
 				break;
 		}
 	}
+
 	
 	function pause_video() {
 		switch (_platform) {
-			case "DC" :
+			case "DC":
 				$rm_video.pauseVideo();
 				break;
 
-			case "FT" :
+			case "FT":
 				$rm_video[0].pause();
 				break;
 		}
 	}
 
+	
 	function insert_video() {
 		$($vid_holder).empty();
 		switch (_platform) {
 			case "DC":
 				doLog("Inserting DoubleClick Video Now");
-				
+
 				var $controls,
 					$muted;
-				
+
 				if (_video[7]) {
 					$controls = 1;
-				} else { 
+				} else {
 					$controls = 0;
 				}
-				
+
 				if (_video[8]) {
 					$muted = 1;
-				} else { 
+				} else {
 					$muted = 0;
 				}
-				
+
 				$rm_video = new YT.Player(_video[1], {
-					width : _video[4].toString(),
-					height : _video[5].toString(),
-					videoId : _video[9],
+					width: _video[4].toString(),
+					height: _video[5].toString(),
+					videoId: _video[9],
 					playerVars: {
-						mute : $muted,
-						controls : $controls,
+						mute: $muted,
+						controls: $controls,
 						modestbranding: 1,
 						rel: 0,
 						showinfo: 0,
 						wmode: "transparent"
-					},				
+					},
 					events: {
-						"onReady" : on_player_ready,
-						"onStateChange" : on_playerState_change,
-						"onError" : on_player_error
+						"onReady": on_player_ready,
+						"onStateChange": on_playerState_change,
+						"onError": on_player_error
 					}
 				});
 				break;
@@ -1266,22 +1291,25 @@ $.dispatch = {
 				break;
 		}
 	}
+
 	
 	function on_player_ready(event) {
 		setTimeout(function () {
 			play_video();
 		}, $vid_delay);
 	}
+
 	
 	function on_playerState_change(event) {
-		
+
 	}
+
 	
 	function on_player_error(event) {
-		
+
 	}
 
-
+	
 	function mod_js($mod, $code, $tgtTag, $class, $callback, $id) {
 		var $sc = document.createElement("script");
 		/*>*/
@@ -1357,6 +1385,7 @@ $.dispatch = {
 		}
 	}
 
+	
 	function replace_attributes($elm, $id, $rplceAttrs, $transAttrs) {
 		if ($rplceAttrs) {
 			doLog("Supplying New Attributes to:");
