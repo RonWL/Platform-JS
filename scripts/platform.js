@@ -24,90 +24,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-
-$.dispatch = {
-	id: 'Platform JS',
-	version: 'v7.6',
-	defaults: {
-		//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
-		$platform: "DC",
-
-		//	If Platform is Doubleclick, Options are at the moment true -> Unit IS Going through DC Studio, false -> Unit Not DC Studio Unit	
-		$isDCS: false,
-
-		//	Option to Load External Animation Library or Not (Greensock {0 - None, 1 - "Max", or 2 - "Lite"}).  If None Chosen, will default to not loading the Tweening Engine.
-		//	The loaded URI is the CDN endpoint to the latest version of GS.
-		$loadGS: 0,
-
-		//	Select If the Unit is Dynamic or Static (Now ONLY Supports FlashTalking)
-		$dataType: "Static",
-
-		//	Select If the Unit Standard Display or Rich Media Unit ({ST - Standard, RM - Rich Media}) (Now ONLY Supports FlashTalking)
-		$unitType: "ST",
-
-		//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
-		$size: [300, 250],
-
-		//	The border color of the unit (If None Given in Options, will Default to Black
-		$borderColor: "#000",
-
-		//	The font included within the Unit (Especially Needed if Dynamic(Instant) Unit
-		$font: "'Arial', sans-serif",
-
-		//	Does the Unit have "Replay" Functionality
-		$replay: false,
-
-		//	If the Unit Has a replay Button, Vars for Button (Array of [{hexcolor}, {size}, {position: "topLeft", "topRight", "bottomLeft", or "bottomRight"}])
-		$replayVars: ["#000", 20, "topRight"],
-
-		//	Sets a Logger for When Testing Edits / Updates to Plugin And / Or Unit Code	
-		$testing: false,
-
-		//	If the Unit Will be Dynamic, This array will hold the elements to be Registered with the variables in the Manifest.js file (Flash Talking)
-		$dynElms: [],
-
-		//	This Array holds the Variable(s) from which the elements in "$dynElms" will be populated with
-		$dynVars: [],
-
-		//	How Many Clicktags will be used within the Unit (Other than the Default Click Thru).  If None, are provided, will default to 0.
-		$altTags: 0,
-
-		//	The Elements that will Possess a Click Tag.  Only Needed if the "$altTags" Option is Greater than 0.
-		$ctElms: [],
-
-		//	This is put in place in the event the developer wants to assign a target for the clicktag.
-		$defClickTag: "",
-
-		//	Select If the Unit is an Expandable or Not)
-		$expands: false,
-
-		//	Collapse Button Content can be image or text
-		$collapseBtnContent: "Click to Collapse",
-
-		//	Expanded Size ([Width, Height]) of the EXPANDED state of the unit
-		$expSize: [300, 250],
-
-		//	Collapse Button Content can be image or text
-		$expandBtnContent: "Click to Expand",
-
-		//	Toggle Whether or not the Expanded panel has a clicktag
-
-
-
-		$expandedHasClickTag: false,
-
-		//	Alternate Element to Assign the Expanded Clicktag to
-		$altButtonClickTag: "",
-
-		//	Determine Whether or not the RMU is AutoExpand
-		$isAutoExpand: false,
-
-		//	If the Unit is Rich, Does it have video - Array [true/false, container, video name (listed in manifest.js), still image, width, height, autoplay, controls, muted, Youtube ID(Only for DC)]
-		//	  Ex: $video: [true, "#vid_holder", "yt_video", "still_frame.jpg", 408, 202, [false,1000], false, true, Youtube ID]
-		$video: [false]
-	}
-};
-
 (function ($) {
 	"use strict";
 
@@ -179,11 +95,88 @@ $.dispatch = {
 	var _testing;
 
 
-	$.fn.extend({
-		dispatch: function (params) {
-			return this.each(function () {
-				var opts = $.extend({}, this.defaults, params);
+	$.fn.extend ({
+		id: 'Platform JS',
+		version: 'v8',
+		dispatch : function(params) {
+			var defaults = {
+				//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
+				$platform: "DC",
 
+				//	If Platform is Doubleclick, Options are at the moment true -> Unit IS Going through DC Studio, false -> Unit Not DC Studio Unit	
+				$isDCS: false,
+
+				//	Option to Load External Animation Library or Not (Greensock {0 - None, 1 - "Max", or 2 - "Lite"}).  If None Chosen, will default to not loading the Tweening Engine.
+				//	The loaded URI is the CDN endpoint to the latest version of GS.
+				$loadGS: 1,
+
+				//	Select If the Unit is Dynamic or Static (Now ONLY Supports FlashTalking)
+				$dataType: "Static",
+
+				//	Select If the Unit Standard Display or Rich Media Unit ({ST - Standard, RM - Rich Media}) (Now ONLY Supports FlashTalking)
+				$unitType: "ST",
+
+				//	Size ([Width, Height]) of the collapsed state of the unit *If Not Rich, this is consists of the dimensions of the unit*
+				$size: [300, 250],
+
+				//	The border color of the unit (If None Given in Options, will Default to Black
+				$borderColor: "#000",
+
+				//	The font included within the Unit (Especially Needed if Dynamic(Instant) Unit
+				$font: "'Arial', sans-serif",
+
+				//	Does the Unit have "Replay" Functionality
+				$replay: false,
+
+				//	If the Unit Has a replay Button, Vars for Button (Array of [{hexcolor}, {size}, {position: "topLeft", "topRight", "bottomLeft", or "bottomRight"}])
+				$replayVars: ["#000", 20, "topRight"],
+
+				//	Sets a Logger for When Testing Edits / Updates to Plugin And / Or Unit Code	
+				$testing: false,
+
+				//	If the Unit Will be Dynamic, This array will hold the elements to be Registered with the variables in the Manifest.js file (Flash Talking)
+				$dynElms: [],
+
+				//	This Array holds the Variable(s) from which the elements in "$dynElms" will be populated with
+				$dynVars: [],
+
+				//	How Many Clicktags will be used within the Unit (Other than the Default Click Thru).  If None, are provided, will default to 0.
+				$altTags: 0,
+
+				//	The Elements that will Possess a Click Tag.  Only Needed if the "$altTags" Option is Greater than 0.
+				$ctElms: [],
+
+				//	This is put in place in the event the developer wants to assign a target for the clicktag.
+				$defClickTag: "",
+
+				//	Select If the Unit is an Expandable or Not)
+				$expands: false,
+
+				//	Collapse Button Content can be image or text
+				$collapseBtnContent: "Click to Collapse",
+
+				//	Expanded Size ([Width, Height]) of the EXPANDED state of the unit
+				$expSize: [300, 250],
+
+				//	Collapse Button Content can be image or text
+				$expandBtnContent: "Click to Expand",
+
+				//	Toggle Whether or not the Expanded panel has a clicktag
+				$expandedHasClickTag: false,
+
+				//	Alternate Element to Assign the Expanded Clicktag to
+				$altButtonClickTag: "",
+
+				//	Determine Whether or not the RMU is AutoExpand
+				$isAutoExpand: false,
+
+				//	If the Unit is Rich, Does it have video - Array [true/false, container, video name (listed in manifest.js), still image, width, height, autoplay, controls, muted, Youtube ID(Only for DC)]
+				//	  Ex: $video: [true, "#vid_holder", "yt_video", "still_frame.jpg", 408, 202, [false,1000], false, true, Youtube ID]
+				$video: [false]
+			};
+			var opts = $.extend({}, defaults, params);
+			
+			return this.each(function () {
 				_platform = opts.$platform;
 				_dcs = opts.$isDCS;
 				_loadGS = opts.$loadGS;
@@ -191,11 +184,7 @@ $.dispatch = {
 				_newSize = [_size[0] - 2, _size[1] - 2];
 
 				_font = opts.$font;
-				if (opts.$borderColor) {
-					_borderColor = opts.$borderColor;
-				} else {
-					_borderColor = "#000";
-				}
+				_borderColor = opts.$borderColor;
 
 				//	FlashTalking Options Declared in Root of Plugin
 				_data_type = opts.$dataType;
@@ -240,7 +229,7 @@ $.dispatch = {
 
 				//	Modify the Head or Body with the external script needed to create the platform-ready unit	
 				$(".extHC").empty();
-
+				
 				$(document).ready(function () {
 					$("meta[name=unit-size]").attr("content", "width=" + _size[0] + ",height=" + _size[1]);
 
@@ -262,7 +251,7 @@ $.dispatch = {
 							mod_js("Load", $ftsrc, "body", "ftjs", get_animation_assets, "FtdynJS");
 
 							break;
-						
+
 						case "CV":
 						case "SK":
 							get_animation_assets();
@@ -280,14 +269,10 @@ $.dispatch = {
 			});
 		}
 	});
-
 	
 	// If GA is enabled, this pulls in the necessary tweening engine.
-	
 	function get_animation_assets() {
 		if (_loadGS) {
-
-
 			var $gs_prefix = "https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/";
 			var $gs_end;
 			var $gs_url;
@@ -774,7 +759,7 @@ $.dispatch = {
 	// This is the Polite Loader in case there is a video loading from Youtube for RM Units
 	
 	function polite_init() {
-		if (_video.length !== 0 && _video[0] === true) {
+		if (_video[0]) {
 			var $yt_url = "https://www.youtube.com/iframe_api";
 			mod_js("Load", $yt_url, "head", "ytjs", null, "ytJS");
 
@@ -811,7 +796,7 @@ $.dispatch = {
 				$altClickElm = _$FT.$("#" + _altButtonClickTag);
 			}
 		}
-		if (_video.length !== 0 && _video[0] === true) {
+		if (_video[0]) {
 			doLog("Initializing FlashTalking Rich Media Video Setup");
 			init_video();
 		} else {
@@ -948,7 +933,7 @@ $.dispatch = {
 					init_animation();
 				}
 			} else {
-				if (_video[0] === true) {
+				if (_video[0]) {
 					_isAutoExpand = false;
 					trigger_video("expand");
 				}
@@ -1008,11 +993,9 @@ $.dispatch = {
 					init_animation();
 				}
 			} else {
-				if (_video) {
-					if (_video[0] === true) {
-						_isAutoExpand = false;
-						trigger_video("start");
-					}
+				if (_video[0]) {
+					_isAutoExpand = false;
+					trigger_video("start");
 				}
 				$panel = document.getElementById("main-panel");
 				$panel.addEventListener("click", function () {
@@ -1045,7 +1028,7 @@ $.dispatch = {
 			_isAutoExpand = false;
 		}, 7000);
 
-		if ($vid_holder.length) {
+		if (_video[0] && $vid_holder.length) {
 			$vid_holder.on("click", function () {
 				_isAutoExpand = false;
 				clearTimeout($col_timer);
@@ -1172,7 +1155,7 @@ $.dispatch = {
 
 	
 	function trigger_video($action) {
-		if (_video[0] !== false) {
+		if (_video[0]) {
 			switch ($action) {
 				case "start":
 					insert_video();
