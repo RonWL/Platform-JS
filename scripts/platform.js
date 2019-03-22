@@ -993,7 +993,7 @@ SOFTWARE.
 					init_animation();
 				}
 			} else {
-				if (_video[0]) {
+				if (_video) {
 					_isAutoExpand = false;
 					trigger_video("start");
 				}
