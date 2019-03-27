@@ -97,7 +97,7 @@ SOFTWARE.
 
 	$.fn.extend ({
 		id: 'Platform JS',
-		version: 'v8',
+		version: 'v8.1',
 		dispatch : function(params) {
 			var defaults = {
 				//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
@@ -993,7 +993,7 @@ SOFTWARE.
 					init_animation();
 				}
 			} else {
-				if (_video) {
+				if (_video[0]) {
 					_isAutoExpand = false;
 					trigger_video("start");
 				}
@@ -1108,6 +1108,9 @@ SOFTWARE.
 	function expand_finish() {
 		_is_expanded = true;
 		on_expand();
+		if (_autoplay) {
+			trigger_video("expand");
+		}
 	}
 
 	
