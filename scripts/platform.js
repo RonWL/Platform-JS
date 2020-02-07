@@ -170,8 +170,8 @@ SOFTWARE.
 				//	Determine Whether or not the RMU is AutoExpand
 				$isAutoExpand: false,
 
-				//	If the Unit is Rich, Does it have video - Array [true/false, container, video name (listed in manifest.js), still image, width, height, autoplay, controls, muted, Youtube ID(Only for DC)]
-				//	  Ex: $video: [true, "#vid_holder", "yt_video", "still_frame.jpg", 408, 202, [false,1000], false, true, Youtube ID]
+				//	If the Unit is Rich, Does it have video - Array [true/false, container, video name (listed in manifest.js), still image, width, height, autoplay, controls, muted, Closed Captioning, Youtube ID(Only for DC)]
+				//	  Ex: $video: [true, "#vid_holder", "yt_video", "still_frame.jpg", 408, 202, [false,1000], false, true, false, Youtube ID]
 				$video: [false]
 			};
 			var opts = $.extend({}, defaults, params);
@@ -955,12 +955,13 @@ SOFTWARE.
 				init_animation();
 			}
 		} else if (_platform === "DC") {
-			Enabler.addEventListener(studio.events.StudioEvent.EXPAND_START, expand_init);
-			Enabler.addEventListener(studio.events.StudioEvent.EXPAND_FINISH, expand_finish);
-
-			Enabler.addEventListener(studio.events.StudioEvent.COLLAPSE_START, collapse_init);
-			Enabler.addEventListener(studio.events.StudioEvent.COLLAPSE_FINISH, collapse_finish);
 			if (_unit_type === "RM" && _expands === true) {
+				Enabler.addEventListener(studio.events.StudioEvent.EXPAND_START, expand_init);
+				Enabler.addEventListener(studio.events.StudioEvent.EXPAND_FINISH, expand_finish);
+
+				Enabler.addEventListener(studio.events.StudioEvent.COLLAPSE_START, collapse_init);
+				Enabler.addEventListener(studio.events.StudioEvent.COLLAPSE_FINISH, collapse_finish);
+				
 				$collapsed.on("click", function () {
 					background_exit();
 				});
@@ -1237,25 +1238,48 @@ SOFTWARE.
 				} else {
 					$muted = 0;
 				}
-
-				$rm_video = new YT.Player(_video[1], {
-					width: _video[4].toString(),
-					height: _video[5].toString(),
-					videoId: _video[9],
-					playerVars: {
-						mute: $muted,
-						controls: $controls,
-						modestbranding: 1,
-						rel: 0,
-						showinfo: 0,
-						wmode: "transparent"
-					},
-					events: {
-						"onReady": on_player_ready,
-						"onStateChange": on_playerState_change,
-						"onError": on_player_error
-					}
-				});
+				
+				if (_video[10]) {
+					$rm_video = new YT.Player(_video[1], {
+						width: _video[4].toString(),
+						height: _video[5].toString(),
+						videoId: _video[10],
+						playerVars: {
+							mute: $muted,
+							controls: $controls,
+							modestbranding: 1,
+							rel: 0,
+							showinfo: 0,
+							wmode: "transparent",
+							cc_load_policy: 1,
+							cc_lang_pref: "en"
+						},
+						events: {
+							"onReady": on_player_ready,
+							"onStateChange": on_playerState_change,
+							"onError": on_player_error
+						}
+					});
+				} else {
+					$rm_video = new YT.Player(_video[1], {
+						width: _video[4].toString(),
+						height: _video[5].toString(),
+						videoId: _video[9],
+						playerVars: {
+							mute: $muted,
+							controls: $controls,
+							modestbranding: 1,
+							rel: 0,
+							showinfo: 0,
+							wmode: "transparent"
+						},
+						events: {
+							"onReady": on_player_ready,
+							"onStateChange": on_playerState_change,
+							"onError": on_player_error
+						}
+					});
+				}
 				break;
 
 			case "FT":
@@ -1270,6 +1294,14 @@ SOFTWARE.
 				$($vid_holder).find("ft-video").attr({
 					"id": "rm_video"
 				});
+				
+				if (_video[9]) {
+					$("#rm_video").find("iframe").attr({
+						"cc_load_policy" : 1,
+						"cc_lang_pref" : "en"
+					});
+				}
+				
 				$rm_video = _$FT.$("#rm_video");
 				setTimeout(function () {
 					play_video();
