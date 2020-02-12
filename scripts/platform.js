@@ -526,6 +526,16 @@ SOFTWARE.
 				doLog("Initing Replay");
 				init_replay_btn();
 			}
+			
+			// Handling of Aria Tag
+			
+			var aria_elm;
+			
+			if ($aria_label && $aria_label !== '') {
+				aria_elm = $('#main-panel');
+				aria_elm.attr('aria-label', $aria_label);
+			}
+			
 		} else {
 			if (_expands) {
 				$("#collapsed-panel").css({
