@@ -97,7 +97,7 @@ SOFTWARE.
 
 	$.fn.extend ({
 		id: 'Platform JS',
-		version: 'v8.1',
+		version: 'v8.15',
 		dispatch : function(params) {
 			var defaults = {
 				//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
@@ -533,7 +533,11 @@ SOFTWARE.
 			
 			if ($aria_label && $aria_label !== '') {
 				aria_elm = $('#main-panel');
-				aria_elm.attr('aria-label', $aria_label);
+                
+                		var attr = $('#main-panel').attr('aria-label');
+                		if (typeof attr !== typeof undefined && attr !== false) {
+                    			aria_elm.attr('aria-label', $aria_label);
+                		}
 			}
 			
 		} else {
