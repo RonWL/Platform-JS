@@ -533,11 +533,7 @@ SOFTWARE.
 			
 			if ($aria_label && $aria_label !== '') {
 				aria_elm = $('#main-panel');
-                
-                		var attr = $('#main-panel').attr('aria-label');
-                		if (typeof attr !== typeof undefined && attr !== false) {
-                    			aria_elm.attr('aria-label', $aria_label);
-                		}
+				aria_elm.attr('aria-label', $aria_label);
 			}
 			
 		} else {
@@ -947,7 +943,7 @@ SOFTWARE.
 					init_animation();
 				}
 			} else {
-				if (_video && _video[0]) {
+				if (_unit_type === "RM" && _video[0]) {
 					_isAutoExpand = false;
 					trigger_video("expand");
 				}
@@ -1407,13 +1403,13 @@ SOFTWARE.
 		} else {
 			/*>*/
 			doLog("Type 2");
-
-			var $html = $($elm).innerHTML;
-			$($elm).html("<" + $rplceTag + ">" + $html + "</" + $rplceTag + ">");
-
-			$($elm).find($rplceTag).after(function () {
-				replace_attributes($(this), $id, $rplceAttrs);
-			});
+            
+            var $temp_tag = $("<" + $rplceTag + " style='display:none;width:0;height:0;opacity:0;' />");
+            $("body").prepend($temp_tag);
+            replace_attributes($temp_tag, $id, $rplceAttrs);
+            
+            var $dyn_html = $temp_tag.html();
+            $($elm).html($dyn_html);
 		}
 	}
 
