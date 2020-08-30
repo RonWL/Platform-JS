@@ -97,7 +97,7 @@ SOFTWARE.
 
 	$.fn.extend ({
 		id: 'Platform JS',
-		version: 'v8.2',
+		version: 'v8.3',
 		dispatch : function(params) {
 			var defaults = {
 				//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
@@ -1370,47 +1370,61 @@ SOFTWARE.
 	//	This method handles all of the replacement of tags that will be fed dynamic content. (FlashTalking)
 	function getSetAttr($id, $rplceTag, $rplceAttrs) {
 		doLog("Replacement Attributes: " + $rplceAttrs);
-		var $elm = document.getElementById($id);
+		var $elm;
+        var $temp_tag;
+        var $dyn_html;
+        
 		/*>*/
-		doLog("Found Element: " + $elm.id);
-
-		if ($($elm).is("img")) {
-			/*>*/
-			doLog("Type 1");
-
-			if ($elm.attributes) {
-				var $transAttrs = [];
-
-				$transAttrs[0] = [];
-				$transAttrs[1] = [];
-
-				$.each($elm.attributes, function () {
-					if (this.name !== "id") {
-						/*>*/
-						doLog("Name: " + this.name);
-						/*>*/
-						doLog("Value: " + this.value);
-					}
-					$transAttrs[0].push(this.name);
-					$transAttrs[1].push(this.value);
-				});
-				var $newElm = $($elm).returnReplaced($("<" + $rplceTag + ">" + $elm.innerHTML + "</" + $rplceTag + ">"));
-				$newElm.prop("id", $id);
-				replace_attributes($newElm, $id, $rplceAttrs, $transAttrs);
-			} else {
-				$($elm).replaceWith($("<" + $rplceTag + ">" + $elm.innerHTML + "</" + $rplceTag + ">"));
-			}
-		} else {
-			/*>*/
-			doLog("Type 2");
+        
+        if ($("#" + $id).length) {
+            $elm = $("#" + $id);
+            doLog("Found Element: " + $id);
             
-            var $temp_tag = $("<" + $rplceTag + " style='display:none;width:0;height:0;opacity:0;' />");
+            if ($($elm).is("img")) {
+                
+                doLog("Type 1: Image Variable / Element");
+
+                if ($elm.attributes) {
+                    var $transAttrs = [];
+
+                    $transAttrs[0] = [];
+                    $transAttrs[1] = [];
+
+                    $.each($elm.attributes, function () {
+                        if (this.name !== "id") {
+                            
+                            doLog("Name: " + this.name);
+                            
+                            doLog("Value: " + this.value);
+                        }
+                        $transAttrs[0].push(this.name);
+                        $transAttrs[1].push(this.value);
+                    });
+                    var $newElm = $($elm).returnReplaced($("<" + $rplceTag + ">" + $elm.innerHTML + "</" + $rplceTag + ">"));
+                    $newElm.prop("id", $id);
+                    replace_attributes($newElm, $id, $rplceAttrs, $transAttrs);
+                } else {
+                    $($elm).replaceWith($("<" + $rplceTag + ">" + $elm.innerHTML + "</" + $rplceTag + ">"));
+                }
+            } else {
+                doLog("Type 2: Text Variable / Element");
+
+                $temp_tag = $("<" + $rplceTag + " style='display:none;width:0;height:0;opacity:0;' />");
+                $("body").prepend($temp_tag);
+                replace_attributes($temp_tag, $id, $rplceAttrs);
+
+                $dyn_html = $temp_tag.html();
+                $($elm).html($dyn_html);
+            }
+        } else {
+            doLog("Element specified was not found in DOM.  Creating Tag for variable.");
+
+            $temp_tag = $("<" + $rplceTag + " style='display:none;width:0;height:0;opacity:0;' />");
             $("body").prepend($temp_tag);
             replace_attributes($temp_tag, $id, $rplceAttrs);
             
-            var $dyn_html = $temp_tag.html();
-            $($elm).html($dyn_html);
-		}
+            $($temp_tag).attr("id", $id);
+        }
 	}
 
 	
