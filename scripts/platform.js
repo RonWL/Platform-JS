@@ -93,11 +93,11 @@ SOFTWARE.
 	var _def_clickTag;
 
 	var _testing;
-
+    var console = window.console;
 
 	$.fn.extend ({
 		id: 'Platform JS',
-		version: 'v8.3',
+		version: 'v9.0',
 		dispatch : function(params) {
 			var defaults = {
 				//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
@@ -241,8 +241,12 @@ SOFTWARE.
 								get_animation_assets();
 								// If going through DC Studio the Enabler.js script located within the script repository at the bottom of the index file will need to be placed within the head.
 							} else {
-								var $dcsrc = "https://s0.2mdn.net/ads/studio/Enabler.js";
-								mod_js("Load", $dcsrc, "head", "dcjs", get_animation_assets, "EnablerJS");
+                                if (_unit_type === "RM") {
+                                    var $dcsrc = "https://s0.2mdn.net/ads/studio/Enabler.js";
+                                    mod_js("Load", $dcsrc, "head", "dcjs", get_animation_assets, "EnablerJS");
+                                } else {
+                                    get_animation_assets();
+                                }
 							}
 							break;
 
@@ -678,11 +682,15 @@ SOFTWARE.
 
 		//	Per each platform, we have to wait for their external scripts to load before continuing the unit's process
 		if (_platform === "DC") {
-			if (Enabler.isInitialized()) {
-				init_handle();
-			} else {
-				Enabler.addEventListener(studio.events.StudioEvent.INIT, init_handle);
-			}
+            if (_unit_type === "RM") {
+                if (Enabler.isInitialized()) {
+                    init_handle();
+                } else {
+                    Enabler.addEventListener(studio.events.StudioEvent.INIT, init_handle);
+                }
+            } else {
+                init_handle();
+            }
 		} else if (_platform === "SK") {
 			if (!EB.isInitialized()) {
 				EB.addEventListener(EBG.EventName.EB_INITIALIZED, init_handle);
@@ -865,7 +873,7 @@ SOFTWARE.
 						Enabler.requestCollapse();
 					}
 				} else {
-					doLog("Enabler Triggered Exit");
+					doLog("Standard Exit Triggered");
 					window.open(window.clickTag);
 				}
 				break;
