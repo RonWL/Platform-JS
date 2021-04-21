@@ -97,7 +97,7 @@ SOFTWARE.
 
 	$.fn.extend ({
 		id: 'Platform JS',
-		version: 'v9.0',
+		version: 'v10.0',
 		dispatch : function(params) {
 			var defaults = {
 				//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
@@ -256,9 +256,14 @@ SOFTWARE.
 
 							break;
 
-						case "CV":
-						case "SK":
+						ase "CV":
 							get_animation_assets();
+
+							break;
+							
+						case "SK":
+							var $sksrc = "https://secure-ds.serving-sys.com/BurstingScript/adKit/adkit.js";
+							mod_js("Load", $sksrc, "body", "ftjs", get_animation_assets, "SkdynJS");
 
 							break;
 
@@ -692,11 +697,7 @@ SOFTWARE.
                 init_handle();
             }
 		} else if (_platform === "SK") {
-			if (!EB.isInitialized()) {
-				EB.addEventListener(EBG.EventName.EB_INITIALIZED, init_handle);
-			} else {
-				init_handle();
-			}
+			adkit.onReady(init_handle);
 		} else {
 			init_handle();
 		}
@@ -879,7 +880,7 @@ SOFTWARE.
 				break;
 
 			case "SK":
-				EB.clickthrough();
+				adkit.clickthrough();
 
 				break;
 
