@@ -97,7 +97,7 @@ SOFTWARE.
 
 	$.fn.extend ({
 		id: 'Platform JS',
-		version: 'v10.0',
+		version: 'v10.1',
 		dispatch : function(params) {
 			var defaults = {
 				//	Options are at the moment "DC" -> DoubleClick , "SK" -> Sizmek , "FT" -> FlashTalking , "" -> None		
@@ -106,8 +106,8 @@ SOFTWARE.
 				//	If Platform is Doubleclick, Options are at the moment true -> Unit IS Going through DC Studio, false -> Unit Not DC Studio Unit	
 				$isDCS: false,
 
-				//	Option to Load External Animation Library or Not (Greensock {0 - None, 1 - "Max", or 2 - "Lite"}).  If None Chosen, will default to not loading the Tweening Engine.
-				//	The loaded URI is the CDN endpoint to the latest version of GS.
+				//	Option to Load External Animation Library or Not (Greensock {0 - None, 1 - Yes.  If None Chosen, will default to not loading the Tweening Engine.
+				//	The loaded URI is the CDN endpoint to the latest version of GS. -- Keep In mind, There is no longer a need to reference TweenLite or TweenMax.  They are all bundled in one "gsap" object.
 				$loadGS: 1,
 
 				//	Select If the Unit is Dynamic or Static (Now ONLY Supports FlashTalking)
@@ -272,20 +272,7 @@ SOFTWARE.
 	// If GA is enabled, this pulls in the necessary tweening engine.
 	function get_animation_assets() {
 		if (_loadGS) {
-			var $gs_prefix = "https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/";
-			var $gs_end;
-			var $gs_url;
-
-			switch (_loadGS) {
-				case 1:
-					$gs_end = "TweenMax.min.js";
-					break;
-
-				case 2:
-					$gs_end = "TweenLite.min.js";
-					break;
-			}
-			$gs_url = $gs_prefix + $gs_end;
+			var $gs_url = "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js";
 			mod_js("Load", $gs_url, "head", "anjs", init_platform, "GsJS");
 
 		} else {
