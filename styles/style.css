@@ -3,6 +3,11 @@
 /*	version: "v8.2"	*/
 /* CSS Document */
 
+:root {
+	--full-width: 300px;
+	--full-height: 250px;
+}
+
 body, html {
 	margin: 0;
 	padding: 0;
@@ -31,7 +36,7 @@ img, svg {
 	position: absolute;
 }
 
-.full-col {}
+.full-col { width: var(--full-width); height: var(--full-height); }
 
 .full-exp {}
 
